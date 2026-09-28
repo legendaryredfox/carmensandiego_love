@@ -378,6 +378,43 @@ for the circular dependencies a screen-graph state machine like this one
 inherently has. Clue images and per-city exterior art remain outstanding
 (need sourced assets, not code).
 
+### Known issues — next up (flagged 2026-09-28, not yet fixed)
+
+- **Venue card images are real photos; they need to be new pixel-art
+  illustrations instead — not a filter over the photos.** The 23 clue
+  images sourced from Wikimedia Commons (see `assets/CREDITS.md`'s "Clue
+  Images" table) are real-world photographs dropped straight into a
+  128x128 card. Downscaling or posterizing a photo doesn't get there —
+  the ask is genuinely new, hand-drawn-style pixel art per clue subject,
+  matching this project's stated aesthetic (`CLAUDE.md`: "Pixel art retro
+  aesthetic"). This applies to the venue-type images specifically — the
+  small icon-like pictures standing in for each venue (museum, airport,
+  bank, currency exchange, witness corner, etc. — see the current
+  `src/screens/city.lua` venue cards), not full illustrated backgrounds.
+  For a sense of the target look, see
+  `references/apple2-carmen-sandiego-world-disasm/docs/runtime/po-paris-investigation.png`
+  — the three small building-silhouette icons (Bank / Library / Hotel)
+  overlaid on the location screen are the closest 1985 equivalent of what
+  this project's venue cards need. That reference is for *style/mood*
+  only — per `CLAUDE.md`'s IP section, this project must not trace or
+  reuse the original's actual asset files, only take inspiration from the
+  general look (simple flat silhouettes, minimal detail, low palette).
+  Affects all 23 existing images plus the ~97 still-unsourced ones —
+  worth deciding the art pipeline (manual pixel art vs. a generation
+  workflow) before sourcing more, so work isn't redone twice.
+- **Volume control is too coarse, and even the lowest step is too loud.**
+  `src/screens/settings.lua`'s `VOLUME_STEP = 0.1` gives only 10 steps
+  from 0.0-1.0 (`src/settings.lua`'s `clamp01`) — reported as needing
+  finer-grained control. Also reported that the lowest non-zero setting
+  still sounds too loud, which smells like the classic issue with linear
+  volume controls: human loudness perception is roughly logarithmic, so a
+  linear 0.0-1.0 gain (what `src/audio.lua:136-147`'s
+  `set_music_volume`/`set_sfx_volume` feed straight into LÖVE's
+  `Source:setVolume`) makes most of the useful range crowd into the
+  bottom 10-20% of the slider. Likely fix: smaller step (e.g. 0.05) *and*
+  an exponential/log curve between the stored 0-1 setting and the actual
+  `setVolume()` call, not just a smaller linear step.
+
 ---
 
 ## Technical Decisions
