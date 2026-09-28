@@ -10,6 +10,11 @@ local map_mod  = require("src.map")
 local S = {}
 local destinations, conn_ids, selected = {}, {}, 1
 
+-- map_mod.draw only reads visited_ids, never mutates it — no destination
+-- is ever marked "visited" on this screen, so one shared empty table
+-- beats a fresh allocation every frame.
+local NO_VISITED = {}
+
 local function build_destinations()
     local d     = game.detective
     local conns = game.connections_for(d.current_city_id)
@@ -42,7 +47,7 @@ function S.draw()
     local mx, my, mw, mh = 320, 30, 310, 200
     local selected_id = destinations[selected] and destinations[selected].id
     map_mod.draw(game.cities_ordered, game.cities_by_id,
-                 mx, my, mw, mh, {}, d.current_city_id, conn_ids, selected_id)
+                 mx, my, mw, mh, NO_VISITED, d.current_city_id, conn_ids, selected_id)
 
     -- Destination list (left half)
     ui.title(0, 6, locale.t("travel.title"))

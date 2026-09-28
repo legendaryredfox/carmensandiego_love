@@ -38,6 +38,7 @@ return {
     ["briefing.suspect_seen"]     = "A suspect was seen fleeing the scene.",
     ["briefing.mission"]          = "Your mission: track down the thief\nand make the arrest.\nYou have {days} days.",
     ["briefing.good_luck"]        = "Good luck, {rank} {name}.",
+    ["briefing.press_any_key"]    = "[ PRESS ANY KEY ]",
 
     -- City screen
     ["city.interpol"]             = "CRIME COMPUTER",

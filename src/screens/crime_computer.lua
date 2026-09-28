@@ -5,10 +5,14 @@ local ui     = require("src.ui")
 local game   = require("src.game")
 local detective_mod = require("src.detective")
 local suspect_mod   = require("src.suspect")
+local mission_mod   = require("src.mission")
 
 local S = {}
 
-local ATTRS = { "sex", "hair", "hobby", "vehicle", "feature", "food" }
+-- Same list mission.lua uses to decide which trait clues to generate —
+-- shared so the two can't drift out of sync (a clued trait the UI never
+-- shows, or a UI field no clue ever fills).
+local ATTRS = mission_mod.TRAIT_ATTRS
 local ATTR_VALUES = {
     sex     = { "", "male", "female" },
     hair    = { "", "brown", "blonde", "red", "black" },
@@ -43,7 +47,7 @@ local function cycle(attr, dir)
     -- clearing the key) made issue_warrant's raw gathered_traits filter
     -- treat it as "must equal empty string" and reject every suspect —
     -- get_filter() here already had to work around exactly this.
-    game.detective.gathered_traits[attr] = idx > 1 and vals[idx] or nil
+    detective_mod.add_trait(game.detective, attr, idx > 1 and vals[idx] or nil)
 end
 
 function S.enter()

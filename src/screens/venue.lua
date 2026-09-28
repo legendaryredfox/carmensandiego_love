@@ -10,7 +10,7 @@ local venue_name_mod = require("src.venue_name")
 local S = {}
 S.venue_index = 1
 
-local text_full, revealed, timer, done, clue = "", 0, 0, false, nil
+local text_full, text_len, revealed, timer, done, clue = "", 0, 0, 0, false, nil
 
 -- Witness portrait — generic pixel-art character art (never a specific
 -- real person, see CLAUDE.md's IP rules), picked deterministically per
@@ -66,12 +66,12 @@ function S.enter()
         SM.switch(require("src.screens.game_over"))
         return
     end
+    -- Trait clues are NOT auto-recorded into gathered_traits — the player
+    -- reads the witness's description here and has to go enter it
+    -- themselves on the crime computer, same as any other deduction.
     clue      = detective_mod.investigate(game.detective, game.mission, S.venue_index)
-    -- Auto-record trait clues
-    if clue and clue.type == "trait" then
-        detective_mod.add_trait(game.detective, clue.attr, clue.value)
-    end
     text_full = locale.t("venue.witness_says") .. "\n\n" .. clue_to_text(clue)
+    text_len  = ui.utf8_len(text_full)
     revealed  = 0
     timer     = 0
     done      = false
@@ -80,8 +80,8 @@ end
 function S.update(dt)
     if done then return end
     timer    = timer + dt
-    revealed = math.min(ui.utf8_len(text_full), math.floor(timer * settings.get().typewriter_speed))
-    if revealed >= ui.utf8_len(text_full) then done = true end
+    revealed = math.min(text_len, math.floor(timer * settings.get().typewriter_speed))
+    if revealed >= text_len then done = true end
 end
 
 function S.draw()
@@ -113,7 +113,7 @@ function S.draw()
 end
 
 function S.keypressed(key)
-    if not done then revealed = ui.utf8_len(text_full); done = true; return end
+    if not done then revealed = text_len; done = true; return end
     if key == "return" or key == "escape" or key == "space" then
         SM.switch(require("src.screens.city"))
     end

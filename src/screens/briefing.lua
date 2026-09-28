@@ -7,7 +7,7 @@ local det_mod  = require("src.detective")
 local settings = require("src.settings")
 
 local S = {}
-local full_text, revealed, timer, done = "", 0, 0, false
+local full_text, text_len, revealed, timer, done = "", 0, 0, 0, false
 
 local function build_text()
     local d        = game.detective
@@ -28,6 +28,7 @@ end
 
 function S.enter()
     full_text = build_text()
+    text_len  = ui.utf8_len(full_text)
     revealed  = 0
     timer     = 0
     done      = false
@@ -37,8 +38,8 @@ end
 function S.update(dt)
     if done then return end
     timer    = timer + dt
-    revealed = math.min(ui.utf8_len(full_text), math.floor(timer * settings.get().typewriter_speed))
-    if revealed >= ui.utf8_len(full_text) then done = true end
+    revealed = math.min(text_len, math.floor(timer * settings.get().typewriter_speed))
+    if revealed >= text_len then done = true end
 end
 
 function S.draw()
@@ -46,12 +47,12 @@ function S.draw()
     ui.text(30, 25, ui.utf8_sub(full_text, revealed), ui.C.highlight, "left", ui.VIRTUAL_W - 60)
     if done then
         ui.text(0, ui.VIRTUAL_H - 26,
-            "[ PRESS ANY KEY ]", ui.C.dim, "center", ui.VIRTUAL_W)
+            locale.t("briefing.press_any_key"), ui.C.dim, "center", ui.VIRTUAL_W)
     end
 end
 
 function S.keypressed()
-    if not done then revealed = ui.utf8_len(full_text); done = true; return end
+    if not done then revealed = text_len; done = true; return end
     SM.switch(require("src.screens.city_info"))
 end
 

@@ -78,6 +78,14 @@ describe("mission._build_route", function()
             assert_eq(route1[i], route2[i])
         end
     end)
+
+    it("errors instead of silently returning a short route when the graph can't support the length", function()
+        local tiny_cities = { a = { id = "a" }, b = { id = "b" } }
+        local tiny_graph  = { a = { "b" }, b = { "a" } }
+        local ok, err = pcall(mission._build_route, tiny_cities, tiny_graph, 5, make_seed_rng(1))
+        assert_false(ok, "expected _build_route to error on an unsatisfiable route length")
+        assert_true(tostring(err):find("only found") ~= nil, "unexpected error: " .. tostring(err))
+    end)
 end)
 
 describe("mission._distinguishing_attrs", function()

@@ -39,6 +39,7 @@ return {
     ["briefing.suspect_seen"]     = "Uma pessoa suspeita foi vista fugindo da cena.",
     ["briefing.mission"]          = "Sua missao: rastrear o ladrao\ne efetuar a prisao.\nVoce tem {days} dias.",
     ["briefing.good_luck"]        = "Boa sorte, {rank} {name}.",
+    ["briefing.press_any_key"]    = "[ PRESSIONE QUALQUER TECLA ]",
 
     -- Cidade
     ["city.interpol"]             = "COMPUTADOR DO CRIME",

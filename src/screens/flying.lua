@@ -14,6 +14,10 @@ S.dest = nil
 local DURATION = 1.2
 local MAP_X, MAP_Y, MAP_W, MAP_H = 40, 60, ui.VIRTUAL_W - 80, ui.VIRTUAL_H - 130
 
+-- map_mod.draw only reads visited_ids/connection_ids, never mutates them —
+-- one shared empty table instead of two fresh allocations every frame.
+local NO_IDS = {}
+
 local elapsed, origin_id, start_ts, end_ts = 0, nil, 0, 0
 
 function S.enter()
@@ -32,9 +36,7 @@ local function finish()
         return
     end
 
-    local d = game.detective
-    local m = game.mission
-    if d.warrant_id and d.current_city_id == require("src.mission").thief_city(m) then
+    if game.should_auto_arrest() then
         SM.switch(require("src.screens.arrest"))
     else
         SM.switch(require("src.screens.city_info"))
@@ -48,7 +50,7 @@ end
 
 function S.draw()
     map_mod.draw(game.cities_ordered, game.cities_by_id,
-        MAP_X, MAP_Y, MAP_W, MAP_H, {}, nil, {})
+        MAP_X, MAP_Y, MAP_W, MAP_H, NO_IDS, nil, NO_IDS)
 
     local origin = game.cities_by_id[origin_id]
     local dest   = game.cities_by_id[S.dest.id]

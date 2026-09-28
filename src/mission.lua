@@ -9,27 +9,15 @@ M.RANK_CONFIG = {
     ace_detective    = { route_length = 8, time_days = 5 },
 }
 
--- Real landmark items, keyed by their actual home city — a briefing must
--- never claim, say, the Mona Lisa was stolen from Kathmandu. Cities without
--- a specific landmark in this table draw from GENERIC_ITEMS instead, which
--- describe something vague enough to be true of any city's museum.
-local ITEM_BY_CITY = {
-    paris       = { "item.mona_lisa", "item.eiffel_torch" },
-    london      = { "item.crown_jewels", "item.magna_carta", "item.big_ben_bell" },
-    mexico_city = { "item.aztec_calendar" },
-    athens      = { "item.parthenon_frieze" },
-    rome        = { "item.colosseum_stone" },
-}
-
-local GENERIC_ITEMS = {
-    "item.generic_painting", "item.generic_gem", "item.generic_relic",
-    "item.generic_document", "item.generic_statue",
-}
+local ITEMS         = require("data.items")
+local ITEM_BY_CITY  = ITEMS.BY_CITY
+local GENERIC_ITEMS = ITEMS.GENERIC
 
 M.ITEM_BY_CITY  = ITEM_BY_CITY
 M.GENERIC_ITEMS = GENERIC_ITEMS
 
 local TRAIT_ATTRS = { "sex", "hair", "hobby", "vehicle", "feature", "food" }
+M.TRAIT_ATTRS = TRAIT_ATTRS
 
 -- Attributes guaranteed unique in full combination across the roster (see
 -- suspect_test.lua's "full trait combinations are unique" check) — food is
@@ -134,7 +122,15 @@ function M._build_route(cities_by_id, graph, length, rng)
         end
     end
 
-    return best_route
+    -- Every caller (mission.new, the rank-length tests, the final-case
+    -- logic) assumes a route of exactly `length`. A stress test across
+    -- 3000 rank/seed/graph combinations never hit this, so a shorter
+    -- route surfacing here would mean something's genuinely wrong with
+    -- the graph or rng — fail loudly instead of silently shipping an
+    -- undersized mission.
+    error(string.format(
+        "mission._build_route: only found a %d-city route after %d attempts (wanted %d)",
+        best_route and #best_route or 0, MAX_ROUTE_ATTEMPTS, length))
 end
 
 -- Generates clue tables per city in route.

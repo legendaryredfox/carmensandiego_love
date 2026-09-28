@@ -2,18 +2,9 @@ local SM     = require("src.state_machine")
 local locale = require("src.locale")
 local ui     = require("src.ui")
 local game   = require("src.game")
-local save   = require("src.save")
 
 local S = {}
 local selected = 1
-
--- A save whose detective already caught the organization leader has no
--- more mission to continue — Continue must be disabled, new game required.
-local function continue_available()
-    if not save.exists(1) then return false end
-    local data = save.read(1)
-    return data ~= nil and not (data.detective and data.detective.career_complete)
-end
 
 local function items()
     return {
@@ -25,7 +16,7 @@ local function items()
               -- already saw this case's briefing and may have made progress.
               if game.load(1) then SM.switch(require("src.screens.city")) end
           end,
-          disabled = not continue_available() },
+          disabled = not game.can_continue(1) },
         { label = locale.t("menu.leaderboard"),
           action = function() SM.switch(require("src.screens.leaderboard")) end },
         { label = locale.t("menu.settings"),

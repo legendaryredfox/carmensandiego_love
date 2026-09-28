@@ -74,6 +74,15 @@ function M.next_mission()
     detective_mod.begin_mission(M.detective, M.mission)
 end
 
+-- True once the detective holds any warrant and has reached the thief's
+-- city — city.lua and flying.lua both check this to auto-jump to the
+-- arrest screen instead of waiting for an explicit player action. (The
+-- warrant might still be wrong; arrest.lua resolves that separately.)
+function M.should_auto_arrest()
+    return M.detective.warrant_id ~= nil
+        and M.detective.current_city_id == mission_mod.thief_city(M.mission)
+end
+
 function M.current_city()
     return M.cities_by_id[M.detective.current_city_id]
 end
@@ -91,6 +100,19 @@ function M.city_name(city_id)
     if not c then return city_id end
     local locale = require("src.locale")
     return locale.get_lang() == "pt" and c.name_pt or c.name_en
+end
+
+-- Whether Continue should be offered for this slot: a save must exist and
+-- its detective must not have already completed their career (caught the
+-- organization leader) — there'd be no case left to resume. The menu used
+-- to parse save.read(slot) itself, separately from M.load's own parsing of
+-- the exact same payload; kept in one place so they can't disagree about
+-- what a given save means.
+function M.can_continue(slot)
+    slot = slot or M.save_slot
+    if not save_mod.exists(slot) then return false end
+    local data = save_mod.read(slot)
+    return data ~= nil and not (data.detective and data.detective.career_complete)
 end
 
 function M.save()

@@ -62,9 +62,7 @@ local function nearest_zone(indices, x)
 end
 
 local function check_auto_arrest()
-    local d = game.detective
-    local m = game.mission
-    if d.warrant_id and d.current_city_id == mission_mod.thief_city(m) then
+    if game.should_auto_arrest() then
         SM.switch(require("src.screens.arrest"))
         return true
     end

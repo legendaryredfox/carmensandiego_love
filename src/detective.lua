@@ -1,4 +1,5 @@
 local suspect_mod = require("src.suspect")
+local mission_mod = require("src.mission")
 
 local M = {}
 
@@ -37,7 +38,6 @@ function M.new(name)
         start_timestamp  = os.time(),
         gathered_traits  = {},
         warrant_id       = nil,
-        mission          = nil,
         career_complete  = false,
     }
 end
@@ -101,13 +101,15 @@ function M.investigate(det, mission, venue_index)
     -- Advance clock regardless (time passes even on wrong city)
     det.hours_elapsed = math.min(det.time_limit_hours,
                                   det.hours_elapsed + INVESTIGATION_HOURS)
-    if not require("src.mission").on_route(mission, city_id) then
+    if not mission_mod.on_route(mission, city_id) then
         return nil
     end
-    return require("src.mission").clue_at(mission, city_id, venue_index)
+    return mission_mod.clue_at(mission, city_id, venue_index)
 end
 
--- Records a suspect trait clue gathered from a witness.
+-- Sets (or, with a nil value, clears) one gathered trait — what the crime
+-- computer's dropdowns write as the player manually enters what a witness
+-- told them (see src/screens/crime_computer.lua's cycle()).
 function M.add_trait(det, attr, value)
     det.gathered_traits[attr] = value
 end
@@ -129,7 +131,7 @@ end
 -- Attempts to arrest the suspect at the current city.
 -- Returns "success", "wrong_warrant", "no_warrant", or "wrong_city".
 function M.attempt_arrest(det, mission)
-    local thief_city = require("src.mission").thief_city(mission)
+    local thief_city = mission_mod.thief_city(mission)
     if det.current_city_id ~= thief_city then
         return "wrong_city"
     end
@@ -168,7 +170,6 @@ end
 
 -- Resets mission state for a new case.
 function M.begin_mission(det, mission)
-    det.mission          = mission
     det.current_city_id  = mission.route[1]
     det.hours_elapsed    = 0
     det.time_limit_hours = mission.time_limit_hours
