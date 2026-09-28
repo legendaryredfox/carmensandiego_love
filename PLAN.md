@@ -10,20 +10,20 @@ the previous to be complete. Phases 0–3 have no LÖVE dependency and are fully
 Goal: runnable skeleton, all infrastructure in place, tests passing.
 
 ### 0.1 Project skeleton
-- [ ] `conf.lua` — window 1280×720, title, disable unused modules (physics, joystick)
-- [ ] `main.lua` — thin dispatcher: `love.load/update/draw/keypressed/mousepressed` → state machine
-- [ ] `src/state_machine.lua` — `switch(state)`, `update(dt)`, `draw()`, `keypressed(key)`, `mousepressed(x,y,b)`
-- [ ] `src/locale.lua` — `locale.set(lang)`, `locale.t(key, vars)`, interpolation with `{var}` syntax, missing-key fallback (return key + warning)
-- [ ] `locales/en.lua` — skeleton with section comments, ~10 placeholder keys
-- [ ] `locales/pt.lua` — same keys in PT-BR
+- [x] `conf.lua` — window 1280×720, title, disable unused modules (physics, joystick)
+- [x] `main.lua` — thin dispatcher: `love.load/update/draw/keypressed/mousepressed` → state machine
+- [x] `src/state_machine.lua` — `switch(state)`, `update(dt)`, `draw()`, `keypressed(key)`, `mousepressed(x,y,b)`
+- [x] `src/locale.lua` — `locale.set(lang)`, `locale.t(key, vars)`, interpolation with `{var}` syntax, missing-key fallback (return key + warning)
+- [x] `locales/en.lua` — skeleton with section comments, ~10 placeholder keys
+- [x] `locales/pt.lua` — same keys in PT-BR
 
 ### 0.2 Minitest runner
-- [ ] `tests/runner.lua` — discovers `tests/*_test.lua` via hardcoded list, `pcall`-based, prints PASS/FAIL, exits 1 on failure
-- [ ] Helper functions: `assert_eq(a, b, msg)`, `assert_near(a, b, tolerance, msg)`, `assert_true(v, msg)`, `assert_nil(v, msg)`
-- [ ] `tests/locale_test.lua` — key lookup, missing key, interpolation, language switch
+- [x] `tests/runner.lua` — discovers `tests/*_test.lua` via hardcoded list, `pcall`-based, prints PASS/FAIL, exits 1 on failure
+- [x] Helper functions: `assert_eq(a, b, msg)`, `assert_near(a, b, tolerance, msg)`, `assert_true(v, msg)`, `assert_nil(v, msg)`
+- [x] `tests/locale_test.lua` — key lookup, missing key, interpolation, language switch
 
 ### 0.3 Virtual canvas
-- [ ] `src/ui.lua` — `ui.init()` creates 640×360 canvas; `ui.begin_frame()` / `ui.end_frame(scale)` wraps draw calls; `ui.scale` constant = 2
+- [x] `src/ui.lua` — `ui.init()` creates 640×360 canvas; `ui.begin_frame()` / `ui.end_frame(scale)` wraps draw calls; `ui.scale` constant = 2
 
 Acceptance: `love .` opens 1280×720 black window; `lua tests/runner.lua` reports all passing.
 
@@ -34,43 +34,43 @@ Acceptance: `love .` opens 1280×720 black window; `lua tests/runner.lua` report
 Goal: all game data loadable and queryable. No rendering.
 
 ### 1.1 Cities
-- [ ] `data/cities.csv` — 30 cities: `id;name_en;name_pt;country_en;country_pt;lat;lon;population`
+- [x] `data/cities.csv` — 30 cities: `id;name_en;name_pt;country_en;country_pt;lat;lon;population`
   - Populate all 30 from original game (see SPEC.md §8)
   - Verify lat/lon values against current sources
-- [ ] `src/city.lua`
+- [x] `src/city.lua`
   - `city.load(path)` — parse CSV, return indexed table `{[id] = City}`
   - `city.haversine(lat1, lon1, lat2, lon2)` → km (pure Lua)
   - `city.distance(city_a, city_b)` → km
   - `city.travel_hours(city_a, city_b)` → hours at 800 km/h
   - `city.connections(city_id, route_graph)` → `string[]`
-- [ ] `data/routes.lua` — 8 connection graphs as Lua tables (from iolo disassembly J-routes.json)
-- [ ] `tests/city_test.lua`
+- [x] `data/routes.lua` — 8 connection graphs as Lua tables (from iolo disassembly J-routes.json)
+- [x] `tests/city_test.lua`
   - Haversine: Nashville→LA = 2887 km ± 30 km
   - travel_hours: Buenos Aires→Rio de Janeiro ~3h at 800 km/h
   - All 30 cities load without error
   - Each city has ≥ 2 connections in every graph
 
 ### 1.2 Suspects
-- [ ] `data/suspects.lua` — 10 suspects as Lua table (renamed from originals)
+- [x] `data/suspects.lua` — 10 suspects as Lua table (renamed from originals)
   - Fields: `id, name, sex, hair, hobby, vehicle, feature, food`
   - Trait distribution preserves deduction logic (verify unique trait-set combos)
-- [ ] `src/suspect.lua`
+- [x] `src/suspect.lua`
   - `suspect.load()` → `Suspect[]`
   - `suspect.filter(suspects, traits)` → `Suspect[]` — returns all matching
   - `suspect.random(suspects, rng)` → single Suspect
-- [ ] `tests/suspect_test.lua`
+- [x] `tests/suspect_test.lua`
   - `filter` with 0 traits → all 10 returned
   - `filter` with unique combo → exactly 1 returned
   - `filter` contradictory → 0 returned
   - All 10 suspects have distinct `(sex, hair, hobby, vehicle, feature)` combinations
 
 ### 1.3 Clues
-- [ ] `data/clues/<city_id>.lua` — per-city clue pools (3–6 clues each)
+- [x] `data/clues/<city_id>.lua` — per-city clue pools (3–6 clues each)
   - Each clue: `{type, category, value, text_key, image, verified}`
   - Start with 5 cities fully authored; rest marked `-- TODO`
   - Geographic facts must be current (post-2020 verified)
-- [ ] Add clue text keys to `locales/en.lua` and `locales/pt.lua`
-- [ ] `src/mission.lua` (partial — clue selection only)
+- [x] Add clue text keys to `locales/en.lua` and `locales/pt.lua`
+- [x] `src/mission.lua` (partial — clue selection only)
   - `mission.clues_for_city(city_id, count)` → `Clue[]` random selection
 
 Acceptance: `lua tests/runner.lua` all pass; `city.haversine` error < 1%.
@@ -82,7 +82,7 @@ Acceptance: `lua tests/runner.lua` all pass; `city.haversine` error < 1%.
 Goal: complete game loop as pure Lua, no rendering. All testable.
 
 ### 2.1 Mission generation
-- [ ] `src/mission.lua` (complete)
+- [x] `src/mission.lua` (complete)
   - `mission.new(suspects, cities, route_graphs, rank, rng)` → Mission
     - Random suspect selection
     - Random starting city
@@ -91,14 +91,14 @@ Goal: complete game loop as pure Lua, no rendering. All testable.
     - Terminal city: all 3 clues signal "thief is here"
   - `mission.clue_at(mission, city_id, venue_index)` → Clue
   - `mission.is_terminal(mission, city_id)` → boolean
-- [ ] `tests/mission_test.lua`
+- [x] `tests/mission_test.lua`
   - Fixed seed → deterministic mission
   - Route length matches rank requirement
   - All route cities are connected in the chosen graph
   - Terminal city clues differ from mid-route clues
 
 ### 2.2 Detective state
-- [ ] `src/detective.lua`
+- [x] `src/detective.lua`
   - `detective.new(name)` → Detective
   - `detective.travel(det, city, hours)` → ok | "time_expired"
   - `detective.investigate(det, mission, city_id, venue_index)` → Clue
@@ -107,32 +107,32 @@ Goal: complete game loop as pure Lua, no rendering. All testable.
   - `detective.attempt_arrest(det, mission)` → "success" | "wrong_warrant" | "no_warrant" | "wrong_city"
   - `detective.advance_rank(det)` — called on success
   - `detective.score(det)` → number
-- [ ] `tests/detective_test.lua`
+- [x] `tests/detective_test.lua`
   - Rank advances at correct case thresholds
   - Time expiry triggers correctly
   - Warrant issue/deny logic (see SPEC §2.4)
   - Arrest outcomes cover all 4 cases
 
 ### 2.3 Save / Load
-- [ ] `lib/json.lua` — rxi/json.lua (copy single file, no modification)
-- [ ] `src/save.lua`
+- [x] `lib/json.lua` — rxi/json.lua (copy single file, no modification)
+- [x] `src/save.lua`
   - `save.write(slot, detective)` — serialize to JSON via love.filesystem
   - `save.read(slot)` → detective table | nil
   - `save.exists(slot)` → boolean
   - `save.delete(slot)`
   - Slot paths: `"carmensandiego/save_1.json"` etc.
-- [ ] `tests/save_test.lua` (mock love.filesystem with io.tmpfile)
+- [x] `tests/save_test.lua` (mock love.filesystem with io.tmpfile)
   - Round-trip: write then read returns identical data
   - Missing slot returns nil without error
   - Corrupt JSON returns nil without crash
 
 ### 2.4 Ranking
-- [ ] `src/ranking.lua`
+- [x] `src/ranking.lua`
   - `ranking.load(save_slot)` → Entry[]
   - `ranking.add(ranking, entry)` — insert sorted, keep top 10
   - `ranking.save(ranking, save_slot)`
   - Entry: `{name, rank, cases_solved, score, date}`
-- [ ] `tests/ranking_test.lua` (can reuse save mock)
+- [x] `tests/ranking_test.lua` (can reuse save mock)
   - Top 10 cap enforced
   - Sort order: descending by score
   - Ties broken by cases_solved
@@ -146,7 +146,7 @@ Acceptance: `lua tests/runner.lua` all pass; full game loop simulatable by calli
 Goal: all screens implemented, game playable end-to-end.
 
 ### 3.1 Shared UI primitives
-- [ ] `src/ui.lua` (complete)
+- [x] `src/ui.lua` (complete)
   - `ui.panel(x, y, w, h)` — draws 9-slice panel from Kenney Pixel UI Pack
   - `ui.button(x, y, label, selected)` → draws button; returns true if clicked this frame
   - `ui.text(x, y, str, color)` — Press Start 2P font
@@ -155,30 +155,30 @@ Goal: all screens implemented, game playable end-to-end.
   - `ui.load_assets()` — loads fonts, sprites; called once in love.load
 
 ### 3.2 Title + Language + Menu screens
-- [ ] `src/screens/title.lua` — game logo, press-any-key prompt, retro scanline effect
-- [ ] `src/screens/language.lua` — EN / PT-BR selection; stores to save slot 0
-- [ ] `src/screens/menu.lua` — New Game / Continue / Leaderboard / Quit; Continue grayed if no save
+- [x] `src/screens/title.lua` — game logo, press-any-key prompt, retro scanline effect
+- [x] `src/screens/language.lua` — EN / PT-BR selection; stores to save slot 0
+- [x] `src/screens/menu.lua` — New Game / Continue / Leaderboard / Quit; Continue grayed if no save
 
 ### 3.3 Name entry + Briefing
-- [ ] `src/screens/name_entry.lua` — text input (love.textinput), max 20 chars, confirm with Enter
-- [ ] `src/screens/briefing.lua` — teleprinter effect (reveal text char by char), mission summary
+- [x] `src/screens/name_entry.lua` — text input (love.textinput), max 20 chars, confirm with Enter
+- [x] `src/screens/briefing.lua` — teleprinter effect (reveal text char by char), mission summary
 
 ### 3.4 City screen (main game screen)
-- [ ] `src/screens/city.lua`
+- [x] `src/screens/city.lua`
   - Shows city exterior layout (left: Interpol | 3 venues | right: Airport)
   - Status bar: city name, days remaining, rank
   - Keyboard/mouse navigation between action zones
   - Dispatches to venue, crime computer, travel, or arrest screens
 
 ### 3.5 Venue screen
-- [ ] `src/screens/venue.lua`
+- [x] `src/screens/venue.lua`
   - Witness dialogue with typewriter effect
   - Clue reveal: text + optional image (side by side)
   - Image clue: no country label, no flag images
   - "Back" returns to city screen
 
 ### 3.6 Crime Computer screen
-- [ ] `src/screens/crime_computer.lua`
+- [x] `src/screens/crime_computer.lua`
   - 6 attribute dropdowns (sex, hair, hobby, vehicle, feature, food)
   - Each cycles through known values + blank (unset)
   - "Search" button → shows matching suspects
@@ -186,23 +186,23 @@ Goal: all screens implemented, game playable end-to-end.
   - Suspect dossier view: traits listed, no photo (avoid IP)
 
 ### 3.7 Travel screen
-- [ ] `src/screens/travel.lua`
+- [x] `src/screens/travel.lua`
   - Lists connected cities with Haversine distance and travel time
   - World map inset showing current city + destinations as dots
   - Confirm → triggers travel animation → city screen for destination
 
 ### 3.8 Map rendering
-- [ ] `src/map.lua`
+- [x] `src/map.lua`
   - `map.load()` — loads world map base image
   - `map.draw(cities, current_city, connections)` — renders map with markers
   - City markers: dot at geographic position (normalized lat/lon → screen coords)
   - `map.lat_lon_to_screen(lat, lon, map_w, map_h)` — equirectangular projection
 
 ### 3.9 Arrest + Outcome screens
-- [ ] `src/screens/arrest.lua` — confrontation text, result (success/failure), animation
-- [ ] `src/screens/rank_up.lua` — rank promotion announcement
-- [ ] `src/screens/game_over.lua` — time expired or wrong arrest message
-- [ ] `src/screens/leaderboard.lua` — top 10 table display
+- [x] `src/screens/arrest.lua` — confrontation text, result (success/failure), animation
+- [x] `src/screens/rank_up.lua` — rank promotion announcement
+- [x] `src/screens/game_over.lua` — time expired or wrong arrest message
+- [x] `src/screens/leaderboard.lua` — top 10 table display
 
 Acceptance: full game loop playable from title to arrest with keyboard.
 
@@ -300,6 +300,74 @@ and airport actions, replacing the old 5-zone single-row strip.
       ticking the clock from the current time toward
       `detective.INVESTIGATION_HOURS` later before handing off to
       `src/screens/venue.lua`.
+
+### Full-codebase review pass — 2026-09-28
+
+Requested: a code review of the whole codebase (not just recent diffs),
+followed by a QA/UX/UI pass. Found and fixed, most severe first:
+
+- **Every trait clue in the game displayed as a raw locale key** instead of
+  readable text (`mission.lua` generated `"clue.trait.*"`, the locale files
+  only define `"trait.*"`) — deterministic, both languages, always.
+- **An undeducible thief was possible on literally the first case of any
+  playthrough.** Trait clues cycled sex→hair→hobby→... blindly by route
+  position; Rookie's 3-clue-city route only ever revealed sex/hair/hobby,
+  and two suspects (`marina_delacroix`, `kat_sterling`) share exactly
+  those three. `mission.lua` now computes the actual minimal
+  distinguishing attribute set per thief and reveals those first — a test
+  simulates every thief at every rank and confirms the crime computer's
+  filter always narrows to exactly one match.
+- **A correctly-identified warrant could report "no match" forever** — the
+  crime computer's blank dropdown state was stored as a literal `""`
+  instead of clearing the key, which `suspect.filter` compared literally.
+- **A successful arrest saved before the mission advanced**, so an abnormal
+  exit before pressing Enter, followed by Continue, replayed the
+  auto-arrest and double-counted the case.
+- `investigate()` had no time-limit guard (`travel()` does) — a player past
+  the deadline could re-enter venues for free clues indefinitely.
+- `clue_pool.load` treated a real syntax/runtime error in a
+  `data/clues/*.lua` file identically to "file doesn't exist," silently
+  masking content bugs.
+- **Save files didn't persist the in-progress mission at all** — Continue
+  restored only the detective + ranking, leaving `game.mission` nil and
+  crashing the next screen. Now round-trips through JSON as-is (it's
+  already plain data) and Continue drops the player back into the city
+  screen instead of replaying the briefing.
+- The crime computer auto-filled a trait the instant a witness mentioned
+  it — removed; the player now has to enter what the witness said
+  themselves, same as any other deduction.
+- Mission-generation matched the 1985 original more closely at the user's
+  request: routes are built backward from a randomly-picked hideout (not
+  forward from a random start), and the organization-leader "final case"
+  now triggers on the original's exact two-part gate (top rank **and**
+  29 cases solved — not just the rank-up threshold).
+- UX, from live feedback: the world map was nearly invisible (near-black
+  background, 2px dots) — brighter/bigger markers, and the destination
+  currently selected on the travel screen now draws its route in a
+  distinct highlighted color instead of every candidate route looking
+  identical. Replaced "time left in X days" with the actual current
+  day/time (with a "Day N" prefix — plain weekday+time made "now" and a
+  same-weekday deadline read identically). Fixed a status-bar text overlap
+  that surfaced once those strings got longer. Added a witness-portrait
+  slot to the venue screen (generic pixel art, no art sourced yet —
+  same bordered-"?" fallback as the other planned image slots).
+- Dedup/efficiency cleanup: `game.should_auto_arrest()` / `game.can_continue()`
+  replace duplicated logic that lived independently in two screens each;
+  `venue_name.name_for` memoized (was re-hashing + re-resolving locale
+  keys every single draw() frame); `ITEM_BY_CITY` moved into
+  `data/items.lua` alongside the project's other content data.
+- Also routed the last remaining hardcoded strings (`language.lua`'s
+  entire screen, `"DETECTIVE AGENCY"`, several nav hints) through
+  `locale.t`, per CLAUDE.md's i18n rule.
+
+Deliberately not done (real findings, judged not worth the blast radius
+for zero behavior change): renaming every screen's `local S = {}` to the
+literal `M` CLAUDE.md's style rule specifies, and replacing the
+`require("src.screens.X")`-inside-handler navigation idiom with a central
+string-keyed registry — the latter is also the standard idiomatic Lua fix
+for the circular dependencies a screen-graph state machine like this one
+inherently has. Clue images and per-city exterior art remain outstanding
+(need sourced assets, not code).
 
 ---
 
