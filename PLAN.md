@@ -547,20 +547,27 @@ JSON assets, same as SPEC.md already does for the 29-case leader rule.
    wrapper templates to fit. Budget this as its own content pass, not a
    quick locale edit.
 
-7. **Source a detective-office background for the dispatch/briefing
-   screen.** Candidate found: "Vintage Office Interiors" by Croomfolk on
-   OpenGameArt — https://opengameart.org/content/vintage-office-interiors
-   — a pixel-art 1950s/60s office & police-station furniture set (desks,
-   file cabinets, phone, lamp, safe, tileable wall/floor boards, benches,
-   coat rack), explicitly grouped into an OGA "Detective Game" collection.
-   Matches CLAUDE.md's pixel-art aesthetic far better than a stock photo
-   would. Two caveats before using it: (a) it's a prop/furniture sprite
-   sheet, not a single composed background — someone still needs to lay
-   pieces out into a scene for the briefing screen's dimensions; (b) its
-   license is **OGA-BY 3.0** (attribution required), which is not
-   literally one of CLAUDE.md's enumerated licenses (CC0/CC-BY/OFL) — confirm
-   OGA-BY 3.0 is acceptable before use, or keep looking for a strict
-   CC0/CC-BY equivalent if not.
+7. **FIXED (2026-09-28)** — Detective-office background for the
+   dispatch/briefing screen. Used "Vintage Office Interiors" by Croomfolk
+   on OpenGameArt (OGA-BY 3.0 — confirmed acceptable by the user despite
+   not being literally CC0/CC-BY/OFL, since it's an attribution-only
+   license in the same spirit as CC-BY). Composed `assets/images/ui/briefing_bg.png`
+   (640x360, matches the virtual canvas exactly) with ImageMagick from
+   four of its sprites: `wallpiece-clean.png` tiled into a wood wainscot
+   band across the bottom ~140px, plus `largetable-clean.png` (desk),
+   `filecabinet-clean.png`, and `safe-clean.png` as silhouettes standing
+   on it. Full attribution in `assets/CREDITS.md`'s new "Briefing Screen
+   Background" section. `src/screens/briefing.lua` draws it full-canvas
+   before the panel (same load/cache/fallback pattern as this project's
+   other optional art) and shrinks the panel from nearly-full-screen down
+   to the upper ~200px so the furniture band actually shows below it —
+   verified by actually launching the game (`love .` under `xvfb-run`
+   with `SDL_AUDIODRIVER=dummy` to avoid any audio output, screenshotting
+   the briefing screen via `love.graphics.captureScreenshot`) rather than
+   just trusting the composited PNG looked right in isolation; caught and
+   fixed one real issue that way — the "press any key" hint was unreadable
+   over the busy wood pattern, fixed with a small dark backdrop strip
+   behind it.
 
 8. **FIXED (2026-09-28)**, via option (b) below — World map city markers
    sometimes don't line up with real lat/lon. Verified with a script

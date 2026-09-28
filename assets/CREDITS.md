@@ -52,6 +52,19 @@ Board Game Icons and Roguelike Characters (Kenney, CC0) remain unused for now.
 
 Used as the window/taskbar icon via `conf.lua`'s `t.window.icon`.
 
+## Briefing Screen Background
+
+| File | Source | Author | License |
+|---|---|---|---|
+| ui/briefing_bg.png | Composed from "Vintage Office Interiors" — https://opengameart.org/content/vintage-office-interiors | Croomfolk | OGA-BY 3.0 |
+
+`src/screens/briefing.lua`'s dispatch screen backdrop, composed (ImageMagick,
+not by hand) from four sprites in the pack above: `wallpiece-clean.png`
+(tiled as the wood wainscot band), `largetable-clean.png` (the desk),
+`filecabinet-clean.png`, and `safe-clean.png`. OGA-BY 3.0 requires
+attribution, not a specific format — the line above is that credit.
+Falls back to a flat `ui.C.bg` fill if the file is absent.
+
 ## World Map
 
 | File | Source | License |
