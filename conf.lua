@@ -21,6 +21,7 @@ function love.conf(t)
     t.modules.timer   = true
     t.modules.window  = true
 
+    -- TODO(future): enable joystick module when gamepad/controller support is added
     t.modules.joystick = false
     t.modules.physics  = false
     t.modules.thread   = false
