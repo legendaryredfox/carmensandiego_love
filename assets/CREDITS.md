@@ -71,11 +71,40 @@ public domain, no attribution required), fetched via the
 [world-atlas](https://github.com/topojson/world-atlas) npm package (ISC
 license) and simplified with Douglas-Peucker for legibility at ~300x200px.
 
-## Clue Images (planned)
+## Clue Images
 
-Country-specific images sourced from Wikimedia Commons under CC0 or CC-BY.
-Full attribution per image will be listed here as assets are added.
-Flags are NEVER used as clue images (see CLAUDE.md).
+Per-clue images sourced from Wikimedia Commons under CC0 or CC-BY (never
+CC-BY-SA, per this project's license policy), resized to 128x128 with
+nearest-neighbor downscaling. Referenced from the `image` field in
+`data/clues/<city_id>.lua`. Flags are NEVER used as clue images (see
+CLAUDE.md). Most cities' clue pools still have no image set — the venue
+card falls back to a bordered "?" placeholder in that case.
+
+| File | Source file | Author | License |
+|---|---|---|---|
+| clues/athens/parthenon.png | [Restoration work Parthenon facade Acropolis Athens Greece.jpg](https://commons.wikimedia.org/wiki/File:Restoration_work_Parthenon_facade_Acropolis_Athens_Greece.jpg) | Jebulon | CC0 |
+| clues/bamako/hippo.png | [Hippopotamus @ Barcelona zoo.jpg](https://commons.wikimedia.org/wiki/File:Hippopotamus_@_Barcelona_zoo.jpg) | Pedroserafin | Public domain |
+| clues/bangkok/elephant.png | [Elephas maximus in Singapore Zoo, 20240206 0857 6202.jpg](https://commons.wikimedia.org/wiki/File:Elephas_maximus_in_Singapore_Zoo,_20240206_0857_6202.jpg) | Jakub Hałun | CC BY 4.0 |
+| clues/beijing/forbidden_city.png | [Meridian Gate Forbidden City Beijing (1).jpg](https://commons.wikimedia.org/wiki/File:Meridian_Gate_Forbidden_City_Beijing_(1).jpg) | Radosław Botev | CC BY 3.0 pl |
+| clues/beijing/panda.png | [Giant Panda 2004-03-2.jpg](https://commons.wikimedia.org/wiki/File:Giant_Panda_2004-03-2.jpg) | Jeff Kubina | Public domain |
+| clues/cairo/pyramids.png | [Great Pyramid (Pyramid of Cheops Khufu), Giza, GG, EGY (47850686472).jpg](https://commons.wikimedia.org/wiki/File:Great_Pyramid_(Pyramid_of_Cheops_Khufu),_Giza,_GG,_EGY_(47850686472).jpg) | Warren LeMay | CC0 |
+| clues/colombo/tea.png | [Sri Lanka, Tea plantations, Nuwara Eliya.jpg](https://commons.wikimedia.org/wiki/File:Sri_Lanka,_Tea_plantations,_Nuwara_Eliya.jpg) | Vyacheslav Argenberg | CC BY 4.0 |
+| clues/kathmandu/everest.png | [Everest, Himalayas.jpg](https://commons.wikimedia.org/wiki/File:Everest,_Himalayas.jpg) | Vyacheslav Argenberg | CC BY 4.0 |
+| clues/kigali/gorilla.png | [Gorilla Portrait.jpg](https://commons.wikimedia.org/wiki/File:Gorilla_Portrait.jpg) | Bradley Gordon | CC BY 2.0 |
+| clues/lima/condor.png | [Vultur gryphus head (Linnaeus, 1758).jpg](https://commons.wikimedia.org/wiki/File:Vultur_gryphus_head_(Linnaeus,_1758).jpg) | Michael Gäbler | CC BY 3.0 |
+| clues/london/pound_coin.png | [England, Elizabeth I, 1558-1603 - Pound (obverse) - 1969.185.a - Cleveland Museum of Art.jpg](https://commons.wikimedia.org/wiki/File:England,_Elizabeth_I,_1558-1603_-_Pound_(obverse)_-_1969.185.a_-_Cleveland_Museum_of_Art.jpg) | Cleveland Museum of Art | CC0 |
+| clues/montreal/beaver.png | [North American Beaver, Humber River near Kleinburg, Ontario (39637607974).jpg](https://commons.wikimedia.org/wiki/File:North_American_Beaver,_Humber_River_near_Kleinburg,_Ontario_(39637607974).jpg) | Vlad Podvorny | CC BY 2.0 |
+| clues/moroni/coelacanth.png | [Latimeria Paris.jpg](https://commons.wikimedia.org/wiki/File:Latimeria_Paris.jpg) | sybarite48 | CC BY 2.0 |
+| clues/moscow/basil.png | [Moscow - 2025 - Daytime view of St. Basil's Cathedral from Vasilyevsky Spusk.jpg](https://commons.wikimedia.org/wiki/File:Moscow_-_2025_-_Daytime_view_of_St._Basil%27s_Cathedral_from_Vasilyevsky_Spusk.jpg) | Юрий Д.К. | CC BY 4.0 |
+| clues/new_delhi/tiger.png | [Tiger-ga7c0f1b70_1280.jpg](https://commons.wikimedia.org/wiki/File:Tiger-ga7c0f1b70_1280.jpg) | andibreit (Pixabay) | CC0 |
+| clues/new_york/liberty.png | [Statue of Liberty close-up-NPS.jpg](https://commons.wikimedia.org/wiki/File:Statue_of_Liberty_close-up-NPS.jpg) | National Park Service | Public domain |
+| clues/paris/eiffel.png | [Tour Eiffel Wikimedia Commons.jpg](https://commons.wikimedia.org/wiki/File:Tour_Eiffel_Wikimedia_Commons.jpg) | Benh LIEU SONG | Public domain |
+| clues/port_moresby/bird_of_paradise.png | [John Collett - Red-Plumed Bird-of-Paradise (Paradisea Apoda Raggiana), Southeastern New Guinea - B1975.4.1810 - Yale Center for British Art.jpg](https://commons.wikimedia.org/wiki/File:John_Collett_-_Red-Plumed_Bird-of-Paradise_(Paradisea_Apoda_Raggiana),_Southeastern_New_Guinea_-_B1975.4.1810_-_Yale_Center_for_British_Art.jpg) | John Collett (Yale Center for British Art) | CC0 |
+| clues/reykjavik/arctic_fox.png | [Vulpes lagopus in Iceland.jpg](https://commons.wikimedia.org/wiki/File:Vulpes_lagopus_in_Iceland.jpg) | Jonatan Pie (unsplash.com/@r3dmax) | CC0 |
+| clues/rio_de_janeiro/christ.png | [Christ-the-redeemer.jpeg](https://commons.wikimedia.org/wiki/File:Christ-the-redeemer.jpeg) | Grandmaster Huon | CC0 |
+| clues/rome/colosseum.png | [Colosseum of Rome, Italy.jpg](https://commons.wikimedia.org/wiki/File:Colosseum_of_Rome,_Italy.jpg) | Wilfredor | CC0 |
+| clues/sydney/platypus.png | [Platypus (Ornithorhynchus anatinus). First Description 1799.jpg](https://commons.wikimedia.org/wiki/File:Platypus_(Ornithorhynchus_anatinus)._First_Description_1799.jpg) | Frederick Polydore Nodder | CC0 |
+| clues/tokyo/macaque.png | [Macaca fuscata - Zoo Sauvage de Saint-Félicien - 2016-07-19 (2).jpg](https://commons.wikimedia.org/wiki/File:Macaca_fuscata_-_Zoo_Sauvage_de_Saint-F%C3%A9licien_-_2016-07-19_(2).jpg) | Letartean | CC BY 3.0 |
 
 ## Witness Portraits (planned)
 

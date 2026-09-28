@@ -233,15 +233,24 @@ Goal: all 30 cities have complete, verified clue pools.
 - [x] Verify all geographic facts against current sources — every clue has
       `verified = true`, no `-- TODO: verify` markers remain
 - [ ] Download CC0 clue images for each city (coins, animals, landmarks) —
-      still outstanding. Clue tables have an `image` field and the city
-      screen's venue cards already render it when present (falling back to
-      a "?" placeholder otherwise, see `src/screens/city.lua`), but almost
-      no `data/clues/*.lua` entries actually set one yet — venue cards are
-      showing placeholders for nearly every city.
-  - Source: Wikimedia Commons CC0/CC-BY
-  - Resize to max 128×128 px for pixel art feel; nearest-neighbor downscale
+      partially done. All 23 clue entries that already had an `image` path
+      set in `data/clues/*.lua` now have a real, license-checked file under
+      `assets/images/clues/`. The other 97 clues (most cities) still have
+      `image = nil` and render the "?" placeholder — no image path was ever
+      assigned for them, so there's nothing to source yet until those
+      fields get authored.
+  - Source: Wikimedia Commons, filtered to CC0/CC-BY only (CC-BY-SA
+    rejected per CLAUDE.md's license list — it's the majority license for
+    well-known landmark/wildlife photos on Commons, so several cities
+    needed 2-3 search rounds to find a compliant, recognizable shot)
+  - Resized to 128×128, nearest-neighbor downscale
   - No flags as images
-- [ ] Add all image credits to `assets/CREDITS.md`
+  - Caught two bad auto-picks on manual review: a 9/11-era Statue of
+    Liberty photo with WTC smoke in frame (swapped for a NPS close-up),
+    and a Cristo Redentor image where the statue itself wasn't visible in
+    frame at 128×128 (swapped for one where it is)
+- [x] Add all image credits to `assets/CREDITS.md` — the 23 images above
+      are listed; the section will grow as more clues get an `image` path
 - [x] Localize all clue text keys for both EN and PT-BR (clue text is
       inline `{en=..., pt=...}` per entry, not locale-key based, but both
       languages are present for all 30 cities)
