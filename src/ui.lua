@@ -33,6 +33,56 @@ local function load_font(size)
     return love.graphics.newFont(size)
 end
 
+local PANEL_PATH         = "assets/images/ui/panel.png"
+local PANEL_PRESSED_PATH = "assets/images/ui/panel_pressed.png"
+local NINE_SLICE_BORDER  = 3
+
+-- Sprites are plain greyscale so they can be tinted to any palette color
+-- via love.graphics.setColor before drawing (see draw_nine_slice).
+local function load_nine_slice(path)
+    if not love.filesystem.getInfo(path) then return nil end
+    local ok, img = pcall(love.graphics.newImage, path)
+    if not ok then return nil end
+    local iw, ih = img:getDimensions()
+    local b      = NINE_SLICE_BORDER
+    return {
+        image = img, border = b,
+        center_w = iw - 2 * b, center_h = ih - 2 * b,
+        quads = {
+            tl     = love.graphics.newQuad(0,      0,      b,        b,        iw, ih),
+            top    = love.graphics.newQuad(b,      0,      iw - 2*b, b,        iw, ih),
+            tr     = love.graphics.newQuad(iw - b, 0,      b,        b,        iw, ih),
+            left   = love.graphics.newQuad(0,      b,      b,        ih - 2*b, iw, ih),
+            center = love.graphics.newQuad(b,      b,      iw - 2*b, ih - 2*b, iw, ih),
+            right  = love.graphics.newQuad(iw - b, b,      b,        ih - 2*b, iw, ih),
+            bl     = love.graphics.newQuad(0,      ih - b, b,        b,        iw, ih),
+            bottom = love.graphics.newQuad(b,      ih - b, iw - 2*b, b,        iw, ih),
+            br     = love.graphics.newQuad(iw - b, ih - b, b,        b,        iw, ih),
+        },
+    }
+end
+
+local function draw_nine_slice(sprite, x, y, w, h, color)
+    local b   = sprite.border
+    local q   = sprite.quads
+    local img = sprite.image
+    local cw  = math.max(w - 2 * b, 0) / sprite.center_w
+    local ch  = math.max(h - 2 * b, 0) / sprite.center_h
+    love.graphics.setColor(color)
+    love.graphics.draw(img, q.tl, x, y)
+    love.graphics.draw(img, q.tr, x + w - b, y)
+    love.graphics.draw(img, q.bl, x, y + h - b)
+    love.graphics.draw(img, q.br, x + w - b, y + h - b)
+    love.graphics.draw(img, q.top,    x + b,     y,         0, cw, 1)
+    love.graphics.draw(img, q.bottom, x + b,     y + h - b, 0, cw, 1)
+    love.graphics.draw(img, q.left,   x,         y + b,     0, 1,  ch)
+    love.graphics.draw(img, q.right,  x + w - b, y + b,     0, 1,  ch)
+    love.graphics.draw(img, q.center, x + b,     y + b,     0, cw, ch)
+    love.graphics.setColor(1, 1, 1, 1)
+end
+
+local panel_sprite, panel_pressed_sprite
+
 function M.init()
     love.graphics.setDefaultFilter("nearest", "nearest")
     canvas  = love.graphics.newCanvas(M.VIRTUAL_W, M.VIRTUAL_H)
@@ -40,6 +90,8 @@ function M.init()
     font_md = load_font(10)
     font_lg = load_font(14)
     love.graphics.setFont(font_sm)
+    panel_sprite         = load_nine_slice(PANEL_PATH)
+    panel_pressed_sprite = load_nine_slice(PANEL_PRESSED_PATH)
 end
 
 function M.begin_frame()
@@ -59,8 +111,13 @@ function M.to_virtual(x, y)
     return math.floor(x / M.SCALE), math.floor(y / M.SCALE)
 end
 
--- Draws a filled rectangle with a border.
+-- Draws a filled rectangle with a border, or a Kenney 9-slice panel when
+-- the sprite is available (see assets/CREDITS.md).
 function M.panel(x, y, w, h)
+    if panel_sprite then
+        draw_nine_slice(panel_sprite, x, y, w, h, M.C.panel)
+        return
+    end
     love.graphics.setColor(M.C.panel)
     love.graphics.rectangle("fill", x, y, w, h)
     love.graphics.setColor(M.C.border)
@@ -71,19 +128,16 @@ end
 -- Draws a button; selected = highlight color. Returns bounding box for click detection.
 function M.button(x, y, w, h, label, selected)
     h = h or 14
-    if selected then
-        love.graphics.setColor(M.C.highlight)
+    if panel_sprite then
+        local sprite = selected and (panel_pressed_sprite or panel_sprite) or panel_sprite
+        draw_nine_slice(sprite, x, y, w, h, selected and M.C.highlight or M.C.panel)
     else
-        love.graphics.setColor(M.C.panel)
+        love.graphics.setColor(selected and M.C.highlight or M.C.panel)
+        love.graphics.rectangle("fill", x, y, w, h)
+        love.graphics.setColor(M.C.border)
+        love.graphics.rectangle("line", x, y, w, h)
     end
-    love.graphics.rectangle("fill", x, y, w, h)
-    love.graphics.setColor(M.C.border)
-    love.graphics.rectangle("line", x, y, w, h)
-    if selected then
-        love.graphics.setColor(M.C.bg)
-    else
-        love.graphics.setColor(M.C.text)
-    end
+    love.graphics.setColor(selected and M.C.bg or M.C.text)
     love.graphics.setFont(font_sm)
     love.graphics.printf(label, x + 2, y + 3, w - 4, "center")
     love.graphics.setColor(1, 1, 1, 1)

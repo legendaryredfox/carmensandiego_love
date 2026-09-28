@@ -33,13 +33,18 @@ All assets used in this project are free for commercial use.
 
 All SFX by Juhani Junkala — https://opengameart.org/content/512-sound-effects-8-bit-style
 
-## UI Sprites (planned)
+## UI Sprites
 
-| Asset | Source | License |
+| File | Source | License |
 |---|---|---|
-| Pixel UI Pack | Kenney | https://kenney.nl/assets/pixel-ui-pack | CC0 |
-| Board Game Icons | Kenney | https://kenney.nl/assets/board-game-icons | CC0 |
-| Roguelike Characters | Kenney | https://kenney.nl/assets/roguelike-characters | CC0 |
+| ui/panel.png (from 9-Slice/Colored/grey.png) | Kenney Pixel UI Pack — https://kenney.nl/assets/pixel-ui-pack | CC0 |
+| ui/panel_pressed.png (from 9-Slice/Colored/grey_pressed.png) | Kenney Pixel UI Pack — https://kenney.nl/assets/pixel-ui-pack | CC0 |
+
+Both are plain greyscale so `src/ui.lua` can tint them to any palette color at
+draw time (`draw_nine_slice`). `ui.panel` and `ui.button` fall back to flat
+rectangles when the files are absent, so the game runs without them too.
+
+Board Game Icons and Roguelike Characters (Kenney, CC0) remain unused for now.
 
 ## Clue Images (planned)
 
