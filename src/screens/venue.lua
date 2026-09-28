@@ -74,7 +74,10 @@ function S.enter()
         SM.switch(require("src.screens.arrest"))
         return
     end
-    text_full = locale.t("venue.witness_says") .. "\n\n" .. clue_to_text(clue)
+    -- Quoted directly — see the WHY comments on the venue.* locale keys
+    -- in locales/en.lua/pt.lua for why this is direct, not reported, speech.
+    text_full = locale.t("venue.witness_says") .. "\n\n" ..
+        "\"" .. clue_to_text(clue) .. "\""
     text_len  = ui.utf8_len(text_full)
     revealed  = 0
     timer     = 0

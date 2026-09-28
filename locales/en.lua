@@ -49,11 +49,13 @@ return {
     ["city.status_rank"]          = "RANK: {rank}",
     ["city.nav_hint"]             = "[ ARROWS  ENTER ]",
 
-    -- Venue
-    ["venue.nobody_suspicious"]   = "Nobody suspicious has been seen here.",
-    ["venue.witness_says"]        = "A witness reports:",
-    ["venue.clue_destination"]    = "The informant mentioned {hint}.",
-    ["venue.clue_trait"]          = "The suspect was described as {trait}.",
+    -- Venue — clue_to_text (src/screens/venue.lua) wraps whichever of these
+    -- gets picked in quotes, so this witness is always quoted directly
+    -- speaking, never reported/summarized in the third person.
+    ["venue.nobody_suspicious"]   = "Nobody suspicious around here, sorry.",
+    ["venue.witness_says"]        = "A witness leans in and says:",
+    ["venue.clue_destination"]    = "{hint}",
+    ["venue.clue_trait"]          = "{trait}.",
     ["venue.back"]                = "BACK",
 
     -- Venue names (derived from the clue category at that venue)

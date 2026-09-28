@@ -519,33 +519,32 @@ JSON assets, same as SPEC.md already does for the 29-case leader rule.
    `tests/detective_test.lua`'s new "case clock always starts Monday
    08:00" and `detective.begin_mission` cases.
 
-6. **Witness clue text should be direct speech, not reported speech —
-   scope turned out bigger than the two wrapper strings.** Original
-   estimate was just `locale.t("venue.witness_says")` = "A witness
-   reports:" + "The informant mentioned {hint}." / "The suspect was
-   described as {trait}." (`locales/en.lua:52-55`). Investigated further
-   before touching it: `{hint}` isn't a short phrase — `clue_pool.clue_text`
-   (`src/clue_pool.lua:58-69`) returns each clue's full `text.en`/`text.pt`
-   sentence straight from `data/clues/<city_id>.lua`, and every one of
-   those (108 clue entries across 30 cities, so 216 strings counting both
-   languages) is already written in third-person reported form — e.g.
-   Paris's landmark clue: "A metalworker described the suspect gazing up
-   at an iron lattice tower...". So wrapping `{hint}` in quotes without
-   rewriting the underlying sentences would just produce an odd
-   double-reported quote, not real direct speech. Separately,
-   `{trait}` (`venue.clue_trait`) pulls from the 18 `trait.*.*` locale
-   values (`locales/en.lua:159-179`), which are inconsistent grammatical
-   fragments — noun phrases ("Brown hair"), and verb phrases with mixed
-   implicit subjects ("Plays tennis", "Drives a convertible", "Has a
-   tattoo") — so even that template can't cleanly become a first-person
-   quote without rewriting those 18 values too. Left untouched rather
-   than ship awkward/broken-grammar text. Real next step is a proper
-   content pass: rewrite the 18 trait values into a uniform quotable
-   form, rewrite all 108 clue sentences (`data/clues/*.lua`, en+pt) into
-   actual first-person witness quotes, then simplify the
-   `venue.witness_says`/`venue.clue_destination`/`venue.clue_trait`
-   wrapper templates to fit. Budget this as its own content pass, not a
-   quick locale edit.
+6. **FIXED (2026-09-28)** — Witness clue text was reported speech, not
+   direct speech. Originally scoped this as a big content rewrite (all
+   108 clue sentences × 2 languages, plus the 18 `trait.*.*` values) after
+   noticing `{hint}`/`{trait}` interpolate full third-person sentences —
+   turned out that reasoning conflated two different things. Direct vs.
+   reported speech is about *grammatical framing* (is it inside quotation
+   marks, attributed to a speaker, vs. paraphrased with "that") — not
+   about whether the quoted content itself happens to describe a third
+   party in the third person. A witness saying `"A metalworker described
+   the suspect gazing up at..."` *as a direct quote* is completely
+   natural — that's just a person relaying secondhand info in conversation,
+   same as real speech does constantly. The actual bug was the wrapper:
+   `"The informant mentioned {hint}."` paraphrases instead of quoting
+   (indirect speech, missing even the "that" indirect speech needs
+   grammatically). Fix was small: `venue.clue_destination`/`venue.clue_trait`
+   (`locales/en.lua`/`pt.lua`) now hold bare content (`"{hint}"` /
+   `"{trait}."`) with no reporting verb, `venue.witness_says` reads as a
+   lead-in to a quote ("A witness leans in and says:"), and
+   `src/screens/venue.lua`'s `S.enter` wraps whatever `clue_to_text`
+   returns in literal `"` quote marks once, in one place — so every clue
+   type (destination, trait, nobody-suspicious) is quoted, not just some.
+   Zero changes needed to the 108 clue sentences or 18 trait values.
+   Verified in-engine (`love .` + `xvfb-run` + `SDL_AUDIODRIVER=dummy`,
+   screenshotting `src/screens/venue.lua` directly) in both EN and PT, for
+   both a destination clue and a trait clue — quote marks render fine at
+   this font size, PT accents unaffected.
 
 7. **FIXED (2026-09-28), then REDONE same day** — Detective-office
    background for the dispatch/briefing screen. First attempt composed

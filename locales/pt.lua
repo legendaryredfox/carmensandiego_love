@@ -52,10 +52,13 @@ return {
     ["city.nav_hint"]             = "[ SETAS  ENTER ]",
 
     -- Local de investigacao
-    ["venue.nobody_suspicious"]   = "Nenhum suspeito foi visto aqui.",
-    ["venue.witness_says"]        = "Uma testemunha relata:",
-    ["venue.clue_destination"]    = "O informante mencionou {hint}.",
-    ["venue.clue_trait"]          = "O suspeito foi descrito como {trait}.",
+    -- clue_to_text (src/screens/venue.lua) wraps whichever of these gets
+    -- picked in quotes, so this witness is always quoted directly
+    -- speaking, never reported/summarized in the third person.
+    ["venue.nobody_suspicious"]   = "Ninguem suspeito por aqui, desculpe.",
+    ["venue.witness_says"]        = "Uma testemunha se aproxima e diz:",
+    ["venue.clue_destination"]    = "{hint}",
+    ["venue.clue_trait"]          = "{trait}.",
     ["venue.back"]                = "VOLTAR",
 
     -- Nomes de locais (derivados da categoria da pista naquele local)
