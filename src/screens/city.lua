@@ -11,6 +11,7 @@ local S = {}
 local ZONE_LABELS = { "CRIME\nCOMPUTER", "VENUE\n1", "VENUE\n2", "VENUE\n3", "AIRPORT" }
 local ZONE_W      = 128
 local selected    = 1
+local selector_x  = nil
 
 local function zone_x(i) return (i - 1) * ZONE_W end
 
@@ -25,26 +26,39 @@ local function check_auto_arrest()
 end
 
 function S.enter()
-    selected = 1
+    selected   = 1
+    selector_x = ui.new_smooth(zone_x(selected))
     audio.crossfade("city")
     if check_auto_arrest() then return end
+end
+
+function S.update(dt)
+    selector_x.target = zone_x(selected)
+    ui.update_smooth(selector_x, dt)
 end
 
 function S.draw()
     local d    = game.detective
     local lang = locale.get_lang()
+    local zone_h = ui.VIRTUAL_H - 68
 
     -- Zone areas
     for i = 1, 5 do
-        local x   = zone_x(i)
-        local sel = (i == selected)
-        love.graphics.setColor(sel and ui.C.highlight or ui.C.panel)
-        love.graphics.rectangle("fill", x, 30, ZONE_W, ui.VIRTUAL_H - 68)
+        local x = zone_x(i)
+        love.graphics.setColor(ui.C.panel)
+        love.graphics.rectangle("fill", x, 30, ZONE_W, zone_h)
         love.graphics.setColor(ui.C.border)
-        love.graphics.rectangle("line", x, 30, ZONE_W, ui.VIRTUAL_H - 68)
-        love.graphics.setColor(sel and ui.C.bg or ui.C.text)
+        love.graphics.rectangle("line", x, 30, ZONE_W, zone_h)
+        love.graphics.setColor(ui.C.text)
         love.graphics.printf(ZONE_LABELS[i], x + 4, ui.VIRTUAL_H / 2 - 20, ZONE_W - 8, "center")
     end
+
+    -- Selection cursor slides smoothly between zones instead of snapping
+    love.graphics.setColor(ui.C.highlight)
+    love.graphics.setLineWidth(2)
+    love.graphics.rectangle("line", selector_x.value, 30, ZONE_W, zone_h)
+    love.graphics.setLineWidth(1)
+    love.graphics.setColor(1, 1, 1, 1)
 
     -- City name header
     ui.title(0, 8, game.city_name(d.current_city_id))

@@ -225,4 +225,23 @@ function M.start_fade_out(fade, on_done)
     fade.on_done = on_done or fade.on_done
 end
 
+-- Smoothly-trailing scalar: value eases toward target via exponential
+-- velocity damping rather than a snap or a fixed-duration lerp, so it
+-- keeps moving naturally if the target changes mid-flight (e.g. the
+-- player mashes left/right before the cursor settles).
+function M.new_smooth(initial)
+    return { value = initial, target = initial, vel = 0 }
+end
+
+function M.update_smooth(s, dt, damping)
+    damping = damping or 0.1
+    if s.value == s.target and s.vel == 0 then return end
+    s.vel   = damping * s.vel + (1 - damping) * (s.target - s.value) * 35 * dt
+    s.value = s.value + s.vel
+    if math.abs(s.target - s.value) < 0.05 and math.abs(s.vel) < 0.05 then
+        s.value = s.target
+        s.vel   = 0
+    end
+end
+
 return M
