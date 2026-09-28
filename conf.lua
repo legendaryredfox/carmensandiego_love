@@ -1,7 +1,7 @@
 function love.conf(t)
     t.identity        = "carmensandiego_love"
     t.version         = "11.5"
-    t.window.title    = "Carmen Sandiego — LÖVE2D Edition"
+    t.window.title    = "Carmen Sandiego - LOVE2D Edition"
     t.window.width    = 1280
     t.window.height   = 720
     t.window.resizable = false
