@@ -8,7 +8,7 @@ local det_mod  = require("src.detective")
 local map_mod  = require("src.map")
 
 local S = {}
-local destinations, selected = {}, 1
+local destinations, conn_ids, selected = {}, {}, 1
 
 local function build_destinations()
     local d     = game.detective
@@ -27,19 +27,22 @@ end
 
 function S.enter()
     destinations = build_destinations()
+    conn_ids     = {}
+    for _, dest in ipairs(destinations) do table.insert(conn_ids, dest.id) end
     selected     = 1
     audio.crossfade("travel")
 end
 
 function S.draw()
-    local d = game.detective
+    local d    = game.detective
+    local lang = locale.get_lang()
 
-    -- Mini map (right half)
+    -- Mini map (right half) — the selected destination's route is drawn
+    -- brighter/thicker than the others so it's clear which one Enter picks.
     local mx, my, mw, mh = 320, 30, 310, 200
-    local conn_ids = {}
-    for _, dest in ipairs(destinations) do table.insert(conn_ids, dest.id) end
+    local selected_id = destinations[selected] and destinations[selected].id
     map_mod.draw(game.cities_ordered, game.cities_by_id,
-                 mx, my, mw, mh, {}, d.current_city_id, conn_ids)
+                 mx, my, mw, mh, {}, d.current_city_id, conn_ids, selected_id)
 
     -- Destination list (left half)
     ui.title(0, 6, locale.t("travel.title"))
@@ -61,20 +64,22 @@ function S.draw()
         local dest   = destinations[selected]
         local remain = d_hours - dest.hours
         if remain <= 24 then
-            ui.text(10, 240, "WARNING: LOW ON TIME!", ui.C.danger)
+            ui.text(10, 240, locale.t("travel.low_on_time"), ui.C.danger)
         end
     end
 
-    -- Days remaining
-    local days = string.format("TIME LEFT: %.1f DAYS", det_mod.days_remaining(d))
-    ui.text(10, 256, days, ui.C.dim)
+    -- Current time + deadline (not a countdown — matches the city screen's
+    -- status bar so "when am I" reads the same everywhere)
+    local time_str     = locale.t("status.time",    { time = det_mod.current_time_str(d, lang) })
+    local deadline_str = locale.t("status.deadline", { time = det_mod.deadline_str(d, lang) })
+    ui.text(10, 256, time_str .. "  " .. deadline_str, ui.C.dim)
 
     ui.text(0, ui.VIRTUAL_H - 26,
-        "UP/DOWN  ENTER=DEPART  ESC=BACK",
+        locale.t("travel.nav_hint"),
         ui.C.dim, "center", ui.VIRTUAL_W)
 
     ui.status_bar(game.city_name(d.current_city_id),
-        string.format("DAYS: %.1f", det_mod.days_remaining(d)),
+        deadline_str,
         locale.t("rank." .. d.rank))
 end
 

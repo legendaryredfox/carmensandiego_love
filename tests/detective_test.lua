@@ -186,6 +186,23 @@ describe("detective time helpers", function()
         d.hours_elapsed    = 156  -- 12h remaining = 0.5 days
         assert_eq(detective.days_remaining(d), 0.5)
     end)
+
+    it("current_time_str and deadline_str differ even when exactly N*24h apart", function()
+        -- Regression: at mission start (hours_elapsed=0) with a round
+        -- 24h-multiple deadline (e.g. Rookie's 7 days), "now" and the
+        -- deadline land on the identical weekday and time-of-day —
+        -- format_datetime alone showed "Mon 14:30" for both, reading as
+        -- if the deadline were already here.
+        local d = fresh_det()
+        d.time_limit_hours = 168 -- exactly 7 * 24
+        d.hours_elapsed    = 0
+        local now_str      = detective.current_time_str(d, "en")
+        local deadline_str = detective.deadline_str(d, "en")
+        assert_true(now_str ~= deadline_str,
+            "now and deadline read identically: " .. now_str)
+        assert_true(now_str:find("^Day 1,") ~= nil, "expected Day 1: " .. now_str)
+        assert_true(deadline_str:find("^Day 8,") ~= nil, "expected Day 8: " .. deadline_str)
+    end)
 end)
 
 describe("detective serialize/deserialize", function()

@@ -80,6 +80,58 @@ describe("mission._build_route", function()
     end)
 end)
 
+describe("mission._distinguishing_attrs", function()
+    it("finds a subset that actually distinguishes two near-identical suspects", function()
+        -- Regression: marina_delacroix and kat_sterling share sex/hair/hobby
+        -- (exactly what the old blind sex->hair->hobby->... cycle revealed
+        -- at Rookie's 3-non-terminal-city route) and differ only on
+        -- vehicle/feature/food — a Rookie case with either as thief was
+        -- permanently undeducible via clues alone.
+        local suspect_mod = require("src.suspect")
+        local suspects     = suspect_mod.load()
+        local marina        = suspect_mod.by_id(suspects, "marina_delacroix")
+        local kat            = suspect_mod.by_id(suspects, "kat_sterling")
+        assert_not_nil(marina)
+        assert_not_nil(kat)
+
+        local attrs = mission._distinguishing_attrs(marina, suspects)
+        -- Whatever subset was picked, it must actually rule kat out —
+        -- i.e. at least one chosen attribute differs between the two.
+        local rules_out_kat = false
+        for _, attr in ipairs(attrs) do
+            if marina[attr] ~= kat[attr] then rules_out_kat = true end
+        end
+        assert_true(rules_out_kat,
+            "distinguishing_attrs for marina_delacroix doesn't rule out kat_sterling")
+    end)
+
+    it("every rank's route length reveals enough trait clues to deduce any thief", function()
+        -- End-to-end regression for the bug above: simulate every possible
+        -- thief at every rank, gather exactly the trait clues that route
+        -- length would reveal, and confirm the crime computer's filter
+        -- narrows to exactly one suspect.
+        local suspect_mod = require("src.suspect")
+        local roster       = suspect_mod.load()
+        for _, cfg in pairs(mission.RANK_CONFIG) do
+            local non_terminal = cfg.route_length - 1
+            for _, thief in ipairs(roster) do
+                local route = {}
+                for i = 1, cfg.route_length do route[i] = "city" .. i end
+                local clues = mission._generate_clues(route, thief, roster, nil)
+                local gathered = {}
+                for i = 1, non_terminal do
+                    local c = clues[route[i]][3]
+                    gathered[c.attr] = c.value
+                end
+                local matches = suspect_mod.filter(roster, gathered)
+                assert_eq(#matches, 1,
+                    "thief " .. thief.id .. " undeducible at route_length=" ..
+                    cfg.route_length .. " (" .. #matches .. " matches)")
+            end
+        end
+    end)
+end)
+
 describe("mission._generate_clues", function()
     local thief = suspects[1]
     local route = {"london", "paris", "tokyo", "moscow"}
@@ -114,7 +166,7 @@ describe("mission._generate_clues", function()
     it("venues 1-2 never share the same clue when the pool has enough entries", function()
         local pool_mod = require("src.clue_pool")
         for seed = 1, 20 do
-            local clues = mission._generate_clues(route, thief, make_seed_rng(seed))
+            local clues = mission._generate_clues(route, thief, suspects, make_seed_rng(seed))
             for i = 1, #route - 1 do
                 local pool = pool_mod.load(route[i + 1])
                 if #pool >= 2 then

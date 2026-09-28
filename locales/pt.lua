@@ -102,6 +102,8 @@ return {
     ["travel.distance"]           = "{km} KM",
     ["travel.duration"]           = "VOO DE {hours}H",
     ["travel.departing"]          = "PARTINDO PARA {city}...",
+    ["travel.low_on_time"]        = "AVISO: POUCO TEMPO RESTANTE!",
+    ["travel.nav_hint"]           = "CIMA/BAIXO  ENTER=PARTIR  ESC=VOLTAR",
 
     -- Prisao
     ["arrest.success"]            = "Voce prendeu {name}!\nCaso encerrado.",

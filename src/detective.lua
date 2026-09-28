@@ -13,6 +13,7 @@ local RANKS = {
 
 local DAY_EN = { "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" }
 local DAY_PT = { "Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sab" }
+local DAY_WORD_EN, DAY_WORD_PT = "Day", "Dia"
 
 local INVESTIGATION_HOURS = 2
 M.INVESTIGATION_HOURS     = INVESTIGATION_HOURS
@@ -58,14 +59,26 @@ function M.format_datetime(ts, lang)
     return string.format("%s %02d:%02d", days[t.wday], t.hour, t.min)
 end
 
--- Returns formatted current game time string.
-function M.current_time_str(det, lang)
-    return M.format_datetime(M.current_timestamp(det), lang)
+-- 1-indexed day-of-case number for a timestamp relative to the mission's
+-- start — disambiguates e.g. "now" vs. a deadline exactly N*24h later,
+-- which otherwise show the identical weekday and time (see
+-- M.format_datetime) and read as if the deadline were already here.
+local function day_number(det, ts)
+    return math.floor((ts - det.start_timestamp) / 86400) + 1
 end
 
--- Returns formatted deadline string.
+-- Returns formatted current game time string, e.g. "Day 1, Mon 14:30".
+function M.current_time_str(det, lang)
+    local ts   = M.current_timestamp(det)
+    local word = (lang == "pt") and DAY_WORD_PT or DAY_WORD_EN
+    return word .. " " .. day_number(det, ts) .. ", " .. M.format_datetime(ts, lang)
+end
+
+-- Returns formatted deadline string, e.g. "Day 8, Mon 14:30".
 function M.deadline_str(det, lang)
-    return M.format_datetime(M.deadline_timestamp(det), lang)
+    local ts   = M.deadline_timestamp(det)
+    local word = (lang == "pt") and DAY_WORD_PT or DAY_WORD_EN
+    return word .. " " .. day_number(det, ts) .. ", " .. M.format_datetime(ts, lang)
 end
 
 -- Moves detective to city_id, consuming flight hours.

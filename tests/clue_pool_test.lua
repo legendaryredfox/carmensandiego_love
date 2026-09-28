@@ -8,6 +8,34 @@ local function make_seed_rng(seed)
     end
 end
 
+describe("clue_pool.load", function()
+    it("loads a real city's clue pool", function()
+        local pool = clue_pool.load("paris")
+        assert_true(#pool > 0, "expected paris to have clues")
+        assert_not_nil(pool[1].category)
+    end)
+
+    it("returns an empty table for a city with no clue file", function()
+        local pool = clue_pool.load("__no_such_city__")
+        assert_eq(#pool, 0)
+    end)
+
+    it("surfaces a real error in an existing file instead of silently swallowing it", function()
+        -- Regression: pcall(require, ...) caught every failure the same
+        -- way, so a typo/syntax error in a data/clues/*.lua file looked
+        -- identical to "this city just has no clues" — no diagnostic at
+        -- all. Simulate a broken module via package.preload (no need to
+        -- touch a real file on disk).
+        package.preload["data.clues.__broken_test_city__"] = function()
+            error("boom: simulated syntax error")
+        end
+        local ok = pcall(clue_pool.load, "__broken_test_city__")
+        package.preload["data.clues.__broken_test_city__"] = nil
+        clue_pool.clear_cache()
+        assert_false(ok, "expected clue_pool.load to raise for a broken module")
+    end)
+end)
+
 describe("clue_pool.pick_many", function()
     it("returns an empty table for a nil or empty pool", function()
         assert_eq(#clue_pool.pick_many(nil, 2, make_seed_rng(1)), 0)

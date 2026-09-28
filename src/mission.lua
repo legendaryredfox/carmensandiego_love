@@ -31,6 +31,54 @@ M.GENERIC_ITEMS = GENERIC_ITEMS
 
 local TRAIT_ATTRS = { "sex", "hair", "hobby", "vehicle", "feature", "food" }
 
+-- Attributes guaranteed unique in full combination across the roster (see
+-- suspect_test.lua's "full trait combinations are unique" check) — food is
+-- flavor only, not part of that guarantee, so it's excluded here.
+local DEDUCTION_ATTRS = { "sex", "hair", "hobby", "vehicle", "feature" }
+
+-- Smallest subset of DEDUCTION_ATTRS (in DEDUCTION_ATTRS order, smallest
+-- first) whose values uniquely identify `thief` among `roster`. Falls back
+-- to the full list if nothing smaller works — shouldn't happen given the
+-- roster's uniqueness guarantee, but stay safe rather than crash.
+local function unique_with(thief, roster, subset)
+    for _, s in ipairs(roster) do
+        if s.id ~= thief.id then
+            local same = true
+            for _, attr in ipairs(subset) do
+                if s[attr] ~= thief[attr] then same = false; break end
+            end
+            if same then return false end
+        end
+    end
+    return true
+end
+
+local function try_size(thief, roster, size, start, chosen)
+    if #chosen == size then
+        if unique_with(thief, roster, chosen) then
+            local copy = {}
+            for _, a in ipairs(chosen) do copy[#copy + 1] = a end
+            return copy
+        end
+        return nil
+    end
+    for i = start, #DEDUCTION_ATTRS do
+        table.insert(chosen, DEDUCTION_ATTRS[i])
+        local found = try_size(thief, roster, size, i + 1, chosen)
+        table.remove(chosen)
+        if found then return found end
+    end
+    return nil
+end
+
+function M._distinguishing_attrs(thief, roster)
+    for size = 1, #DEDUCTION_ATTRS do
+        local found = try_size(thief, roster, size, 1, {})
+        if found then return found end
+    end
+    return DEDUCTION_ATTRS
+end
+
 -- Cap on hideout re-picks before giving up and returning a shorter route.
 -- Mirrors the original's "dead end rings the bell and restarts the case"
 -- behavior below, but bounded so a pathological rng can't hang forever.
@@ -90,11 +138,35 @@ function M._build_route(cities_by_id, graph, length, rng)
 end
 
 -- Generates clue tables per city in route.
+-- roster: the suspects thief must be deducible from (the crime computer's
+--   searchable pool for this mission) — used to figure out which trait
+--   attributes actually need to be clued, instead of blindly cycling
+--   through all of them regardless of whether they distinguish anyone.
+--   Optional; falls back to the full TRAIT_ATTRS cycle if omitted.
 -- rng is optional; if nil, first pool entry is used (for tests).
 -- Returns { [city_id] = { clue, clue, clue }, ... }
-function M._generate_clues(route, thief, rng)
+function M._generate_clues(route, thief, roster, rng)
     local pool_mod = require("src.clue_pool")
     local clues    = {}
+
+    -- Trait-clue slots (venue 3, one per non-terminal city) are limited —
+    -- as few as 3 at Rookie rank. Reveal the attributes that actually
+    -- distinguish this thief first; a short route used to blindly cycle
+    -- sex/hair/hobby regardless of the thief, which could leave two
+    -- suspects sharing exactly those three permanently undeducible.
+    local ordered_attrs = TRAIT_ATTRS
+    if roster then
+        local essential = M._distinguishing_attrs(thief, roster)
+        local used       = {}
+        ordered_attrs    = {}
+        for _, a in ipairs(essential) do
+            ordered_attrs[#ordered_attrs + 1] = a
+            used[a] = true
+        end
+        for _, a in ipairs(TRAIT_ATTRS) do
+            if not used[a] then ordered_attrs[#ordered_attrs + 1] = a end
+        end
+    end
 
     for i = 1, #route - 1 do
         local city_id      = route[i]
@@ -127,14 +199,15 @@ function M._generate_clues(route, thief, rng)
             end
         end
 
-        -- Venue 3: one suspect trait clue, cycling through attributes per city
-        local attr = TRAIT_ATTRS[((i - 1) % #TRAIT_ATTRS) + 1]
+        -- Venue 3: one suspect trait clue, cycling through attributes per
+        -- city — distinguishing ones first (see ordered_attrs above)
+        local attr = ordered_attrs[((i - 1) % #ordered_attrs) + 1]
         table.insert(city_clues, {
             type     = "trait",
             attr     = attr,
             value    = thief[attr],
             category = "trait",
-            text_key = "clue.trait." .. attr .. "." .. thief[attr],
+            text_key = "trait." .. attr .. "." .. thief[attr],
             image    = nil,
         })
 
@@ -179,7 +252,7 @@ function M.new(suspects, cities_by_id, routes, rank_name, rng, leader)
     local graph       = routes[graph_index]
 
     local route     = M._build_route(cities_by_id, graph, cfg.route_length, rng)
-    local clues     = M._generate_clues(route, thief, rng)
+    local clues     = M._generate_clues(route, thief, suspects, rng)
     local item_pool = ITEM_BY_CITY[route[1]] or GENERIC_ITEMS
     local item_key  = item_pool[rng(#item_pool)]
 

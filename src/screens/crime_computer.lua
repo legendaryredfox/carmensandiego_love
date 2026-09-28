@@ -39,7 +39,11 @@ local function cycle(attr, dir)
     local vals = ATTR_VALUES[attr]
     local idx  = current_idx(attr)
     idx        = ((idx - 1 + dir) % #vals) + 1
-    game.detective.gathered_traits[attr] = vals[idx]
+    -- vals[1] is always "" (unset). Storing "" as a real value (instead of
+    -- clearing the key) made issue_warrant's raw gathered_traits filter
+    -- treat it as "must equal empty string" and reject every suspect —
+    -- get_filter() here already had to work around exactly this.
+    game.detective.gathered_traits[attr] = idx > 1 and vals[idx] or nil
 end
 
 function S.enter()

@@ -29,7 +29,12 @@ function S.enter()
             score        = det_mod.score(game.detective),
             date         = os.date("%Y-%m-%d"),
         })
-        game.save()
+        -- Not saving here: game.mission/warrant_id/current_city_id still
+        -- point at the just-solved case. A save now, followed by an
+        -- abnormal exit before the player presses Enter below, would let
+        -- Continue's auto-arrest check (city.lua) replay this exact arrest
+        -- on load and double-count the case. Save once state has actually
+        -- moved past it, in keypressed below.
     elseif result == "wrong_warrant" then
         result_key = "arrest.wrong_warrant"
         audio.play_sfx("arrest_fail")
@@ -79,6 +84,7 @@ function S.keypressed(key)
 
     local ranked_up = game.detective.rank ~= rank_before_success
     game.next_mission()
+    game.save()
     if ranked_up then
         SM.switch(require("src.screens.rank_up"))
     else

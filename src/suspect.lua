@@ -15,7 +15,10 @@ function M.filter(suspects, traits)
     for _, s in ipairs(suspects) do
         local match = true
         for attr, value in pairs(traits) do
-            if s[attr] ~= value then
+            -- "" means "not set" (the crime computer's blank dropdown
+            -- state) — treat it the same as the key being absent, not as
+            -- a literal value no suspect can ever match.
+            if value ~= "" and s[attr] ~= value then
                 match = false
                 break
             end

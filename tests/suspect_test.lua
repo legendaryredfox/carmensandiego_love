@@ -72,6 +72,20 @@ describe("suspect.filter", function()
         assert_eq(#result, 5)
     end)
 
+    it("treats an empty-string trait value as unset, not a real filter", function()
+        -- Regression: the crime computer stores "" for a dropdown left on
+        -- "----" (see cycle() in src/screens/crime_computer.lua). Before
+        -- the fix, that made filter() require the trait literally equal
+        -- "" — which no suspect has — silently rejecting an otherwise
+        -- correct, uniquely-identified warrant.
+        local result = suspect.filter(suspects, {
+            sex = "female", hair = "brown", hobby = "tennis",
+            vehicle = "convertible", feature = "jewelry", food = "",
+        })
+        assert_eq(#result, 1)
+        assert_eq(result[1].id, "scarlet_vega")
+    end)
+
     it("unique trait combo returns exactly 1 suspect", function()
         -- scarlet_vega: female, brown, tennis, convertible, jewelry
         local result = suspect.filter(suspects, {

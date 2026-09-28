@@ -138,22 +138,12 @@ function S.draw()
     -- City name header
     ui.title(0, 6, game.city_name(d.current_city_id))
 
-    -- Status bar: city | rank | current time + deadline
+    -- Status bar: city | rank | deadline. Current time alone would fit
+    -- too, but showing both combined overflowed this 18px-tall bar and
+    -- overlapped the centered rank text — same fix as travel.lua's bar.
     local rank_str     = locale.t("rank." .. d.rank)
-    local time_str     = locale.t("status.time",     { time = detective_mod.current_time_str(d, lang) })
-    local deadline_str = locale.t("status.deadline",  { time = detective_mod.deadline_str(d, lang) })
-    local right_str    = time_str .. "  " .. deadline_str
-
-    local bar_y = ui.VIRTUAL_H - 18
-    love.graphics.setColor(ui.C.panel)
-    love.graphics.rectangle("fill", 0, bar_y, ui.VIRTUAL_W, 18)
-    love.graphics.setColor(ui.C.border)
-    love.graphics.line(0, bar_y, ui.VIRTUAL_W, bar_y)
-    love.graphics.setColor(ui.C.text)
-    love.graphics.print(game.city_name(d.current_city_id), 6, bar_y + 5)
-    love.graphics.printf(rank_str, 0, bar_y + 5, ui.VIRTUAL_W, "center")
-    love.graphics.printf(right_str, 0, bar_y + 5, ui.VIRTUAL_W - 6, "right")
-    love.graphics.setColor(1, 1, 1, 1)
+    local deadline_str = locale.t("status.deadline", { time = detective_mod.deadline_str(d, lang) })
+    ui.status_bar(game.city_name(d.current_city_id), deadline_str, rank_str)
 
     -- Nav hint
     ui.text(0, ui.VIRTUAL_H - 30, locale.t("city.nav_hint"),

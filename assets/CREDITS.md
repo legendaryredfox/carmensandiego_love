@@ -58,6 +58,15 @@ Country-specific images sourced from Wikimedia Commons under CC0 or CC-BY.
 Full attribution per image will be listed here as assets are added.
 Flags are NEVER used as clue images (see CLAUDE.md).
 
+## Witness Portraits (planned)
+
+`src/screens/venue.lua` shows a portrait next to witness dialogue, sourced
+from `assets/images/witnesses/witness_<1-6>.png` (generic pixel-art
+characters only — never a specific real person, see CLAUDE.md), picked
+deterministically per city/venue. No art exists yet; the screen falls back
+to a bordered "?" placeholder, same pattern as the other planned image
+slots on this page. Attribution will be listed here once assets are added.
+
 ## City Arrival Photos
 
 Shown on the city_info screen when the detective lands in a city, one photo

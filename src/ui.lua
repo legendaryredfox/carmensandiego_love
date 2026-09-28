@@ -210,7 +210,10 @@ function M.fade(alpha)
     love.graphics.setColor(1, 1, 1, 1)
 end
 
--- Status bar drawn at the bottom of the screen.
+-- Status bar drawn at the bottom of the screen. Left/center/right each get
+-- a fixed, non-overlapping zone — three independent full-width printfs
+-- used to just draw on top of each other once any string got long enough
+-- (see the "Day N," time-string change that triggered this).
 function M.status_bar(city_name, days_str, rank_str)
     local y = M.VIRTUAL_H - 18
     love.graphics.setColor(M.C.panel)
@@ -219,9 +222,13 @@ function M.status_bar(city_name, days_str, rank_str)
     love.graphics.line(0, y, M.VIRTUAL_W, y)
     love.graphics.setFont(font_sm)
     love.graphics.setColor(M.C.text)
-    love.graphics.print(city_name, 6, y + 5)
-    love.graphics.printf(rank_str, 0, y + 5, M.VIRTUAL_W, "center")
-    love.graphics.printf(days_str, 0, y + 5, M.VIRTUAL_W - 6, "right")
+
+    local left_w, center_w = 180, 140
+    local right_x, right_w = left_w + center_w, M.VIRTUAL_W - (left_w + center_w) - 6
+
+    love.graphics.printf(city_name, 6, y + 5, left_w - 10, "left")
+    love.graphics.printf(rank_str, left_w, y + 5, center_w, "center")
+    love.graphics.printf(days_str, right_x, y + 5, right_w, "right")
     love.graphics.setColor(1, 1, 1, 1)
 end
 

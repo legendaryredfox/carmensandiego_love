@@ -4,12 +4,25 @@ local M = {}
 
 local _cache = {}
 
--- Loads clue pool for a city. Returns array or empty table if file missing.
+-- Loads clue pool for a city. Returns array or empty table if the file is
+-- genuinely missing. A file that exists but fails to load (syntax error,
+-- runtime error) is NOT treated the same way — that's a real content bug
+-- and gets re-raised instead of silently caching an empty pool, which
+-- would otherwise mask it as "no leads for this city" forever.
 function M.load(city_id)
     if _cache[city_id] ~= nil then return _cache[city_id] end
-    local ok, data = pcall(require, "data.clues." .. city_id)
-    _cache[city_id] = ok and data or {}
-    return _cache[city_id]
+    local mod_name  = "data.clues." .. city_id
+    local ok, data  = pcall(require, mod_name)
+    if ok then
+        _cache[city_id] = data
+        return data
+    end
+    if not tostring(data):find("module '" .. mod_name .. "' not found", 1, true) then
+        error("clue_pool: " .. mod_name .. " exists but failed to load: " ..
+            tostring(data), 0)
+    end
+    _cache[city_id] = {}
+    return {}
 end
 
 -- Picks a random clue from the pool. Returns nil if pool is empty.
