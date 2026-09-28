@@ -111,6 +111,10 @@ return {
     ["trait.food.mexican"]        = "PREFERE COMIDA MEXICANA",
     ["trait.food.seafood"]        = "PREFERE FRUTOS DO MAR",
 
+    -- Pistas genéricas
+    ["clue.generic.destination"]  = "atividade incomum em uma terra distante",
+    ["clue.terminal"]             = "Nada suspeito aqui.",
+
     -- Itens roubados
     ["item.mona_lisa"]            = "A MONA LISA",
     ["item.hope_diamond"]         = "O DIAMANTE HOPE",

@@ -111,6 +111,10 @@ return {
     ["trait.food.mexican"]        = "PREFERS MEXICAN FOOD",
     ["trait.food.seafood"]        = "PREFERS SEAFOOD",
 
+    -- Generic clue fallbacks
+    ["clue.generic.destination"]  = "unusual activity in a distant land",
+    ["clue.terminal"]             = "Nothing suspicious here.",
+
     -- Stolen items
     ["item.mona_lisa"]            = "THE MONA LISA",
     ["item.hope_diamond"]         = "THE HOPE DIAMOND",

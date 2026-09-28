@@ -1,9 +1,10 @@
-local SM     = require("src.state_machine")
-local locale = require("src.locale")
-local ui     = require("src.ui")
-local game   = require("src.game")
+local SM          = require("src.state_machine")
+local locale      = require("src.locale")
+local ui          = require("src.ui")
+local game        = require("src.game")
 local detective_mod = require("src.detective")
 local mission_mod   = require("src.mission")
+local clue_pool   = require("src.clue_pool")
 
 local S = {}
 S.venue_index = 1
@@ -15,10 +16,9 @@ local function clue_to_text(c)
     if not c then return locale.t("venue.nobody_suspicious") end
     if c.type == "terminal" then return locale.t("venue.nobody_suspicious") end
     if c.type == "destination" then
-        local city_name = game.city_name(c.next_city_id)
-        -- Vague text: never name the city directly
-        return locale.t("venue.clue_destination",
-            { hint = locale.t(c.text_key) or "something unusual" })
+        local hint = clue_pool.clue_text(c)
+        if hint == "" then hint = locale.t("clue.generic.destination") end
+        return locale.t("venue.clue_destination", { hint = hint })
     end
     if c.type == "trait" then
         return locale.t("venue.clue_trait",

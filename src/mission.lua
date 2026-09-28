@@ -51,25 +51,39 @@ function M._build_route(cities_by_id, graph, length, rng)
 end
 
 -- Generates clue tables per city in route.
+-- rng is optional; if nil, first pool entry is used (for tests).
 -- Returns { [city_id] = { clue, clue, clue }, ... }
-function M._generate_clues(route, thief)
-    local clues = {}
+function M._generate_clues(route, thief, rng)
+    local pool_mod = require("src.clue_pool")
+    local clues    = {}
 
     for i = 1, #route - 1 do
         local city_id      = route[i]
         local next_city_id = route[i + 1]
         local city_clues   = {}
+        local dest_pool    = pool_mod.load(next_city_id)
 
-        -- Venues 1 and 2: destination clues pointing to next city
+        -- Venues 1 and 2: destination clues from the next city's pool
         for _ = 1, 2 do
-            table.insert(city_clues, {
-                type         = "destination",
-                next_city_id = next_city_id,
-                category     = "generic",
-                text_key     = "clue.generic.destination",
-                image        = nil,
-                verified     = false,
-            })
+            local raw  = pool_mod.pick(dest_pool, rng)
+            if raw then
+                table.insert(city_clues, {
+                    type         = "destination",
+                    next_city_id = next_city_id,
+                    category     = raw.category,
+                    text         = raw.text,
+                    image        = raw.image,
+                    verified     = raw.verified,
+                })
+            else
+                table.insert(city_clues, {
+                    type         = "destination",
+                    next_city_id = next_city_id,
+                    category     = "generic",
+                    text_key     = "clue.generic.destination",
+                    verified     = false,
+                })
+            end
         end
 
         -- Venue 3: one suspect trait clue, cycling through attributes per city
@@ -113,7 +127,7 @@ function M.new(suspects, cities_by_id, routes, rank_name, rng)
     local item_key    = STOLEN_ITEMS[rng(#STOLEN_ITEMS)]
 
     local route = M._build_route(cities_by_id, graph, cfg.route_length, rng)
-    local clues = M._generate_clues(route, thief)
+    local clues = M._generate_clues(route, thief, rng)
 
     return {
         thief             = thief,
