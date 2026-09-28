@@ -1,0 +1,31 @@
+id;name_en;name_pt;country_en;country_pt;lat;lon;population
+athens;Athens;Atenas;Greece;Grécia;37.9838;23.7275;3154000
+baghdad;Baghdad;Bagdá;Iraq;Iraque;33.3406;44.4009;7216000
+bamako;Bamako;Bamako;Mali;Mali;12.6392;-8.0029;2009000
+bangkok;Bangkok;Bangcoque;Thailand;Tailândia;13.7563;100.5018;10156000
+beijing;Beijing;Pequim;China;China;39.9042;116.4074;21542000
+budapest;Budapest;Budapeste;Hungary;Hungria;47.4979;19.0402;1752000
+buenos_aires;Buenos Aires;Buenos Aires;Argentina;Argentina;-34.6037;-58.3816;15257000
+cairo;Cairo;Cairo;Egypt;Egito;30.0444;31.2357;20076000
+colombo;Colombo;Colombo;Sri Lanka;Sri Lanka;6.9271;79.8612;752000
+istanbul;Istanbul;Istambul;Turkey;Turquia;41.0082;28.9784;15462000
+kathmandu;Kathmandu;Catmandu;Nepal;Nepal;27.7172;85.3240;1003285
+kigali;Kigali;Kigali;Rwanda;Ruanda;-1.9441;30.0619;1132686
+lima;Lima;Lima;Peru;Peru;-12.0464;-77.0428;10750000
+london;London;Londres;United Kingdom;Reino Unido;51.5074;-0.1278;9002488
+mexico_city;Mexico City;Cidade do México;Mexico;México;19.4326;-99.1332;21672000
+montreal;Montreal;Montreal;Canada;Canadá;45.5017;-73.5673;4098927
+moroni;Moroni;Moroni;Comoros;Comores;-11.7022;43.2551;54000
+moscow;Moscow;Moscou;Russia;Rússia;55.7558;37.6173;12506468
+new_delhi;New Delhi;Nova Délhi;India;Índia;28.6139;77.2090;32941000
+new_york;New York;Nova Iorque;United States;Estados Unidos;40.7128;-74.0060;18937000
+oslo;Oslo;Oslo;Norway;Noruega;59.9139;10.7522;1041377
+paris;Paris;Paris;France;França;48.8566;2.3522;11020000
+port_moresby;Port Moresby;Port Moresby;Papua New Guinea;Papua Nova Guiné;-9.4438;147.1803;364145
+reykjavik;Reykjavik;Reiquiavique;Iceland;Islândia;64.1265;-21.8174;233034
+rio_de_janeiro;Rio de Janeiro;Rio de Janeiro;Brazil;Brasil;-22.9068;-43.1729;13458075
+rome;Rome;Roma;Italy;Itália;41.9028;12.4964;4342212
+san_marino;San Marino;San Marino;San Marino;San Marino;43.9424;12.4578;34010
+singapore;Singapore;Singapura;Singapore;Singapura;1.3521;103.8198;5850342
+sydney;Sydney;Sydney;Australia;Austrália;-33.8688;151.2093;5312000
+tokyo;Tokyo;Tóquio;Japan;Japão;35.6762;139.6503;37435191
