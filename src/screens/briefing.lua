@@ -43,7 +43,7 @@ end
 
 function S.draw()
     ui.panel(20, 15, ui.VIRTUAL_W - 40, ui.VIRTUAL_H - 50)
-    ui.text(30, 25, full_text:sub(1, revealed), ui.C.highlight)
+    ui.text(30, 25, full_text:sub(1, revealed), ui.C.highlight, "left", ui.VIRTUAL_W - 60)
     if done then
         ui.text(0, ui.VIRTUAL_H - 26,
             "[ PRESS ANY KEY ]", ui.C.dim, "center", ui.VIRTUAL_W)

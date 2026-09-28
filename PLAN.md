@@ -243,14 +243,41 @@ Goal: all 30 cities have complete, verified clue pools.
 
 ## Phase 6 — Polish
 
-- [ ] Screen transitions: fade-in/out between all state switches
-- [ ] Typewriter effect speed configurable (fast/slow in settings)
+- [x] Screen transitions: fade-in/out between all state switches (centralized in `src/state_machine.lua`)
+- [x] Typewriter effect speed configurable (fast/slow in settings)
+- [x] Settings screen: language, music volume, SFX volume
 - [ ] City exterior pixel art backgrounds (1 unique image per city — or 5 regional variants)
 - [ ] Animated airplane on travel screen
 - [ ] Hall of Fame screen (after catching final target)
-- [ ] Settings screen: language, music volume, SFX volume
 - [ ] Confirm working on Linux, macOS, Windows (LÖVE is cross-platform)
 - [ ] Package as `.love` file: `zip -9 -r game.love . -x "*.git*" "tests/*" "SPEC.md" "PLAN.md"`
+
+### City screen redesign — named venues + travel animation
+
+Requested 2026-09-28, not yet implemented. Current `src/screens/city.lua` shows
+5 generic equal-width zones ("CRIME COMPUTER", "VENUE 1/2/3", "AIRPORT") in a
+single row with a sliding selection cursor (see `ui.new_smooth`).
+
+- [ ] Give each venue a real, per-city name instead of "VENUE N" — venues must
+      differ from city to city (e.g. not the same 3 names everywhere). The
+      per-city clue data in `data/clues/<id>.lua` already tags each clue with
+      a `category` (`landmark`, `currency`, `language`, `geography`,
+      `wildlife`, `culture`, ...) — a natural source to derive a venue
+      name/type from (e.g. `currency` → "Bank"/"Market", `landmark` →
+      "Museum"/"Overlook", `wildlife` → "Nature Reserve"). Needs a
+      category→venue-name mapping (localized, EN+PT) or dedicated per-city
+      venue name data — decide which when implementing.
+- [ ] Layout: venues move to a top row, each showing its name (text, already
+      required by i18n rules) **and** a representative image. The other
+      actions (crime computer, airport) move to a row below the venues.
+- [ ] When the player selects a venue, don't cut straight to the venue
+      screen — play a short "traveling to location" transition first while
+      the in-game clock visibly advances (see `detective.investigate`'s
+      `INVESTIGATION_HOURS` in `src/detective.lua`, currently applied
+      instantly with no visual feedback), mirroring the original 1985 game's
+      travel-time feel. Likely its own screen/overlay between `city` and
+      `venue`, analogous to how `city_info.lua` sits between `travel`/
+      `briefing` and `city` today.
 
 ---
 

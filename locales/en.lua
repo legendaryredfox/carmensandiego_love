@@ -28,10 +28,10 @@ return {
 
     -- Briefing
     ["briefing.title"]            = "*** INTERPOL DISPATCH ***",
-    ["briefing.stolen"]           = "A {item} HAS BEEN STOLEN FROM {city}.",
-    ["briefing.suspect_seen"]     = "A SUSPECT WAS SEEN FLEEING THE SCENE.",
-    ["briefing.mission"]          = "YOUR MISSION: TRACK DOWN THE THIEF\nAND MAKE THE ARREST.\nYOU HAVE {days} DAYS.",
-    ["briefing.good_luck"]        = "GOOD LUCK, {rank} {name}.",
+    ["briefing.stolen"]           = "A {item} has been stolen from {city}.",
+    ["briefing.suspect_seen"]     = "A suspect was seen fleeing the scene.",
+    ["briefing.mission"]          = "Your mission: track down the thief\nand make the arrest.\nYou have {days} days.",
+    ["briefing.good_luck"]        = "Good luck, {rank} {name}.",
 
     -- City screen
     ["city.interpol"]             = "CRIME COMPUTER",
@@ -41,10 +41,10 @@ return {
     ["city.status_rank"]          = "RANK: {rank}",
 
     -- Venue
-    ["venue.nobody_suspicious"]   = "NOBODY SUSPICIOUS HAS BEEN SEEN HERE.",
-    ["venue.witness_says"]        = "A WITNESS REPORTS:",
-    ["venue.clue_destination"]    = "THE INFORMANT MENTIONED {hint}.",
-    ["venue.clue_trait"]          = "THE SUSPECT WAS DESCRIBED AS {trait}.",
+    ["venue.nobody_suspicious"]   = "Nobody suspicious has been seen here.",
+    ["venue.witness_says"]        = "A witness reports:",
+    ["venue.clue_destination"]    = "The informant mentioned {hint}.",
+    ["venue.clue_trait"]          = "The suspect was described as {trait}.",
     ["venue.back"]                = "BACK",
 
     -- Crime computer
@@ -69,18 +69,18 @@ return {
     ["travel.departing"]          = "DEPARTING FOR {city}...",
 
     -- Arrest
-    ["arrest.success"]            = "YOU CAUGHT {name}!\nCASE CLOSED.",
-    ["arrest.wrong_warrant"]      = "WRONG SUSPECT!\n{name} ESCAPED.",
-    ["arrest.no_warrant"]         = "NO WARRANT.\nTHE SUSPECT ESCAPED.",
-    ["arrest.wrong_city"]         = "THE THIEF IS NOT HERE.",
+    ["arrest.success"]            = "You caught {name}!\nCase closed.",
+    ["arrest.wrong_warrant"]      = "Wrong suspect!\n{name} escaped.",
+    ["arrest.no_warrant"]         = "No warrant.\nThe suspect escaped.",
+    ["arrest.wrong_city"]         = "The thief is not here.",
 
     -- Rank up
     ["rankup.title"]              = "PROMOTION!",
-    ["rankup.message"]            = "CONGRATULATIONS, {name}.\nYOU ARE NOW A {rank}.",
+    ["rankup.message"]            = "Congratulations, {name}.\nYou are now a {rank}.",
 
     -- Game over
     ["gameover.title"]            = "MISSION FAILED",
-    ["gameover.time"]             = "YOU RAN OUT OF TIME.\nTHE THIEF ESCAPED.",
+    ["gameover.time"]             = "You ran out of time.\nThe thief escaped.",
     ["gameover.retry"]            = "PRESS ENTER TO TRY AGAIN",
 
     -- Leaderboard
@@ -89,35 +89,35 @@ return {
     ["leaderboard.back"]          = "PRESS ESCAPE TO GO BACK",
 
     -- Ranks
-    ["rank.rookie"]               = "ROOKIE",
-    ["rank.junior_detective"]     = "JUNIOR DETECTIVE",
-    ["rank.sleuth"]               = "SLEUTH",
-    ["rank.private_eye"]          = "PRIVATE EYE",
-    ["rank.investigator"]         = "INVESTIGATOR",
-    ["rank.ace_detective"]        = "ACE DETECTIVE",
+    ["rank.rookie"]               = "Rookie",
+    ["rank.junior_detective"]     = "Junior Detective",
+    ["rank.sleuth"]               = "Sleuth",
+    ["rank.private_eye"]          = "Private Eye",
+    ["rank.investigator"]         = "Investigator",
+    ["rank.ace_detective"]        = "Ace Detective",
 
     -- Suspect traits
-    ["trait.sex.male"]            = "MALE",
-    ["trait.sex.female"]          = "FEMALE",
-    ["trait.hair.brown"]          = "BROWN HAIR",
-    ["trait.hair.blonde"]         = "BLONDE HAIR",
-    ["trait.hair.red"]            = "RED HAIR",
-    ["trait.hair.black"]          = "BLACK HAIR",
-    ["trait.hobby.tennis"]        = "PLAYS TENNIS",
-    ["trait.hobby.mountain_climbing"] = "MOUNTAIN CLIMBER",
-    ["trait.hobby.croquet"]       = "PLAYS CROQUET",
-    ["trait.hobby.skydiving"]     = "SKYDIVER",
-    ["trait.hobby.swimming"]      = "SWIMMER",
-    ["trait.vehicle.convertible"] = "DRIVES A CONVERTIBLE",
-    ["trait.vehicle.limousine"]   = "TRAVELS BY LIMOUSINE",
-    ["trait.vehicle.motorcycle"]  = "RIDES A MOTORCYCLE",
-    ["trait.vehicle.racecar"]     = "DRIVES A RACECAR",
-    ["trait.feature.tattoo"]      = "HAS A TATTOO",
-    ["trait.feature.ring"]        = "WEARS A DISTINCTIVE RING",
-    ["trait.feature.jewelry"]     = "WEARS FLASHY JEWELRY",
-    ["trait.feature.scar"]        = "HAS A PROMINENT SCAR",
-    ["trait.food.mexican"]        = "PREFERS MEXICAN FOOD",
-    ["trait.food.seafood"]        = "PREFERS SEAFOOD",
+    ["trait.sex.male"]            = "Male",
+    ["trait.sex.female"]          = "Female",
+    ["trait.hair.brown"]          = "Brown hair",
+    ["trait.hair.blonde"]         = "Blonde hair",
+    ["trait.hair.red"]            = "Red hair",
+    ["trait.hair.black"]          = "Black hair",
+    ["trait.hobby.tennis"]        = "Plays tennis",
+    ["trait.hobby.mountain_climbing"] = "Mountain climber",
+    ["trait.hobby.croquet"]       = "Plays croquet",
+    ["trait.hobby.skydiving"]     = "Skydiver",
+    ["trait.hobby.swimming"]      = "Swimmer",
+    ["trait.vehicle.convertible"] = "Drives a convertible",
+    ["trait.vehicle.limousine"]   = "Travels by limousine",
+    ["trait.vehicle.motorcycle"]  = "Rides a motorcycle",
+    ["trait.vehicle.racecar"]     = "Drives a racecar",
+    ["trait.feature.tattoo"]      = "Has a tattoo",
+    ["trait.feature.ring"]        = "Wears a distinctive ring",
+    ["trait.feature.jewelry"]     = "Wears flashy jewelry",
+    ["trait.feature.scar"]        = "Has a prominent scar",
+    ["trait.food.mexican"]        = "Prefers Mexican food",
+    ["trait.food.seafood"]        = "Prefers seafood",
 
     -- Time / status bar
     ["status.time"]               = "TIME: {time}",
@@ -129,16 +129,16 @@ return {
     ["clue.terminal"]             = "Nothing suspicious here.",
 
     -- Stolen items
-    ["item.mona_lisa"]            = "THE MONA LISA",
-    ["item.hope_diamond"]         = "THE HOPE DIAMOND",
-    ["item.crown_jewels"]         = "THE CROWN JEWELS",
-    ["item.magna_carta"]          = "THE MAGNA CARTA",
-    ["item.aztec_calendar"]       = "THE AZTEC CALENDAR STONE",
-    ["item.terracotta_army"]      = "A TERRACOTTA WARRIOR",
-    ["item.parthenon_frieze"]     = "A PARTHENON FRIEZE",
-    ["item.eiffel_torch"]         = "THE EIFFEL TOWER TORCH",
-    ["item.colosseum_stone"]      = "A COLOSSEUM CORNERSTONE",
-    ["item.big_ben_bell"]         = "BIG BEN'S GREAT BELL",
+    ["item.mona_lisa"]            = "The Mona Lisa",
+    ["item.hope_diamond"]         = "The Hope Diamond",
+    ["item.crown_jewels"]         = "The Crown Jewels",
+    ["item.magna_carta"]          = "The Magna Carta",
+    ["item.aztec_calendar"]       = "The Aztec Calendar Stone",
+    ["item.terracotta_army"]      = "A Terracotta Warrior",
+    ["item.parthenon_frieze"]     = "A Parthenon Frieze",
+    ["item.eiffel_torch"]         = "The Eiffel Tower Torch",
+    ["item.colosseum_stone"]      = "A Colosseum Cornerstone",
+    ["item.big_ben_bell"]         = "Big Ben's Great Bell",
 
     -- City arrival info
     ["city_info.press_enter"]     = "PRESS ENTER TO CONTINUE",

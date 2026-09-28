@@ -20,8 +20,8 @@ describe("locale", function()
 
     it("interpolates {var} placeholders", function()
         locale.set("en")
-        local result = locale.t("briefing.stolen", {item = "MONA LISA", city = "PARIS"})
-        assert_eq(result, "A MONA LISA HAS BEEN STOLEN FROM PARIS.")
+        local result = locale.t("briefing.stolen", {item = "Mona Lisa", city = "Paris"})
+        assert_eq(result, "A Mona Lisa has been stolen from Paris.")
     end)
 
     it("leaves undefined vars as {var} in output", function()

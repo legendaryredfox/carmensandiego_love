@@ -28,10 +28,10 @@ return {
 
     -- Briefing
     ["briefing.title"]            = "*** DESPACHO DA INTERPOL ***",
-    ["briefing.stolen"]           = "{item} FOI ROUBADO(A) DE {city}.",
-    ["briefing.suspect_seen"]     = "UM SUSPEITO FOI VISTO FUGINDO DA CENA.",
-    ["briefing.mission"]          = "SUA MISSAO: RASTREAR O LADRAO\nE EFETUAR A PRISAO.\nVOCE TEM {days} DIAS.",
-    ["briefing.good_luck"]        = "BOA SORTE, {rank} {name}.",
+    ["briefing.stolen"]           = "{item} foi roubado(a) de {city}.",
+    ["briefing.suspect_seen"]     = "Um suspeito foi visto fugindo da cena.",
+    ["briefing.mission"]          = "Sua missao: rastrear o ladrao\ne efetuar a prisao.\nVoce tem {days} dias.",
+    ["briefing.good_luck"]        = "Boa sorte, {rank} {name}.",
 
     -- Cidade
     ["city.interpol"]             = "COMPUTADOR DO CRIME",
@@ -41,10 +41,10 @@ return {
     ["city.status_rank"]          = "PATENTE: {rank}",
 
     -- Local de investigacao
-    ["venue.nobody_suspicious"]   = "NENHUM SUSPEITO FOI VISTO AQUI.",
-    ["venue.witness_says"]        = "UMA TESTEMUNHA RELATA:",
-    ["venue.clue_destination"]    = "O INFORMANTE MENCIONOU {hint}.",
-    ["venue.clue_trait"]          = "O SUSPEITO FOI DESCRITO COMO {trait}.",
+    ["venue.nobody_suspicious"]   = "Nenhum suspeito foi visto aqui.",
+    ["venue.witness_says"]        = "Uma testemunha relata:",
+    ["venue.clue_destination"]    = "O informante mencionou {hint}.",
+    ["venue.clue_trait"]          = "O suspeito foi descrito como {trait}.",
     ["venue.back"]                = "VOLTAR",
 
     -- Computador do crime
@@ -69,18 +69,18 @@ return {
     ["travel.departing"]          = "PARTINDO PARA {city}...",
 
     -- Prisao
-    ["arrest.success"]            = "VOCE PRENDEU {name}!\nCASO ENCERRADO.",
-    ["arrest.wrong_warrant"]      = "SUSPEITO ERRADO!\n{name} ESCAPOU.",
-    ["arrest.no_warrant"]         = "SEM MANDADO.\nO SUSPEITO ESCAPOU.",
-    ["arrest.wrong_city"]         = "O LADRAO NAO ESTA AQUI.",
+    ["arrest.success"]            = "Voce prendeu {name}!\nCaso encerrado.",
+    ["arrest.wrong_warrant"]      = "Suspeito errado!\n{name} escapou.",
+    ["arrest.no_warrant"]         = "Sem mandado.\nO suspeito escapou.",
+    ["arrest.wrong_city"]         = "O ladrao nao esta aqui.",
 
     -- Promocao
     ["rankup.title"]              = "PROMOCAO!",
-    ["rankup.message"]            = "PARABENS, {name}.\nVOCE AGORA E {rank}.",
+    ["rankup.message"]            = "Parabens, {name}.\nVoce agora e {rank}.",
 
     -- Game over
     ["gameover.title"]            = "MISSAO FRACASSADA",
-    ["gameover.time"]             = "VOCE FICOU SEM TEMPO.\nO LADRAO ESCAPOU.",
+    ["gameover.time"]             = "Voce ficou sem tempo.\nO ladrao escapou.",
     ["gameover.retry"]            = "PRESSIONE ENTER PARA TENTAR NOVAMENTE",
 
     -- Placar
@@ -89,35 +89,35 @@ return {
     ["leaderboard.back"]          = "PRESSIONE ESC PARA VOLTAR",
 
     -- Patentes
-    ["rank.rookie"]               = "NOVATO",
-    ["rank.junior_detective"]     = "DETETIVE JUNIOR",
-    ["rank.sleuth"]               = "INVESTIGADOR",
-    ["rank.private_eye"]          = "DETETIVE PARTICULAR",
-    ["rank.investigator"]         = "INVESTIGADOR SÊNIOR",
-    ["rank.ace_detective"]        = "DETETIVE AS",
+    ["rank.rookie"]               = "Novato",
+    ["rank.junior_detective"]     = "Detetive Junior",
+    ["rank.sleuth"]               = "Investigador",
+    ["rank.private_eye"]          = "Detetive Particular",
+    ["rank.investigator"]         = "Investigador Senior",
+    ["rank.ace_detective"]        = "Detetive As",
 
     -- Tracos dos suspeitos
-    ["trait.sex.male"]            = "MASCULINO",
-    ["trait.sex.female"]          = "FEMININO",
-    ["trait.hair.brown"]          = "CABELO CASTANHO",
-    ["trait.hair.blonde"]         = "CABELO LOIRO",
-    ["trait.hair.red"]            = "CABELO RUIVO",
-    ["trait.hair.black"]          = "CABELO PRETO",
-    ["trait.hobby.tennis"]        = "JOGA TENIS",
-    ["trait.hobby.mountain_climbing"] = "ALPINISTA",
-    ["trait.hobby.croquet"]       = "JOGA CROQUETE",
-    ["trait.hobby.skydiving"]     = "PRATICA PARAQUEDISMO",
-    ["trait.hobby.swimming"]      = "PRATICA NATACAO",
-    ["trait.vehicle.convertible"] = "DIRIGE UM CONVERSIVEL",
-    ["trait.vehicle.limousine"]   = "VIAJA DE LIMUSINE",
-    ["trait.vehicle.motorcycle"]  = "ANDA DE MOTO",
-    ["trait.vehicle.racecar"]     = "DIRIGE UM CARRO DE CORRIDA",
-    ["trait.feature.tattoo"]      = "TEM UMA TATUAGEM",
-    ["trait.feature.ring"]        = "USA UM ANEL DISTINTIVO",
-    ["trait.feature.jewelry"]     = "USA JOIAS CHAMATIVAS",
-    ["trait.feature.scar"]        = "TEM UMA CICATRIZ EVIDENTE",
-    ["trait.food.mexican"]        = "PREFERE COMIDA MEXICANA",
-    ["trait.food.seafood"]        = "PREFERE FRUTOS DO MAR",
+    ["trait.sex.male"]            = "Masculino",
+    ["trait.sex.female"]          = "Feminino",
+    ["trait.hair.brown"]          = "Cabelo castanho",
+    ["trait.hair.blonde"]         = "Cabelo loiro",
+    ["trait.hair.red"]            = "Cabelo ruivo",
+    ["trait.hair.black"]          = "Cabelo preto",
+    ["trait.hobby.tennis"]        = "Joga tenis",
+    ["trait.hobby.mountain_climbing"] = "Alpinista",
+    ["trait.hobby.croquet"]       = "Joga croquete",
+    ["trait.hobby.skydiving"]     = "Pratica paraquedismo",
+    ["trait.hobby.swimming"]      = "Pratica natacao",
+    ["trait.vehicle.convertible"] = "Dirige um conversivel",
+    ["trait.vehicle.limousine"]   = "Viaja de limusine",
+    ["trait.vehicle.motorcycle"]  = "Anda de moto",
+    ["trait.vehicle.racecar"]     = "Dirige um carro de corrida",
+    ["trait.feature.tattoo"]      = "Tem uma tatuagem",
+    ["trait.feature.ring"]        = "Usa um anel distintivo",
+    ["trait.feature.jewelry"]     = "Usa joias chamativas",
+    ["trait.feature.scar"]        = "Tem uma cicatriz evidente",
+    ["trait.food.mexican"]        = "Prefere comida mexicana",
+    ["trait.food.seafood"]        = "Prefere frutos do mar",
 
     -- Hora / barra de status
     ["status.time"]               = "HORA: {time}",
@@ -129,16 +129,16 @@ return {
     ["clue.terminal"]             = "Nada suspeito aqui.",
 
     -- Itens roubados
-    ["item.mona_lisa"]            = "A MONA LISA",
-    ["item.hope_diamond"]         = "O DIAMANTE HOPE",
-    ["item.crown_jewels"]         = "AS JOIAS DA COROA",
-    ["item.magna_carta"]          = "A MAGNA CARTA",
-    ["item.aztec_calendar"]       = "A PEDRA DO CALENDARIO ASTECA",
-    ["item.terracotta_army"]      = "UM GUERREIRO DE TERRACOTA",
-    ["item.parthenon_frieze"]     = "UM FRISO DO PARTENON",
-    ["item.eiffel_torch"]         = "A TOCHA DA TORRE EIFFEL",
-    ["item.colosseum_stone"]      = "UMA PEDRA DO COLISEU",
-    ["item.big_ben_bell"]         = "O SINO DO BIG BEN",
+    ["item.mona_lisa"]            = "A Mona Lisa",
+    ["item.hope_diamond"]         = "O Diamante Hope",
+    ["item.crown_jewels"]         = "As Joias da Coroa",
+    ["item.magna_carta"]          = "A Magna Carta",
+    ["item.aztec_calendar"]       = "A Pedra do Calendario Asteca",
+    ["item.terracotta_army"]      = "Um Guerreiro de Terracota",
+    ["item.parthenon_frieze"]     = "Um Friso do Partenon",
+    ["item.eiffel_torch"]         = "A Tocha da Torre Eiffel",
+    ["item.colosseum_stone"]      = "Uma Pedra do Coliseu",
+    ["item.big_ben_bell"]         = "O Sino do Big Ben",
 
     -- Informacoes da cidade ao chegar
     ["city_info.press_enter"]     = "PRESSIONE ENTER PARA CONTINUAR",

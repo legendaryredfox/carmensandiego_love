@@ -50,7 +50,7 @@ function S.draw()
     local venue_name = "VENUE " .. tostring(S.venue_index)
     ui.title(0, 8, venue_name)
     ui.panel(20, 30, ui.VIRTUAL_W - 40, ui.VIRTUAL_H - 80)
-    ui.text(30, 44, text_full:sub(1, revealed), ui.C.highlight)
+    ui.text(30, 44, text_full:sub(1, revealed), ui.C.highlight, "left", ui.VIRTUAL_W - 60)
 
     if done then
         ui.button(ui.VIRTUAL_W / 2 - 50, ui.VIRTUAL_H - 40, 100, 16,
