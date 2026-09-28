@@ -23,13 +23,22 @@ local font_sm   -- 8px
 local font_md   -- 10px
 local font_lg   -- 14px
 
+local FONT_PATH = "assets/fonts/PressStart2P.ttf"
+
+local function load_font(size)
+    if love.filesystem.getInfo(FONT_PATH) then
+        local ok, font = pcall(love.graphics.newFont, FONT_PATH, size)
+        if ok then return font end
+    end
+    return love.graphics.newFont(size)
+end
+
 function M.init()
     love.graphics.setDefaultFilter("nearest", "nearest")
     canvas  = love.graphics.newCanvas(M.VIRTUAL_W, M.VIRTUAL_H)
-    -- Use default font until Press Start 2P is available
-    font_sm = love.graphics.newFont(8)
-    font_md = love.graphics.newFont(10)
-    font_lg = love.graphics.newFont(14)
+    font_sm = load_font(8)
+    font_md = load_font(10)
+    font_lg = load_font(14)
     love.graphics.setFont(font_sm)
 end
 

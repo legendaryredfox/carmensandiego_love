@@ -21,63 +21,85 @@ mkdir -p assets/sounds/music assets/sounds/sfx assets/fonts
 # ── Music: 15 Melodic RPG Chiptunes (CC0) ──────────────────────────────────
 echo "[1/3] Downloading 15 Melodic RPG Chiptunes..."
 curl -L -o "$TMPDIR/chiptunes.zip" \
-  "https://opengameart.org/sites/default/files/15_Melodic_RPG_Chiptunes_0.zip"
+  "https://opengameart.org/sites/default/files/15_melodic_rpg_chiptunes_ogg.zip"
 unzip -q "$TMPDIR/chiptunes.zip" -d "$TMPDIR/chiptunes"
 
-# Map tracks to our music slots (filenames may vary by archive version)
-# Adjust if track numbers differ after extraction
-CHIPTUNE_DIR="$TMPDIR/chiptunes"
-tracks=( $(ls "$CHIPTUNE_DIR"/*.ogg 2>/dev/null | sort) )
-
-copy_track() {
-  local idx=$1 dest=$2
-  local src="${tracks[$idx]:-}"
-  if [ -n "$src" ] && [ -f "$src" ]; then
+# Filenames are stable (author-provided names), so match by name rather
+# than by sorted index — the pack's track order isn't documented anywhere.
+copy_named() {
+  local pattern=$1 dest=$2
+  local src
+  src=$(find "$TMPDIR/chiptunes" -iname "$pattern" | head -1)
+  if [ -n "$src" ]; then
     cp "$src" "assets/sounds/music/$dest"
     echo "  -> $dest"
   else
-    echo "  WARNING: track $idx not found for $dest"
+    echo "  WARNING: no match for '$pattern' (wanted $dest)"
   fi
 }
 
-copy_track 0  "title.ogg"
-copy_track 2  "city.ogg"
-copy_track 5  "computer.ogg"
-copy_track 7  "briefing.ogg"  # shrine_of_mysteries
-copy_track 14 "failure.ogg"   # game_over
+copy_named "*title_screen*"        "title.ogg"
+copy_named "*town*"                "city.ogg"
+copy_named "*dungeon*"             "computer.ogg"
+copy_named "*shrine_of_mysteries*" "briefing.ogg"
+copy_named "*game_over*"           "failure.ogg"
 
-# ── Music: 4 Chiptunes Adventure (CC0, Juhani Junkala) ─────────────────────
-echo "[2/3] Downloading 4 Chiptunes Adventure..."
+# ── Music: Chiptune Adventures (CC0, Juhani Junkala) ───────────────────────
+echo "[2/3] Downloading Chiptune Adventures..."
 curl -L -o "$TMPDIR/adventure.zip" \
-  "https://opengameart.org/sites/default/files/4_chiptunes_adventure.zip"
+  "https://opengameart.org/sites/default/files/Juhani%20Junkala%20%5BChiptune%20Adventures%5D%20OGG.zip"
 unzip -q "$TMPDIR/adventure.zip" -d "$TMPDIR/adventure"
 
-adv_tracks=( $(ls "$TMPDIR/adventure"/*.ogg 2>/dev/null | sort) )
-[ -f "${adv_tracks[1]:-}" ] && cp "${adv_tracks[1]}" "assets/sounds/music/travel.ogg" && echo "  -> travel.ogg"
-[ -f "${adv_tracks[0]:-}" ] && cp "${adv_tracks[0]}" "assets/sounds/music/success.ogg" && echo "  -> success.ogg"
+copy_adventure() {
+  local pattern=$1 dest=$2
+  local src
+  src=$(find "$TMPDIR/adventure" -iname "$pattern" | head -1)
+  if [ -n "$src" ]; then
+    cp "$src" "assets/sounds/music/$dest"
+    echo "  -> $dest"
+  else
+    echo "  WARNING: no match for '$pattern' (wanted $dest)"
+  fi
+}
 
-# ── SFX: 512 Sound Effects 8-bit (CC0) ─────────────────────────────────────
+copy_adventure "*1. Stage 1*"     "travel.ogg"
+copy_adventure "*4. Stage Select*" "success.ogg"
+
+# ── SFX: The Essential Retro Video Game Sound Effects Collection (CC0) ─────
 echo "[3/3] Downloading 512 Sound Effects..."
 curl -L -o "$TMPDIR/sfx.zip" \
-  "https://opengameart.org/sites/default/files/512_Sound_Effects_8-bit_0.zip"
+  "https://opengameart.org/sites/default/files/The%20Essential%20Retro%20Video%20Game%20Sound%20Effects%20Collection%20%5B512%20sounds%5D.zip"
 unzip -q "$TMPDIR/sfx.zip" -d "$TMPDIR/sfx"
 
-sfx_files=( $(ls "$TMPDIR/sfx"/*.wav 2>/dev/null | sort) )
-# Pick reasonable candidates by index
-[ -f "${sfx_files[0]:-}" ]  && cp "${sfx_files[0]}"  "assets/sounds/sfx/click.wav"       && echo "  -> click.wav"
-[ -f "${sfx_files[10]:-}" ] && cp "${sfx_files[10]}" "assets/sounds/sfx/clue.wav"        && echo "  -> clue.wav"
-[ -f "${sfx_files[20]:-}" ] && cp "${sfx_files[20]}" "assets/sounds/sfx/warrant.wav"     && echo "  -> warrant.wav"
-[ -f "${sfx_files[30]:-}" ] && cp "${sfx_files[30]}" "assets/sounds/sfx/arrest_ok.wav"   && echo "  -> arrest_ok.wav"
-[ -f "${sfx_files[40]:-}" ] && cp "${sfx_files[40]}" "assets/sounds/sfx/arrest_fail.wav" && echo "  -> arrest_fail.wav"
-[ -f "${sfx_files[5]:-}" ]  && cp "${sfx_files[5]}"  "assets/sounds/sfx/type.wav"        && echo "  -> type.wav"
+copy_sfx() {
+  local pattern=$1 dest=$2
+  local src
+  src=$(find "$TMPDIR/sfx" -iname "$pattern" | head -1)
+  if [ -n "$src" ]; then
+    cp "$src" "assets/sounds/sfx/$dest"
+    echo "  -> $dest"
+  else
+    echo "  WARNING: no match for '$pattern' (wanted $dest)"
+  fi
+}
 
-# ── Font: Press Start 2P (OFL) ──────────────────────────────────────────────
+copy_sfx "sfx_menu_select1.wav"   "click.wav"
+copy_sfx "sfx_sounds_powerup10.wav" "clue.wav"
+copy_sfx "sfx_sounds_fanfare1.wav"  "warrant.wav"
+copy_sfx "sfx_sounds_fanfare3.wav"  "arrest_ok.wav"
+copy_sfx "sfx_sounds_error10.wav"   "arrest_fail.wav"
+copy_sfx "sfx_sounds_Blip1.wav"     "type.wav"
+
+# ── Font: Press Start 2P (OFL, from the Google Fonts source repo) ─────────
 echo "[+] Downloading Press Start 2P font..."
-curl -L -o "$TMPDIR/font.zip" \
-  "https://fonts.google.com/download?family=Press+Start+2P"
-unzip -q "$TMPDIR/font.zip" -d "$TMPDIR/font" 2>/dev/null || true
-find "$TMPDIR/font" -name "*.ttf" | head -1 | xargs -I{} cp {} "assets/fonts/PressStart2P.ttf" 2>/dev/null \
-  && echo "  -> PressStart2P.ttf" || echo "  WARNING: font download failed (try manually)"
+curl -L -o "assets/fonts/PressStart2P.ttf" \
+  "https://github.com/google/fonts/raw/main/ofl/pressstart2p/PressStart2P-Regular.ttf"
+if [ -s "assets/fonts/PressStart2P.ttf" ]; then
+  echo "  -> PressStart2P.ttf"
+else
+  rm -f "assets/fonts/PressStart2P.ttf"
+  echo "  WARNING: font download failed (try manually)"
+fi
 
 echo ""
 echo "Done. Audio files are in assets/sounds/. Font in assets/fonts/."
