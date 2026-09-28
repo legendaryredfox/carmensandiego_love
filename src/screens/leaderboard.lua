@@ -14,7 +14,11 @@ function S.draw()
         ui.text(0, ui.VIRTUAL_H / 2 - 10,
             locale.t("leaderboard.empty"), ui.C.dim, "center", ui.VIRTUAL_W)
     else
-        local headers = { "#", "NAME", "RANK", "CASES", "SCORE" }
+        local headers = {
+            locale.t("leaderboard.col_num"), locale.t("leaderboard.col_name"),
+            locale.t("leaderboard.col_rank"), locale.t("leaderboard.col_cases"),
+            locale.t("leaderboard.col_score"),
+        }
         local cols    = { 30, 60, 200, 330, 400 }
         for i, h in ipairs(headers) do
             ui.text(cols[i], 40, h, ui.C.dim)

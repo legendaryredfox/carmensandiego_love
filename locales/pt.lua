@@ -1,12 +1,15 @@
 return {
     -- Tela inicial
+    ["title.game_name"]           = "DETECTIVE AGENCY",
     ["title.press_any_key"]       = "PRESSIONE QUALQUER TECLA",
     ["title.subtitle"]            = "UM JOGO DE DETETIVE PELO MUNDO",
+    ["title.copyright"]           = "(C) {year} - LEGENDARYREDFOX",
 
     -- Seleção de idioma
     ["language.choose"]           = "ESCOLHA SEU IDIOMA",
     ["language.en"]               = "INGLES",
     ["language.pt"]               = "PORTUGUES",
+    ["language.nav_hint"]         = "CIMA/BAIXO  ENTER",
 
     -- Menu principal
     ["menu.new_game"]             = "NOVO JOGO",
@@ -21,8 +24,10 @@ return {
     ["settings.music_volume"]     = "VOLUME DA MUSICA",
     ["settings.sfx_volume"]       = "VOLUME DOS EFEITOS",
     ["settings.typewriter_speed"] = "VELOCIDADE DO TEXTO",
+    ["settings.nav_hint"]         = "CIMA/BAIXO  ESQ/DIR  ENTER  ESC=VOLTAR",
 
     -- Nome do detetive
+    ["name.title"]                = "SEDE DA INTERPOL",
     ["name.prompt"]               = "INSIRA SEU NOME, DETETIVE:",
     ["name.confirm"]              = "PRESSIONE ENTER PARA CONFIRMAR",
 
@@ -95,6 +100,9 @@ return {
     ["crime.no_match"]            = "NENHUM SUSPEITO COINCIDE. REVISE AS PISTAS.",
     ["crime.multiple_match"]      = "VARIOS SUSPEITOS COINCIDEM. COLETE MAIS PISTAS.",
     ["crime.warrant_issued"]      = "MANDADO DE PRISAO EMITIDO PARA {name}.",
+    ["crime.suspects_label"]      = "SUSPEITOS: {count}",
+    ["crime.warrant_label"]       = "MANDADO: {name}",
+    ["crime.nav_hint"]            = "CIMA/BAIXO  ESQ/DIR  S=BUSCAR  W=MANDADO  ESC=VOLTAR",
 
     -- Viagem
     ["travel.title"]              = "SALA DE EMBARQUE",
@@ -118,6 +126,7 @@ return {
     -- Promocao
     ["rankup.title"]              = "PROMOCAO!",
     ["rankup.message"]            = "Parabens, {name}.\nVoce agora e {rank}.",
+    ["rankup.press_enter"]        = "[ PRESSIONE ENTER ]",
 
     -- Game over
     ["gameover.title"]            = "MISSAO FRACASSADA",
@@ -133,6 +142,11 @@ return {
     ["leaderboard.title"]         = "MELHORES DETETIVES",
     ["leaderboard.empty"]         = "NENHUM REGISTRO AINDA.",
     ["leaderboard.back"]          = "PRESSIONE ESC PARA VOLTAR",
+    ["leaderboard.col_num"]       = "#",
+    ["leaderboard.col_name"]      = "NOME",
+    ["leaderboard.col_rank"]      = "PATENTE",
+    ["leaderboard.col_cases"]     = "CASOS",
+    ["leaderboard.col_score"]     = "PONTOS",
 
     -- Patentes
     ["rank.rookie"]               = "Novato",

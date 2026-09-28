@@ -16,7 +16,7 @@ end
 
 function S.draw()
     local cx, cy = ui.VIRTUAL_W / 2, ui.VIRTUAL_H / 2
-    ui.title(0, cy - 80, "INTERPOL HEADQUARTERS")
+    ui.title(0, cy - 80, locale.t("name.title"))
     ui.text(0, cy - 40, locale.t("name.prompt"), ui.C.text, "center", ui.VIRTUAL_W)
     local bw, bx, by = 260, cx - 130, cy - 10
     ui.panel(bx, by, bw, 20)

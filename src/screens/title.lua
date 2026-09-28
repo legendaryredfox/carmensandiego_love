@@ -25,7 +25,7 @@ function title.draw()
     local cy = ui.VIRTUAL_H / 2
 
     love.graphics.setColor(1, 0.85, 0.1, 1)
-    love.graphics.printf("DETECTIVE AGENCY", 0, cy - 60, ui.VIRTUAL_W, "center")
+    love.graphics.printf(locale.t("title.game_name"), 0, cy - 60, ui.VIRTUAL_W, "center")
 
     love.graphics.setColor(0.7, 0.7, 0.7, 1)
     love.graphics.printf(locale.t("title.subtitle"), 0, cy - 30, ui.VIRTUAL_W, "center")
@@ -36,7 +36,8 @@ function title.draw()
     end
 
     love.graphics.setColor(0.4, 0.4, 0.4, 1)
-    love.graphics.printf("(C) 2025 - LEGENDARYREDFOX", 0, ui.VIRTUAL_H - 20, ui.VIRTUAL_W, "center")
+    love.graphics.printf(locale.t("title.copyright", { year = os.date("%Y") }),
+        0, ui.VIRTUAL_H - 20, ui.VIRTUAL_W, "center")
 
     love.graphics.setColor(1, 1, 1, 1)
 end

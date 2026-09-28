@@ -19,7 +19,7 @@ function S.draw()
             rank = locale.t("rank." .. d.rank)
         }), ui.C.success)
     if timer > 2 then
-        ui.text(0, 220, "[ PRESS ENTER ]", ui.C.dim, "center", ui.VIRTUAL_W)
+        ui.text(0, 220, locale.t("rankup.press_enter"), ui.C.dim, "center", ui.VIRTUAL_W)
     end
 end
 

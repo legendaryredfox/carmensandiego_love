@@ -76,7 +76,7 @@ function S.draw()
     -- Match list
     love.graphics.setColor(ui.C.border)
     love.graphics.line(col_x[3] - 5, 28, col_x[3] - 5, 170)
-    ui.text(col_x[3], 30, "SUSPECTS: " .. tostring(#match_list), ui.C.dim)
+    ui.text(col_x[3], 30, locale.t("crime.suspects_label", { count = #match_list }), ui.C.dim)
     for i, s in ipairs(match_list) do
         ui.text(col_x[3], 30 + i * 14, s.name,
             #match_list == 1 and ui.C.success or ui.C.text)
@@ -97,12 +97,12 @@ function S.draw()
         local ws = suspect_mod.by_id(game.suspect_pool(), game.detective.warrant_id)
         if ws then
             ui.text(10, by + 40,
-                "WARRANT: " .. ws.name, ui.C.success)
+                locale.t("crime.warrant_label", { name = ws.name }), ui.C.success)
         end
     end
 
     ui.text(0, ui.VIRTUAL_H - 26,
-        "UP/DOWN  LEFT/RIGHT  S=SEARCH  W=WARRANT  ESC=BACK",
+        locale.t("crime.nav_hint"),
         ui.C.dim, "center", ui.VIRTUAL_W)
 end
 

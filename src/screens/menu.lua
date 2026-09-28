@@ -39,7 +39,7 @@ function S.enter() selected = 1 end
 
 function S.draw()
     local list = items()
-    ui.title(0, ui.VIRTUAL_H / 2 - 90, "DETECTIVE AGENCY")
+    ui.title(0, ui.VIRTUAL_H / 2 - 90, locale.t("title.game_name"))
     for i, item in ipairs(list) do
         local y   = ui.VIRTUAL_H / 2 - 30 + (i - 1) * 22
         local sel = (i == selected)

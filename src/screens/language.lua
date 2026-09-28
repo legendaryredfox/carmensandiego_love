@@ -5,7 +5,7 @@ local settings = require("src.settings")
 
 local lang_screen = {}
 
-local options    = { { lang = "en", label = "ENGLISH" }, { lang = "pt", label = "PORTUGUES" } }
+local options    = { { lang = "en" }, { lang = "pt" } }
 local selected   = 1
 
 function lang_screen.enter()
@@ -13,24 +13,24 @@ function lang_screen.enter()
 end
 
 function lang_screen.draw()
-    local cx = ui.VIRTUAL_W / 2
     local cy = ui.VIRTUAL_H / 2
 
     love.graphics.setColor(1, 0.85, 0.1, 1)
-    love.graphics.printf("CHOOSE YOUR LANGUAGE", 0, cy - 60, ui.VIRTUAL_W, "center")
+    love.graphics.printf(locale.t("language.choose"), 0, cy - 60, ui.VIRTUAL_W, "center")
 
     for i, opt in ipairs(options) do
+        local label = locale.t("language." .. opt.lang)
         if i == selected then
             love.graphics.setColor(0, 1, 0.5, 1)
-            love.graphics.printf("> " .. opt.label .. " <", 0, cy - 10 + (i - 1) * 24, ui.VIRTUAL_W, "center")
+            love.graphics.printf("> " .. label .. " <", 0, cy - 10 + (i - 1) * 24, ui.VIRTUAL_W, "center")
         else
             love.graphics.setColor(0.7, 0.7, 0.7, 1)
-            love.graphics.printf(opt.label, 0, cy - 10 + (i - 1) * 24, ui.VIRTUAL_W, "center")
+            love.graphics.printf(label, 0, cy - 10 + (i - 1) * 24, ui.VIRTUAL_W, "center")
         end
     end
 
     love.graphics.setColor(0.5, 0.5, 0.5, 1)
-    love.graphics.printf("UP/DOWN  ENTER", 0, cy + 60, ui.VIRTUAL_W, "center")
+    love.graphics.printf(locale.t("language.nav_hint"), 0, cy + 60, ui.VIRTUAL_W, "center")
     love.graphics.setColor(1, 1, 1, 1)
 end
 

@@ -84,7 +84,7 @@ function S.draw()
     love.graphics.setColor(1, 1, 1, 1)
 
     ui.text(0, ui.VIRTUAL_H - 26,
-        "UP/DOWN  LEFT/RIGHT  ENTER  ESC=BACK",
+        locale.t("settings.nav_hint"),
         ui.C.dim, "center", ui.VIRTUAL_W)
 end
 

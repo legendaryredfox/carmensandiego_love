@@ -1,12 +1,15 @@
 return {
     -- Title screen
+    ["title.game_name"]           = "DETECTIVE AGENCY",
     ["title.press_any_key"]       = "PRESS ANY KEY",
     ["title.subtitle"]            = "A GLOBE-TROTTING DETECTIVE GAME",
+    ["title.copyright"]           = "(C) {year} - LEGENDARYREDFOX",
 
     -- Language select
     ["language.choose"]           = "CHOOSE YOUR LANGUAGE",
     ["language.en"]               = "ENGLISH",
     ["language.pt"]               = "PORTUGUES",
+    ["language.nav_hint"]         = "UP/DOWN  ENTER",
 
     -- Main menu
     ["menu.new_game"]             = "NEW GAME",
@@ -21,8 +24,10 @@ return {
     ["settings.music_volume"]     = "MUSIC VOLUME",
     ["settings.sfx_volume"]       = "SFX VOLUME",
     ["settings.typewriter_speed"] = "TEXT SPEED",
+    ["settings.nav_hint"]         = "UP/DOWN  LEFT/RIGHT  ENTER  ESC=BACK",
 
     -- Name entry
+    ["name.title"]                = "INTERPOL HEADQUARTERS",
     ["name.prompt"]               = "ENTER YOUR NAME, DETECTIVE:",
     ["name.confirm"]              = "PRESS ENTER TO CONFIRM",
 
@@ -94,6 +99,9 @@ return {
     ["crime.no_match"]            = "NO SUSPECTS MATCH. REVIEW YOUR CLUES.",
     ["crime.multiple_match"]      = "MULTIPLE SUSPECTS MATCH. GATHER MORE CLUES.",
     ["crime.warrant_issued"]      = "ARREST WARRANT ISSUED FOR {name}.",
+    ["crime.suspects_label"]      = "SUSPECTS: {count}",
+    ["crime.warrant_label"]       = "WARRANT: {name}",
+    ["crime.nav_hint"]            = "UP/DOWN  LEFT/RIGHT  S=SEARCH  W=WARRANT  ESC=BACK",
 
     -- Travel
     ["travel.title"]              = "DEPARTURE LOUNGE",
@@ -117,6 +125,7 @@ return {
     -- Rank up
     ["rankup.title"]              = "PROMOTION!",
     ["rankup.message"]            = "Congratulations, {name}.\nYou are now a {rank}.",
+    ["rankup.press_enter"]        = "[ PRESS ENTER ]",
 
     -- Game over
     ["gameover.title"]            = "MISSION FAILED",
@@ -132,6 +141,11 @@ return {
     ["leaderboard.title"]         = "TOP DETECTIVES",
     ["leaderboard.empty"]         = "NO RECORDS YET.",
     ["leaderboard.back"]          = "PRESS ESCAPE TO GO BACK",
+    ["leaderboard.col_num"]       = "#",
+    ["leaderboard.col_name"]      = "NAME",
+    ["leaderboard.col_rank"]      = "RANK",
+    ["leaderboard.col_cases"]     = "CASES",
+    ["leaderboard.col_score"]     = "SCORE",
 
     -- Ranks
     ["rank.rookie"]               = "Rookie",
