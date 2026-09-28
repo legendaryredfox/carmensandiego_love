@@ -28,7 +28,8 @@ return {
 
     -- Briefing
     ["briefing.title"]            = "*** INTERPOL DISPATCH ***",
-    ["briefing.stolen"]           = "A {item} has been stolen from {city}.",
+    -- {item} already carries its own article ("The Mona Lisa", "A relic")
+    ["briefing.stolen"]           = "{item} has been stolen from {city}.",
     ["briefing.suspect_seen"]     = "A suspect was seen fleeing the scene.",
     ["briefing.mission"]          = "Your mission: track down the thief\nand make the arrest.\nYou have {days} days.",
     ["briefing.good_luck"]        = "Good luck, {rank} {name}.",
@@ -161,17 +162,21 @@ return {
     ["clue.generic.destination"]  = "unusual activity in a distant land",
     ["clue.terminal"]             = "Nothing suspicious here.",
 
-    -- Stolen items
+    -- Stolen items — landmark items tied to their real home city (see
+    -- ITEM_BY_CITY in src/mission.lua); generic ones can be used anywhere
     ["item.mona_lisa"]            = "The Mona Lisa",
-    ["item.hope_diamond"]         = "The Hope Diamond",
     ["item.crown_jewels"]         = "The Crown Jewels",
     ["item.magna_carta"]          = "The Magna Carta",
     ["item.aztec_calendar"]       = "The Aztec Calendar Stone",
-    ["item.terracotta_army"]      = "A Terracotta Warrior",
     ["item.parthenon_frieze"]     = "A Parthenon Frieze",
     ["item.eiffel_torch"]         = "The Eiffel Tower Torch",
     ["item.colosseum_stone"]      = "A Colosseum Cornerstone",
     ["item.big_ben_bell"]         = "Big Ben's Great Bell",
+    ["item.generic_painting"]     = "A priceless painting",
+    ["item.generic_gem"]          = "A rare gemstone",
+    ["item.generic_relic"]        = "An ancient relic",
+    ["item.generic_document"]     = "A historic document",
+    ["item.generic_statue"]       = "A museum statue",
 
     -- City arrival info
     ["city_info.press_enter"]     = "PRESS ENTER TO CONTINUE",

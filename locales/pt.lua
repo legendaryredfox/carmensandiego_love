@@ -163,17 +163,21 @@ return {
     ["clue.generic.destination"]  = "atividade incomum em uma terra distante",
     ["clue.terminal"]             = "Nada suspeito aqui.",
 
-    -- Itens roubados
+    -- Itens roubados — itens de marco historico ligados a sua cidade real
+    -- (ver ITEM_BY_CITY em src/mission.lua); os genericos servem pra qualquer cidade
     ["item.mona_lisa"]            = "A Mona Lisa",
-    ["item.hope_diamond"]         = "O Diamante Hope",
     ["item.crown_jewels"]         = "As Joias da Coroa",
     ["item.magna_carta"]          = "A Magna Carta",
     ["item.aztec_calendar"]       = "A Pedra do Calendario Asteca",
-    ["item.terracotta_army"]      = "Um Guerreiro de Terracota",
     ["item.parthenon_frieze"]     = "Um Friso do Partenon",
     ["item.eiffel_torch"]         = "A Tocha da Torre Eiffel",
     ["item.colosseum_stone"]      = "Uma Pedra do Coliseu",
     ["item.big_ben_bell"]         = "O Sino do Big Ben",
+    ["item.generic_painting"]     = "Uma pintura inestimavel",
+    ["item.generic_gem"]          = "Uma gema rara",
+    ["item.generic_relic"]        = "Uma relíquia antiga",
+    ["item.generic_document"]     = "Um documento historico",
+    ["item.generic_statue"]       = "Uma estatua de museu",
 
     -- Informacoes da cidade ao chegar
     ["city_info.press_enter"]     = "PRESSIONE ENTER PARA CONTINUAR",

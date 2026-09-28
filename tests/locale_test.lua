@@ -20,8 +20,11 @@ describe("locale", function()
 
     it("interpolates {var} placeholders", function()
         locale.set("en")
-        local result = locale.t("briefing.stolen", {item = "Mona Lisa", city = "Paris"})
-        assert_eq(result, "A Mona Lisa has been stolen from Paris.")
+        -- item text always carries its own article ("The Mona Lisa") —
+        -- the template must not add a second one (see src/mission.lua's
+        -- ITEM_BY_CITY comment for why this bit us before)
+        local result = locale.t("briefing.stolen", {item = "The Mona Lisa", city = "Paris"})
+        assert_eq(result, "The Mona Lisa has been stolen from Paris.")
     end)
 
     it("leaves undefined vars as {var} in output", function()

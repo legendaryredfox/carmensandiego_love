@@ -174,6 +174,22 @@ describe("mission.new", function()
         assert_eq(m.time_limit_hours, 5 * 24)
     end)
 
+    it("stolen item matches the starting city's real landmark, when it has one", function()
+        -- Regression: a briefing once claimed the Mona Lisa was stolen from
+        -- Kathmandu because the item was picked independently of the route.
+        for seed = 1, 200 do
+            local m       = mission.new(suspects, cities_by_id, routes, "rookie", make_seed_rng(seed))
+            local city_id = m.route[1]
+            local pool    = mission.ITEM_BY_CITY[city_id] or mission.GENERIC_ITEMS
+            local found   = false
+            for _, item in ipairs(pool) do
+                if item == m.stolen_item then found = true; break end
+            end
+            assert_true(found, "stolen_item " .. m.stolen_item ..
+                " is not valid for starting city " .. city_id)
+        end
+    end)
+
     it("same seed produces identical mission (determinism)", function()
         local m1 = mission.new(suspects, cities_by_id, routes, "sleuth", make_seed_rng(77))
         local m2 = mission.new(suspects, cities_by_id, routes, "sleuth", make_seed_rng(77))

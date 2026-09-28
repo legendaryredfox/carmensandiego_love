@@ -9,12 +9,25 @@ M.RANK_CONFIG = {
     ace_detective    = { route_length = 8, time_days = 5 },
 }
 
-local STOLEN_ITEMS = {
-    "item.mona_lisa", "item.hope_diamond", "item.crown_jewels",
-    "item.magna_carta", "item.aztec_calendar", "item.terracotta_army",
-    "item.parthenon_frieze", "item.eiffel_torch", "item.colosseum_stone",
-    "item.big_ben_bell",
+-- Real landmark items, keyed by their actual home city — a briefing must
+-- never claim, say, the Mona Lisa was stolen from Kathmandu. Cities without
+-- a specific landmark in this table draw from GENERIC_ITEMS instead, which
+-- describe something vague enough to be true of any city's museum.
+local ITEM_BY_CITY = {
+    paris       = { "item.mona_lisa", "item.eiffel_torch" },
+    london      = { "item.crown_jewels", "item.magna_carta", "item.big_ben_bell" },
+    mexico_city = { "item.aztec_calendar" },
+    athens      = { "item.parthenon_frieze" },
+    rome        = { "item.colosseum_stone" },
 }
+
+local GENERIC_ITEMS = {
+    "item.generic_painting", "item.generic_gem", "item.generic_relic",
+    "item.generic_document", "item.generic_statue",
+}
+
+M.ITEM_BY_CITY  = ITEM_BY_CITY
+M.GENERIC_ITEMS = GENERIC_ITEMS
 
 local TRAIT_ATTRS = { "sex", "hair", "hobby", "vehicle", "feature", "food" }
 
@@ -152,10 +165,11 @@ function M.new(suspects, cities_by_id, routes, rank_name, rng)
     local thief       = suspects[rng(#suspects)]
     local graph_index = rng(8)
     local graph       = routes[graph_index]
-    local item_key    = STOLEN_ITEMS[rng(#STOLEN_ITEMS)]
 
-    local route = M._build_route(cities_by_id, graph, cfg.route_length, rng)
-    local clues = M._generate_clues(route, thief, rng)
+    local route     = M._build_route(cities_by_id, graph, cfg.route_length, rng)
+    local clues     = M._generate_clues(route, thief, rng)
+    local item_pool = ITEM_BY_CITY[route[1]] or GENERIC_ITEMS
+    local item_key  = item_pool[rng(#item_pool)]
 
     return {
         thief             = thief,
