@@ -29,7 +29,9 @@ return {
     -- Briefing
     ["briefing.title"]            = "*** DESPACHO DA INTERPOL ***",
     ["briefing.stolen"]           = "{item} foi roubado(a) de {city}.",
-    ["briefing.suspect_seen"]     = "Um suspeito foi visto fugindo da cena.",
+    -- "pessoa suspeita" avoids the masculine default of "um suspeito",
+    -- which would misleadingly hint at the thief's sex before any clue does
+    ["briefing.suspect_seen"]     = "Uma pessoa suspeita foi vista fugindo da cena.",
     ["briefing.mission"]          = "Sua missao: rastrear o ladrao\ne efetuar a prisao.\nVoce tem {days} dias.",
     ["briefing.good_luck"]        = "Boa sorte, {rank} {name}.",
 
@@ -39,6 +41,7 @@ return {
     ["city.status_city"]          = "CIDADE: {city}",
     ["city.status_days"]          = "DIAS RESTANTES: {days}",
     ["city.status_rank"]          = "PATENTE: {rank}",
+    ["city.nav_hint"]             = "[ SETAS  ENTER ]",
 
     -- Local de investigacao
     ["venue.nobody_suspicious"]   = "Nenhum suspeito foi visto aqui.",

@@ -20,6 +20,27 @@ function M.pick(pool, rng)
     return pool[idx]
 end
 
+-- Picks up to `count` distinct clues (never the same entry twice, unlike
+-- calling M.pick repeatedly). Falls back to repeats only once the pool
+-- itself is smaller than `count`. Returns an array shorter than `count`
+-- only when the pool is empty.
+function M.pick_many(pool, count, rng)
+    if not pool or #pool == 0 then return {} end
+    local available = {}
+    for i = 1, #pool do available[i] = i end
+    local result = {}
+    for _ = 1, count do
+        if #available == 0 then
+            table.insert(result, M.pick(pool, rng))
+        else
+            local pick_at = rng and rng(#available) or 1
+            table.insert(result, pool[available[pick_at]])
+            table.remove(available, pick_at)
+        end
+    end
+    return result
+end
+
 -- Returns display text for a clue in the current language.
 function M.clue_text(clue)
     if not clue then return "" end

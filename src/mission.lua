@@ -63,9 +63,11 @@ function M._generate_clues(route, thief, rng)
         local city_clues   = {}
         local dest_pool    = pool_mod.load(next_city_id)
 
-        -- Venues 1 and 2: destination clues from the next city's pool
-        for _ = 1, 2 do
-            local raw  = pool_mod.pick(dest_pool, rng)
+        -- Venues 1 and 2: distinct destination clues from the next city's
+        -- pool — picking independently could return the same clue twice.
+        local picks = pool_mod.pick_many(dest_pool, 2, rng)
+        for slot = 1, 2 do
+            local raw = picks[slot]
             if raw then
                 table.insert(city_clues, {
                     type         = "destination",

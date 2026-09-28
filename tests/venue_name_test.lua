@@ -60,4 +60,20 @@ describe("venue_name.name_for", function()
         local b = venue_name.name_for(mission, "paris", 2)
         assert_true(a ~= b, "landmark and currency venues got the same name")
     end)
+
+    it("avoids duplicate names when two venues share a category", function()
+        -- Same category on both venues used to be able to hash to the same
+        -- variant (e.g. two "landmark" venues both drawing "MONUMENT PLAZA").
+        for i = 1, 30 do
+            local city_id   = "testcity" .. i
+            local same_cat  = { clues = { [city_id] = {
+                { type = "destination", category = "landmark" },
+                { type = "destination", category = "landmark" },
+                { type = "trait" },
+            } } }
+            local a = venue_name.name_for(same_cat, city_id, 1)
+            local b = venue_name.name_for(same_cat, city_id, 2)
+            assert_true(a ~= b, "duplicate venue name for " .. city_id)
+        end
+    end)
 end)

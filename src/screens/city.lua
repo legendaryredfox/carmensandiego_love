@@ -48,6 +48,19 @@ local function zone_rect(i)
              w = ACTION_W, h = ACTION_H }
 end
 
+-- Picks whichever zone in `indices` sits closest (horizontally) to x —
+-- used so up/down jump to the nearest zone in the other row rather than
+-- always landing on the first one.
+local function nearest_zone(indices, x)
+    local best, best_dist = indices[1], math.huge
+    for _, i in ipairs(indices) do
+        local r    = zone_rect(i)
+        local dist = math.abs((r.x + r.w / 2) - x)
+        if dist < best_dist then best_dist = dist; best = i end
+    end
+    return best
+end
+
 local function check_auto_arrest()
     local d = game.detective
     local m = game.mission
@@ -143,13 +156,21 @@ function S.draw()
     love.graphics.setColor(1, 1, 1, 1)
 
     -- Nav hint
-    ui.text(0, ui.VIRTUAL_H - 30, "[ LEFT / RIGHT  ENTER ]",
+    ui.text(0, ui.VIRTUAL_H - 30, locale.t("city.nav_hint"),
         ui.C.dim, "center", ui.VIRTUAL_W)
 end
 
 function S.keypressed(key)
     if key == "left"  then selected = math.max(1, selected - 1) end
     if key == "right" then selected = math.min(5, selected + 1) end
+    if key == "down" and selected <= 3 then
+        local r = zone_rect(selected)
+        selected = nearest_zone({ 4, 5 }, r.x + r.w / 2)
+    end
+    if key == "up" and selected >= 4 then
+        local r = zone_rect(selected)
+        selected = nearest_zone({ 1, 2, 3 }, r.x + r.w / 2)
+    end
     if key == "return" or key == "space" then S._activate(selected) end
 end
 

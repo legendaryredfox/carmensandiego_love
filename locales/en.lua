@@ -39,6 +39,7 @@ return {
     ["city.status_city"]          = "CITY: {city}",
     ["city.status_days"]          = "DAYS LEFT: {days}",
     ["city.status_rank"]          = "RANK: {rank}",
+    ["city.nav_hint"]             = "[ ARROWS  ENTER ]",
 
     -- Venue
     ["venue.nobody_suspicious"]   = "Nobody suspicious has been seen here.",

@@ -145,7 +145,12 @@ function M.button(x, y, w, h, label, selected)
     end
     love.graphics.setColor(selected and M.C.bg or M.C.text)
     love.graphics.setFont(font_sm)
-    love.graphics.printf(label, x + 2, y + 3, w - 4, "center")
+    -- Vertically center regardless of h — a fixed offset only looked right
+    -- for the original 14px-tall buttons and drifted to the top on taller ones.
+    local line_h = font_sm:getHeight() * font_sm:getLineHeight()
+    local lines  = select(2, label:gsub("\n", "\n")) + 1
+    local text_y = y + (h - line_h * lines) / 2
+    love.graphics.printf(label, x + 2, text_y, w - 4, "center")
     love.graphics.setColor(1, 1, 1, 1)
     return { x = x, y = y, w = w, h = h }
 end

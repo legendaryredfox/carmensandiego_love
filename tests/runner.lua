@@ -74,6 +74,7 @@ local test_files = {
     "tests/city_test",
     "tests/suspect_test",
     "tests/mission_test",
+    "tests/clue_pool_test",
     "tests/venue_name_test",
     "tests/detective_test",
     "tests/save_test",

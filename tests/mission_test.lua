@@ -111,6 +111,23 @@ describe("mission._generate_clues", function()
         end
     end)
 
+    it("venues 1-2 never share the same clue when the pool has enough entries", function()
+        local pool_mod = require("src.clue_pool")
+        for seed = 1, 20 do
+            local clues = mission._generate_clues(route, thief, make_seed_rng(seed))
+            for i = 1, #route - 1 do
+                local pool = pool_mod.load(route[i + 1])
+                if #pool >= 2 then
+                    local c1 = clues[route[i]][1]
+                    local c2 = clues[route[i]][2]
+                    assert_true(c1.text ~= c2.text or c1.category ~= c2.category,
+                        "duplicate destination clue for " .. route[i] ..
+                        " (seed " .. seed .. ")")
+                end
+            end
+        end
+    end)
+
     it("venue 3 is a trait clue with correct suspect value", function()
         local clues = mission._generate_clues(route, thief)
         for i = 1, #route - 1 do
