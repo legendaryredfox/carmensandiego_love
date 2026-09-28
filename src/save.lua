@@ -19,18 +19,22 @@ local function slot_path(slot)
     return "save_" .. tostring(slot) .. ".json"
 end
 
--- Persists detective + ranking to a save slot (1–3).
-function M.write(slot, det_data, ranking_data)
+-- Persists detective + ranking + the in-progress mission (if any) to a
+-- save slot (1–3). mission_data is plain data (strings/tables/booleans
+-- only, see src/mission.lua's M.new) so it round-trips through JSON as-is.
+function M.write(slot, det_data, ranking_data, mission_data)
     local fs = get_fs()
     local payload = {
-        version  = 1,
+        version   = 2,
         detective = det_data,
         ranking   = ranking_data,
+        mission   = mission_data,
     }
     fs.write(slot_path(slot), json.encode(payload))
 end
 
--- Loads a save slot. Returns { detective = ..., ranking = ... } or nil.
+-- Loads a save slot. Returns { detective = ..., ranking = ..., mission = ... }
+-- or nil. mission is nil for saves written before v2 or with no mission.
 function M.read(slot)
     local fs = get_fs()
     if not fs.getInfo(slot_path(slot)) then return nil end
@@ -41,6 +45,7 @@ function M.read(slot)
     return {
         detective = data.detective,
         ranking   = ranking.from_table(data.ranking),
+        mission   = data.mission,
     }
 end
 

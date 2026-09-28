@@ -96,7 +96,8 @@ end
 function M.save()
     save_mod.write(M.save_slot,
         detective_mod.serialize(M.detective),
-        ranking_mod.to_table(M.ranking))
+        ranking_mod.to_table(M.ranking),
+        M.mission)
 end
 
 function M.load(slot)
@@ -105,6 +106,18 @@ function M.load(slot)
     if not data then return false end
     M.detective = detective_mod.deserialize(data.detective)
     M.ranking   = data.ranking
+    if data.mission then
+        -- Resume the in-progress case exactly as saved — must not call
+        -- detective_mod.begin_mission here, it would reset the current
+        -- city, elapsed hours, gathered traits and warrant we just restored.
+        M.mission = data.mission
+    else
+        -- Save predates persisted missions (or was written with none) —
+        -- there's nothing to resume, so start a fresh case instead of
+        -- leaving game.mission nil (every screen after the menu assumes
+        -- it's set).
+        M.next_mission()
+    end
     return true
 end
 

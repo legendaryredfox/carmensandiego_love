@@ -41,6 +41,36 @@ describe("save.write / save.read", function()
         assert_eq(loaded.ranking.entries[1].score, 999)
     end)
 
+    it("round-trips an in-progress mission alongside the detective", function()
+        -- Regression: Continue used to restore only detective + ranking,
+        -- leaving game.mission nil and crashing the next screen that read it.
+        setup()
+        local d = detective.new("Tester")
+        local mission = {
+            thief             = { id = "scarlet_vega", name = "Scarlet Vega", sex = "female" },
+            is_final          = false,
+            stolen_item       = "item.generic_gem",
+            graph_index       = 2,
+            route             = { "paris", "london", "rome" },
+            time_limit_hours  = 120,
+            clues             = {
+                paris = {
+                    { type = "destination", next_city_id = "london",
+                      category = "landmark", text = { en = "hi", pt = "oi" } },
+                },
+            },
+        }
+
+        save.write(1, detective.serialize(d), ranking.to_table(ranking.new()), mission)
+        local loaded = save.read(1)
+
+        assert_not_nil(loaded.mission)
+        assert_eq(loaded.mission.thief.id, "scarlet_vega")
+        assert_eq(loaded.mission.route[2], "london")
+        assert_eq(loaded.mission.clues.paris[1].text.en, "hi")
+        assert_false(loaded.mission.is_final)
+    end)
+
     it("read returns nil for missing slot", function()
         setup()
         local result = save.read(2)

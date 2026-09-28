@@ -21,8 +21,9 @@ local function items()
           action = function() SM.switch(require("src.screens.name_entry")) end },
         { label = locale.t("menu.continue"),
           action = function()
-              if game.load(1) then SM.switch(require("src.screens.briefing"))
-              else end
+              -- Resume in the field, not the mission intro — the player
+              -- already saw this case's briefing and may have made progress.
+              if game.load(1) then SM.switch(require("src.screens.city")) end
           end,
           disabled = not continue_available() },
         { label = locale.t("menu.leaderboard"),
