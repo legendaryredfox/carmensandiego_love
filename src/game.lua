@@ -74,13 +74,18 @@ function M.next_mission()
     detective_mod.begin_mission(M.detective, M.mission)
 end
 
--- True once the detective holds any warrant and has reached the thief's
--- city — city.lua and flying.lua both check this to auto-jump to the
--- arrest screen instead of waiting for an explicit player action. (The
--- warrant might still be wrong; arrest.lua resolves that separately.)
-function M.should_auto_arrest()
-    return M.detective.warrant_id ~= nil
-        and M.detective.current_city_id == mission_mod.thief_city(M.mission)
+-- True when investigating venue_index just found the thief's marked
+-- venue at the terminal city — src/screens/venue.lua checks this right
+-- after detective_mod.investigate() to jump to the arrest screen instead
+-- of showing the usual witness/clue text. Deliberately doesn't check
+-- warrant_id here: entering the right venue without a warrant yet still
+-- triggers the arrest sequence in the 1985 original (it just fails with
+-- a "no warrant" report — see detective_mod.attempt_arrest), same as a
+-- wrong warrant. Merely arriving in the city is no longer enough on its
+-- own (see PLAN.md's "arrest requires entering correct venue" note).
+function M.venue_triggers_arrest(venue_index)
+    return mission_mod.is_terminal(M.mission, M.detective.current_city_id)
+        and mission_mod.is_hideout_venue(M.mission, venue_index)
 end
 
 function M.current_city()

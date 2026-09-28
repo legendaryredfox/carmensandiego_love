@@ -69,7 +69,11 @@ function S.enter()
     -- Trait clues are NOT auto-recorded into gathered_traits — the player
     -- reads the witness's description here and has to go enter it
     -- themselves on the crime computer, same as any other deduction.
-    clue      = detective_mod.investigate(game.detective, game.mission, S.venue_index)
+    clue = detective_mod.investigate(game.detective, game.mission, S.venue_index)
+    if game.venue_triggers_arrest(S.venue_index) then
+        SM.switch(require("src.screens.arrest"))
+        return
+    end
     text_full = locale.t("venue.witness_says") .. "\n\n" .. clue_to_text(clue)
     text_len  = ui.utf8_len(text_full)
     revealed  = 0

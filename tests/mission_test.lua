@@ -328,4 +328,40 @@ describe("mission helpers", function()
         assert_not_nil(clue)
         assert_eq(clue.type, "destination")
     end)
+
+    it("hideout_venue starts as one of the 3 slots", function()
+        assert_true(m.hideout_venue >= 1 and m.hideout_venue <= 3)
+    end)
+
+    it("is_hideout_venue matches only the current mark", function()
+        for slot = 1, 3 do
+            assert_eq(mission.is_hideout_venue(m, slot), slot == m.hideout_venue)
+        end
+    end)
+end)
+
+describe("mission.evade_hideout", function()
+    local function fresh(seed)
+        return mission.new(suspects, cities_by_id, routes, "rookie", make_seed_rng(seed))
+    end
+
+    it("does nothing when the visited slot already matches the mark", function()
+        local m    = fresh(5)
+        local mark = m.hideout_venue
+        mission.evade_hideout(m, mark)
+        assert_eq(m.hideout_venue, mark)
+    end)
+
+    it("moves the mark to the one remaining slot when the wrong one is visited", function()
+        for seed = 1, 30 do
+            local m         = fresh(seed)
+            local old_mark  = m.hideout_venue
+            local wrong     = (old_mark % 3) + 1  -- any slot != old_mark
+            mission.evade_hideout(m, wrong)
+            assert_true(m.hideout_venue ~= wrong,
+                "mark must not land on the just-visited slot")
+            assert_true(m.hideout_venue ~= old_mark,
+                "mark must actually move, not stay put")
+        end
+    end)
 end)

@@ -150,7 +150,6 @@ return {
 
     -- Ranks
     ["rank.rookie"]               = "Rookie",
-    ["rank.junior_detective"]     = "Junior Detective",
     ["rank.sleuth"]               = "Sleuth",
     ["rank.private_eye"]          = "Private Eye",
     ["rank.investigator"]         = "Investigator",

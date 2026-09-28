@@ -3,13 +3,18 @@ local mission_mod = require("src.mission")
 
 local M = {}
 
+-- Cumulative cases-solved thresholds to reach each rank — matches the
+-- 1985 original exactly (reconstruction.md:59-61: promotion thresholds
+-- 1, 5, 12, 20 solved cases for its first five ranks; the sixth rank,
+-- Super Sleuth, isn't reached by a plain count — see mission.lua's
+-- FINAL_CASE_CASES_SOLVED, which folds that into "solve the leader case
+-- while at Ace Detective" instead of adding a 7th rank here).
 local RANKS = {
-    { id = "rookie",           cases = 0  },
-    { id = "junior_detective", cases = 1  },
-    { id = "sleuth",           cases = 3  },
-    { id = "private_eye",      cases = 6  },
-    { id = "investigator",     cases = 10 },
-    { id = "ace_detective",    cases = 15 },
+    { id = "rookie",        cases = 0  },
+    { id = "sleuth",        cases = 1  },
+    { id = "private_eye",   cases = 5  },
+    { id = "investigator",  cases = 12 },
+    { id = "ace_detective", cases = 20 },
 }
 
 local DAY_EN = { "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" }
@@ -18,6 +23,18 @@ local DAY_WORD_EN, DAY_WORD_PT = "Day", "Dia"
 
 local INVESTIGATION_HOURS = 2
 M.INVESTIGATION_HOURS     = INVESTIGATION_HOURS
+
+-- Every case starts Monday 08:00 on the in-game clock — a deliberate
+-- simplification, not a port of the 1985 original (which randomizes both
+-- weekday and starting hour 08:00-17:00 per case; see PLAN.md's "Playtest
+-- feedback" note). start_timestamp/current_timestamp/deadline_timestamp
+-- below are plain "seconds since Monday 00:00" counters, not real unix
+-- time or the host machine's clock — format_datetime derives weekday and
+-- hour from that count directly instead of os.date, so the display can't
+-- drift with the host's timezone/DST or whatever real day it is.
+local SEC_PER_DAY          = 86400
+local CASE_START_HOUR      = 8
+M.CASE_START_TIMESTAMP     = CASE_START_HOUR * 3600
 
 local function rank_for_cases(cases_solved)
     local current = RANKS[1]
@@ -35,10 +52,11 @@ function M.new(name)
         current_city_id  = nil,
         hours_elapsed    = 0,
         time_limit_hours = 7 * 24,
-        start_timestamp  = os.time(),
+        start_timestamp  = M.CASE_START_TIMESTAMP,
         gathered_traits  = {},
         warrant_id       = nil,
         career_complete  = false,
+        hideout_visited  = false,
     }
 end
 
@@ -52,11 +70,17 @@ function M.deadline_timestamp(det)
     return det.start_timestamp + math.floor(det.time_limit_hours * 3600)
 end
 
--- Formats a unix timestamp as "Mon 14:30" (or PT equivalent).
+-- Formats a virtual "seconds since Monday 00:00" timestamp (see
+-- CASE_START_TIMESTAMP) as "Mon 14:30" (or PT equivalent). DAY_EN/DAY_PT
+-- are Sunday-first (index 1); Monday is day_offset 0, hence the +2 below.
 function M.format_datetime(ts, lang)
-    local t    = os.date("*t", ts)
-    local days = (lang == "pt") and DAY_PT or DAY_EN
-    return string.format("%s %02d:%02d", days[t.wday], t.hour, t.min)
+    local days       = (lang == "pt") and DAY_PT or DAY_EN
+    local day_offset = math.floor(ts / SEC_PER_DAY) % 7
+    local sec_of_day = ts % SEC_PER_DAY
+    local wday       = (day_offset + 1) % 7 + 1
+    local hour       = math.floor(sec_of_day / 3600)
+    local min        = math.floor((sec_of_day % 3600) / 60)
+    return string.format("%s %02d:%02d", days[wday], hour, min)
 end
 
 -- 1-indexed day-of-case number for a timestamp relative to the mission's
@@ -96,6 +120,13 @@ end
 -- Investigates venue_index (1–3) in current city.
 -- Costs INVESTIGATION_HOURS in-game hours.
 -- Returns the Clue table, or nil if city is not on the route (no leads).
+--
+-- The detective's very first investigation at the terminal (hideout) city
+-- either finds the thief's marked venue or, if wrong, makes the thief
+-- evade to the one remaining slot (see mission.evade_hideout) — mirrors
+-- the 1985 original's "first place investigated can move the mark"
+-- behavior (reconstruction.md:510-514) instead of the thief just sitting
+-- in a fixed spot the moment the detective lands in the city.
 function M.investigate(det, mission, venue_index)
     local city_id = det.current_city_id
     -- Advance clock regardless (time passes even on wrong city)
@@ -103,6 +134,10 @@ function M.investigate(det, mission, venue_index)
                                   det.hours_elapsed + INVESTIGATION_HOURS)
     if not mission_mod.on_route(mission, city_id) then
         return nil
+    end
+    if mission_mod.is_terminal(mission, city_id) and not det.hideout_visited then
+        det.hideout_visited = true
+        mission_mod.evade_hideout(mission, venue_index)
     end
     return mission_mod.clue_at(mission, city_id, venue_index)
 end
@@ -173,9 +208,10 @@ function M.begin_mission(det, mission)
     det.current_city_id  = mission.route[1]
     det.hours_elapsed    = 0
     det.time_limit_hours = mission.time_limit_hours
-    det.start_timestamp  = os.time()
+    det.start_timestamp  = M.CASE_START_TIMESTAMP
     det.gathered_traits  = {}
     det.warrant_id       = nil
+    det.hideout_visited  = false
 end
 
 function M.serialize(det)
@@ -190,6 +226,7 @@ function M.serialize(det)
         gathered_traits  = det.gathered_traits,
         warrant_id       = det.warrant_id,
         career_complete  = det.career_complete,
+        hideout_visited  = det.hideout_visited,
     }
 end
 
@@ -200,10 +237,11 @@ function M.deserialize(t)
     det.current_city_id  = t.current_city_id
     det.hours_elapsed    = t.hours_elapsed    or 0
     det.time_limit_hours = t.time_limit_hours or (7 * 24)
-    det.start_timestamp  = t.start_timestamp  or os.time()
+    det.start_timestamp  = t.start_timestamp  or M.CASE_START_TIMESTAMP
     det.gathered_traits  = t.gathered_traits  or {}
     det.warrant_id       = t.warrant_id
     det.career_complete  = t.career_complete  or false
+    det.hideout_visited  = t.hideout_visited  or false
     return det
 end
 

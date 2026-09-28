@@ -432,19 +432,12 @@ Facts below cite `references/apple2-carmen-sandiego-world-disasm/docs/reconstruc
 (the disassembly/reconstruction of the actual 1985 game) and its decoded
 JSON assets, same as SPEC.md already does for the 29-case leader rule.
 
-1. **First case was solved too fast — needs more steps before an arrest
-   is possible.** Root cause is very likely item 4 below, not route
-   length: `src/mission.lua`'s Rookie `route_length = 4` already matches
-   the original's formula (hideout picked first, walk backward rank+3
-   steps — `reconstruction.md:494-497` — Rookie = rank 0, so 3 steps = 4
-   cities). What's missing is the gate at the end of that route: right
-   now `game.should_auto_arrest()` (`src/game.lua:81-84`) fires the
-   instant the detective's `current_city_id` matches the hideout and a
-   warrant is held — no venue visit required, so arriving ends the case
-   immediately. Fixing item 4 (visit-gated arrest, with the evasion
-   shuffle) should already make cases feel longer without touching route
-   length. Route length itself is still a secondary knob if it still
-   feels short after that.
+1. **FIXED (2026-09-28)** — First case was solved too fast. Root cause
+   was item 4 below, not route length (`src/mission.lua`'s Rookie
+   `route_length = 4` already matched the original's rank+3 formula).
+   Fixed by implementing item 4's visit-gated arrest — see that entry.
+   Route length itself is untouched and still available as a secondary
+   knob if cases still feel short after playtesting this.
 
 2. **Briefing text is too concise; state the suspect's sex up front,
    like the original did.** Current `src/screens/briefing.lua` +
@@ -477,41 +470,52 @@ JSON assets, same as SPEC.md already does for the 29-case leader rule.
    suspect's `(sex, hair, hobby, vehicle, feature)` combo must stay
    unique — enforced by `tests/suspect_test.lua`).
 
-4. **Arrest should require entering the suspect's actual venue within the
-   city, not just arriving in the city.** `reconstruction.md:510-514`: at
-   the hideout city, one of the three investigation slots is secretly
-   marked as the suspect's location. If the player's *first* investigation
-   there lands on an unmarked slot, the mark *moves* to a different slot
-   (the suspect evades to another venue) instead of the case simply
-   failing; a later visit to whichever slot currently holds the mark
-   triggers the arrest sequence. None of that exists today —
-   `game.should_auto_arrest()` (`src/game.lua:81-84`, called from
-   `src/screens/city.lua:66-70` and `src/screens/flying.lua:41`) only
-   checks city + warrant, not venue. Needs: a marked-venue concept in
-   mission/detective state for the hideout city, the evasion-shuffle on a
-   wrong first visit, and arrest.lua triggered only by investigating the
-   currently-marked venue — still subject to the existing deadline (a
-   correct venue visited after time's up should not arrest; see
-   `detective.travel`'s `"time_expired"` handling for the existing
-   deadline-check pattern to mirror).
+4. **FIXED (2026-09-28)** — Arrest required only arriving in the hideout
+   city with a warrant, not entering the suspect's actual venue.
+   `reconstruction.md:510-514`: at the hideout city, one of the three
+   investigation slots is secretly marked as the suspect's location; if
+   the player's *first* investigation there lands on an unmarked slot,
+   the mark *moves* to a different slot (the suspect evades) instead of
+   the case simply failing; a later visit to whichever slot currently
+   holds the mark triggers the arrest sequence. Implemented that shape:
+   `mission.new` now picks `mission.hideout_venue` (1-3) at case
+   generation; `mission.is_hideout_venue`/`mission.evade_hideout`
+   (`src/mission.lua`) read/move the mark; `detective.investigate`
+   (`src/detective.lua`) calls `evade_hideout` exactly once per case, on
+   the detective's first-ever investigation at the terminal city (guarded
+   by a new `det.hideout_visited` flag, persisted through
+   serialize/deserialize); `game.venue_triggers_arrest(venue_index)`
+   (`src/game.lua`, replacing the old arrival-only
+   `game.should_auto_arrest`) checks terminal city + current mark;
+   `src/screens/venue.lua` calls it right after `investigate()` and jumps
+   to `arrest.lua` instead of showing witness text when it matches. The
+   old arrival-based checks in `src/screens/city.lua` and
+   `src/screens/flying.lua` are gone — arriving in the city now always
+   just shows the city screen. Deadline handling is unchanged: a correct
+   venue visited after time's up is already unreachable, since
+   `detective.travel`'s `"time_expired"` sends the player to game_over
+   before another investigation is possible. Tests:
+   `tests/mission_test.lua`'s new `mission.evade_hideout` block.
 
-5. **Every case should start Monday 08:00, in-game clock.** Currently
-   `detective.begin_mission` (`src/detective.lua:172-179`) sets
-   `det.start_timestamp = os.time()` — the real-world wall-clock moment
-   the mission begins — and `format_datetime`/`current_time_str`/
-   `deadline_str` derive the displayed weekday via `os.date(ts).wday` on
-   that real epoch. So today there's no deliberate in-game weekday at
-   all, just whatever real day/time the player happens to launch the
-   game. (For reference/contrast: the original randomizes both — weekday
-   0-6 and starting hour 08:00-17:00 at case start,
-   `reconstruction.md:99-102` — but the ask here is deliberately simpler:
-   always Monday 08:00, not randomized.) Deadlines (days-remaining per
-   rank in `RANK_CONFIG.time_days`) stay as currently configured — only
-   the start anchor changes. Implementation note: deriving weekday from
-   real epoch via `os.date` is fragile (timezone/DST, and "Monday" would
-   need picking a real date that happens to fall on one) — better to stop
-   reading weekday from `os.date` at all and drive display off an
-   explicit in-game day-of-week counter seeded at Monday.
+5. **FIXED (2026-09-28)** — Cases didn't have a deliberate in-game start
+   time at all: `detective.begin_mission` set `det.start_timestamp =
+   os.time()` (real wall-clock moment) and `format_datetime` derived the
+   displayed weekday via `os.date(ts).wday` on that real epoch — whatever
+   real day/time the player happened to launch the game. (For contrast,
+   the original randomizes both weekday 0-6 and starting hour 08:00-17:00
+   per case, `reconstruction.md:99-102` — the ask here is deliberately
+   simpler and NOT ported from source: always Monday 08:00.) Fixed by
+   decoupling the in-game clock from the real one entirely:
+   `start_timestamp`/`current_timestamp`/`deadline_timestamp` are now
+   plain "seconds since Monday 00:00" counters (`M.CASE_START_TIMESTAMP =
+   8 * 3600`, used by both `detective.new` and `detective.begin_mission`
+   instead of `os.time()`), and `format_datetime` computes weekday/hour
+   arithmetically from that count instead of calling `os.date` — so
+   display can no longer drift with the host's timezone/DST or whatever
+   real day it happens to be, and every case reliably opens "Day 1, Mon
+   08:00". Deadlines (`RANK_CONFIG.time_days`) untouched. Tests:
+   `tests/detective_test.lua`'s new "case clock always starts Monday
+   08:00" and `detective.begin_mission` cases.
 
 6. **Witness clue text should be direct speech, not reported speech.**
    Current phrasing is indirect: `locale.t("venue.witness_says")` =
@@ -554,29 +558,35 @@ JSON assets, same as SPEC.md already does for the 29-case leader rule.
 
 ### Rank promotion thresholds — should match the original (flagged 2026-09-28)
 
-`reconstruction.md:59-61`: the original's promotion thresholds are 1, 5,
-12, and 20 cases solved (cumulative) to advance through its first five
-ranks (Rookie → Sleuth → Private Eye → Investigator → Ace Detective); the
-remaining table entries are `$FF` (unused) because the sixth rank, Super
-Sleuth, isn't reached by a plain solved-case count — see the existing
-29-case organization-leader gate already documented in SPEC.md (§ "Once
-the detective is Ace Detective **and** has solved 29 cases total").
+**FIXED (2026-09-28)** — `reconstruction.md:59-61`: the original's
+promotion thresholds are 1, 5, 12, and 20 cases solved (cumulative) to
+advance through its first five ranks (Rookie → Sleuth → Private Eye →
+Investigator → Ace Detective); the remaining table entries are `$FF`
+(unused) because the sixth rank, Super Sleuth, isn't reached by a plain
+solved-case count — see the existing 29-case organization-leader gate
+already documented in SPEC.md (§ "Once the detective is Ace Detective
+**and** has solved 29 cases total").
 
-This project's current thresholds (`src/detective.lua:6-13`, cumulative
-cases-solved required per rank) are **0, 1, 3, 6, 10, 15** across six
-ranks named Rookie, Junior Detective, Sleuth, Private Eye, Investigator,
-Ace Detective — note "Junior Detective" isn't one of the original's six
-rank names at all (original: Rookie, Sleuth, Private Eye, Investigator,
-Ace Detective, Super Sleuth), and this project's "Ace Detective" is
-already the *top* rank (matches SPEC.md's leader-case design, which
-folds the original's separate "Super Sleuth" tier into "solve the leader
-case while at Ace Detective" rather than adding a 7th rank).
-
-Next step: decide how to reconcile the extra "Junior Detective" rank
-(drop it, keeping five ranks at 0/1/5/12/20; or keep it and decide where
-it sits in the threshold sequence) and update `src/detective.lua`'s
-`RANKS` table + `src/mission.lua`'s `RANK_CONFIG` keys to match, then
-update `tests/detective_test.lua`'s threshold assertions accordingly.
+This project's thresholds were **0, 1, 3, 6, 10, 15** across six ranks
+named Rookie, Junior Detective, Sleuth, Private Eye, Investigator, Ace
+Detective — "Junior Detective" wasn't one of the original's six rank
+names at all (original: Rookie, Sleuth, Private Eye, Investigator, Ace
+Detective, Super Sleuth). Dropped it: `src/detective.lua`'s `RANKS` and
+`src/mission.lua`'s `RANK_CONFIG` now both have exactly the original's
+five ranks (Rookie, Sleuth, Private Eye, Investigator, Ace Detective) at
+thresholds 0/1/5/12/20, matching source exactly — this project's
+"Ace Detective" stays the top rank either way (matches SPEC.md's
+leader-case design, which already folds the original's separate "Super
+Sleuth" tier into "solve the leader case while at Ace Detective" rather
+than adding a 7th rank). Bonus: dropping the extra rank also made
+`mission.lua`'s per-rank `route_length` table (4/5/6/7/8) line up exactly
+with the original's rank+3 backward-walk formula
+(`reconstruction.md:494-497`) for the first time — it only looked
+approximately right before because Junior Detective's route_length (5)
+happened to collide with Sleuth's. Removed the `rank.junior_detective`
+locale key from both `locales/en.lua` and `locales/pt.lua` together.
+Tests: `tests/detective_test.lua`'s threshold table and "stays
+ace_detective beyond" case updated to the new numbers.
 
 ---
 

@@ -38,11 +38,10 @@ local function finish()
         return
     end
 
-    if game.should_auto_arrest() then
-        SM.switch(require("src.screens.arrest"))
-    else
-        SM.switch(require("src.screens.city_info"))
-    end
+    -- Arriving in the thief's city is no longer enough to arrest on its
+    -- own; the detective still has to investigate the right venue there
+    -- (see game.venue_triggers_arrest, checked from src/screens/venue.lua).
+    SM.switch(require("src.screens.city_info"))
 end
 
 function S.update(dt)

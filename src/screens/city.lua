@@ -63,20 +63,11 @@ local function nearest_zone(indices, x)
     return best
 end
 
-local function check_auto_arrest()
-    if game.should_auto_arrest() then
-        SM.switch(require("src.screens.arrest"))
-        return true
-    end
-    return false
-end
-
 function S.enter()
     selected   = 1
     local r    = zone_rect(selected)
     selector_x = ui.new_smooth(r.x)
     audio.crossfade("city")
-    if check_auto_arrest() then return end
 end
 
 function S.update(dt)

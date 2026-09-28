@@ -151,7 +151,6 @@ return {
 
     -- Patentes
     ["rank.rookie"]               = "Novato",
-    ["rank.junior_detective"]     = "Detetive Junior",
     ["rank.sleuth"]               = "Investigador",
     ["rank.private_eye"]          = "Detetive Particular",
     ["rank.investigator"]         = "Investigador Senior",

@@ -32,6 +32,23 @@ describe("detective.new", function()
         assert_eq(d.hours_elapsed, 0)
         assert_nil(d.warrant_id)
         assert_nil(d.current_city_id)
+        assert_false(d.hideout_visited)
+    end)
+
+    it("case clock always starts Monday 08:00, regardless of host clock", function()
+        local d = fresh_det()
+        assert_eq(detective.current_time_str(d, "en"), "Day 1, Mon 08:00")
+    end)
+end)
+
+describe("detective.begin_mission", function()
+    it("resets the clock to Monday 08:00 and clears hideout_visited", function()
+        local d = fresh_det()
+        local m = fresh_mission(9)
+        d.hideout_visited = true
+        detective.begin_mission(d, m)
+        assert_false(d.hideout_visited)
+        assert_eq(detective.current_time_str(d, "en"), "Day 1, Mon 08:00")
     end)
 end)
 
@@ -100,6 +117,56 @@ describe("detective.add_trait / issue_warrant", function()
     end)
 end)
 
+describe("detective.investigate", function()
+    it("returns nil when city is not on the mission route", function()
+        local d = fresh_det()
+        local m = fresh_mission(11)
+        d.current_city_id = "atlantis"
+        local clue = detective.investigate(d, m, 1)
+        assert_nil(clue)
+    end)
+
+    it("costs INVESTIGATION_HOURS regardless of hit or miss", function()
+        local d = fresh_det()
+        local m = fresh_mission(11)
+        d.current_city_id = m.route[1]
+        detective.investigate(d, m, 1)
+        assert_eq(d.hours_elapsed, detective.INVESTIGATION_HOURS)
+    end)
+
+    it("first wrong hideout guess evades and does not mark it found", function()
+        local d = fresh_det()
+        local m = fresh_mission(11)
+        d.current_city_id = mission.thief_city(m)
+        local wrong = (m.hideout_venue % 3) + 1
+        detective.investigate(d, m, wrong)
+        assert_true(d.hideout_visited)
+        assert_false(mission.is_hideout_venue(m, wrong),
+            "thief should have evaded away from the visited slot")
+    end)
+
+    it("a first-try correct hideout guess stays found (no evasion)", function()
+        local d = fresh_det()
+        local m = fresh_mission(11)
+        d.current_city_id = mission.thief_city(m)
+        local right = m.hideout_venue
+        detective.investigate(d, m, right)
+        assert_true(mission.is_hideout_venue(m, right))
+    end)
+
+    it("only evades once — a second wrong guess does not move the mark again", function()
+        local d = fresh_det()
+        local m = fresh_mission(11)
+        d.current_city_id = mission.thief_city(m)
+        local first_wrong = (m.hideout_venue % 3) + 1
+        detective.investigate(d, m, first_wrong)
+        local mark_after_first = m.hideout_venue
+        local second_wrong = (mark_after_first % 3) + 1
+        detective.investigate(d, m, second_wrong)
+        assert_eq(m.hideout_venue, mark_after_first)
+    end)
+end)
+
 describe("detective.attempt_arrest", function()
     local m = fresh_mission(42)
 
@@ -146,11 +213,10 @@ describe("detective.on_success / rank progression", function()
     it("rank advances at correct thresholds", function()
         local thresholds = {
             {0,  "rookie"},
-            {1,  "junior_detective"},
-            {3,  "sleuth"},
-            {6,  "private_eye"},
-            {10, "investigator"},
-            {15, "ace_detective"},
+            {1,  "sleuth"},
+            {5,  "private_eye"},
+            {12, "investigator"},
+            {20, "ace_detective"},
         }
         for _, pair in ipairs(thresholds) do
             assert_eq(detective._rank_for_cases(pair[1]), pair[2],
@@ -158,9 +224,9 @@ describe("detective.on_success / rank progression", function()
         end
     end)
 
-    it("rank stays ace_detective beyond 15 cases", function()
+    it("rank stays ace_detective beyond 20 cases", function()
         local d = fresh_det()
-        for _ = 1, 20 do detective.on_success(d) end
+        for _ = 1, 25 do detective.on_success(d) end
         assert_eq(d.rank, "ace_detective")
     end)
 end)
@@ -216,6 +282,7 @@ describe("detective serialize/deserialize", function()
         d.gathered_traits  = { sex = "female", hair = "red" }
         d.warrant_id       = "some_suspect"
         d.career_complete  = true
+        d.hideout_visited  = true
 
         local t  = detective.serialize(d)
         local d2 = detective.deserialize(t)
@@ -229,6 +296,7 @@ describe("detective serialize/deserialize", function()
         assert_eq(d2.warrant_id,       d.warrant_id)
         assert_eq(d2.gathered_traits.sex,  "female")
         assert_eq(d2.gathered_traits.hair, "red")
+        assert_eq(d2.hideout_visited, true)
         assert_true(d2.career_complete)
     end)
 

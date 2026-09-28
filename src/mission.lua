@@ -1,12 +1,16 @@
 local M = {}
 
+-- route_length per rank matches the original's rank+3 backward-walk steps
+-- exactly (reconstruction.md:494-497) now that src/detective.lua's RANKS
+-- has the same 5 ranks in the same order as the original (rookie=rank 0
+-- needs 3 steps = 4 cities, ..., ace_detective=rank 4 needs 7 steps =
+-- 8 cities). time_days is this project's own balance, not ported.
 M.RANK_CONFIG = {
-    rookie           = { route_length = 4, time_days = 7 },
-    junior_detective = { route_length = 5, time_days = 7 },
-    sleuth           = { route_length = 5, time_days = 6 },
-    private_eye      = { route_length = 6, time_days = 6 },
-    investigator     = { route_length = 7, time_days = 5 },
-    ace_detective    = { route_length = 8, time_days = 5 },
+    rookie        = { route_length = 4, time_days = 7 },
+    sleuth        = { route_length = 5, time_days = 6 },
+    private_eye   = { route_length = 6, time_days = 6 },
+    investigator  = { route_length = 7, time_days = 5 },
+    ace_detective = { route_length = 8, time_days = 5 },
 }
 
 local ITEMS         = require("data.items")
@@ -260,7 +264,36 @@ function M.new(suspects, cities_by_id, routes, rank_name, rng, leader)
         route             = route,
         time_limit_hours  = cfg.time_days * 24,
         clues             = clues,
+        -- Which of the terminal city's 3 investigation slots (1-3) the
+        -- thief is actually hiding in — see M.is_hideout_venue/evade_hideout.
+        hideout_venue     = rng(3),
     }
+end
+
+-- True if venue_index is the terminal city's slot currently marked as the
+-- thief's location. Mutable via M.evade_hideout — mirrors the 1985
+-- original's place-state byte (reconstruction.md:510-514), not just a
+-- fixed "arrive in the city and you've won" check.
+function M.is_hideout_venue(mission, venue_index)
+    return mission.hideout_venue == venue_index
+end
+
+-- Called once, the first time the detective investigates a venue at the
+-- terminal city. If venue_index isn't the current mark, the thief evades
+-- to the one remaining slot (deterministic: with 3 slots, excluding the
+-- visited one and the old mark leaves exactly one candidate) — matching
+-- "if it is the first place investigated, that mark can move to another
+-- slot" (reconstruction.md:511-513). No-op if venue_index already matches
+-- the mark, or on any later investigation (caller only invokes this once
+-- per case — see detective.investigate's hideout_visited guard).
+function M.evade_hideout(mission, venue_index)
+    if mission.hideout_venue == venue_index then return end
+    for slot = 1, 3 do
+        if slot ~= venue_index and slot ~= mission.hideout_venue then
+            mission.hideout_venue = slot
+            return
+        end
+    end
 end
 
 -- Returns the clue at a venue (1–3) for a city, or nil if city has no clues.

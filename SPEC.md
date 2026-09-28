@@ -106,14 +106,20 @@ When the detective is in the same city as the thief:
 
 ### 2.7 Rank Progression
 
+Cases-needed thresholds match the 1985 original exactly (its promotion
+thresholds are 1, 5, 12, and 20 solved cases for these same five ranks —
+see `references/apple2-carmen-sandiego-world-disasm/docs/reconstruction.md:59-61`).
+Cities-in-trail also matches the original's rank+3 backward-walk formula
+(`reconstruction.md:494-497`). Days limit is this project's own balance,
+not ported.
+
 | Rank | Cases needed | Cities in trail | Days limit |
 |---|---|---|---|
 | Rookie | 0 | 4 | 7 |
-| Junior Detective | 1 | 5 | 7 |
-| Sleuth | 3 | 5 | 6 |
-| Private Eye | 6 | 6 | 6 |
-| Investigator | 10 | 7 | 5 |
-| Ace Detective | 15 | 8 | 5 |
+| Sleuth | 1 | 5 | 6 |
+| Private Eye | 5 | 6 | 6 |
+| Investigator | 12 | 7 | 5 |
+| Ace Detective | 20 | 8 | 5 |
 
 Once the detective is Ace Detective **and** has solved 29 cases total, the
 next case's thief is always the organization leader — a separate, higher

@@ -29,11 +29,12 @@ function S.enter()
             score        = det_mod.score(game.detective),
             date         = os.date("%Y-%m-%d"),
         })
-        -- Not saving here: game.mission/warrant_id/current_city_id still
-        -- point at the just-solved case. A save now, followed by an
-        -- abnormal exit before the player presses Enter below, would let
-        -- Continue's auto-arrest check (city.lua) replay this exact arrest
-        -- on load and double-count the case. Save once state has actually
+        -- Not saving here: game.mission still points at the just-solved
+        -- case. An abnormal exit before the player presses Enter below
+        -- would otherwise lose this arrest entirely on next load (resuming
+        -- from the last save made before the winning investigation, with
+        -- cases_solved/rank not yet incremented) instead of just replaying
+        -- the briefing for the next case. Save once state has actually
         -- moved past it, in keypressed below.
     elseif result == "wrong_warrant" then
         result_key = "arrest.wrong_warrant"
