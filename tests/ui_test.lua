@@ -41,3 +41,36 @@ describe("ui.new_smooth / ui.update_smooth", function()
         assert_true(mid_value > 0, "should have moved before re-targeting")
     end)
 end)
+
+describe("ui.utf8_len / ui.utf8_sub", function()
+    it("counts multi-byte characters as one, unlike #str", function()
+        local s = "café — ação"
+        assert_true(ui.utf8_len(s) < #s, "expected fewer chars than bytes")
+    end)
+
+    it("returns the whole string when n exceeds its length", function()
+        local s = "café"
+        assert_eq(ui.utf8_sub(s, 100), s)
+    end)
+
+    it("returns empty string when n <= 0", function()
+        assert_eq(ui.utf8_sub("café", 0), "")
+    end)
+
+    it("never splits a multi-byte character (valid UTF-8 at every cut)", function()
+        local utf8 = require("utf8")
+        local s    = "café — ação"
+        for n = 0, ui.utf8_len(s) do
+            local valid = utf8.len(ui.utf8_sub(s, n)) ~= nil
+            assert_true(valid, "utf8_sub produced invalid UTF-8 for n=" .. n)
+        end
+    end)
+
+    it("prefix of n chars matches the first n characters exactly", function()
+        local s = "ação"
+        assert_eq(ui.utf8_sub(s, 1), "a")
+        assert_eq(ui.utf8_sub(s, 2), "aç")
+        assert_eq(ui.utf8_sub(s, 3), "açã")
+        assert_eq(ui.utf8_sub(s, 4), "ação")
+    end)
+end)

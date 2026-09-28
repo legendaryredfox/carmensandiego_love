@@ -15,6 +15,7 @@ local DAY_EN = { "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" }
 local DAY_PT = { "Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sab" }
 
 local INVESTIGATION_HOURS = 2
+M.INVESTIGATION_HOURS     = INVESTIGATION_HOURS
 
 local function rank_for_cases(cases_solved)
     local current = RANKS[1]

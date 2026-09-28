@@ -47,6 +47,38 @@ return {
     ["venue.clue_trait"]          = "The suspect was described as {trait}.",
     ["venue.back"]                = "BACK",
 
+    -- Venue names (derived from the clue category at that venue)
+    ["venue_name.landmark.1"]     = "MUSEUM",
+    ["venue_name.landmark.2"]     = "OLD RUINS",
+    ["venue_name.landmark.3"]     = "MONUMENT PLAZA",
+    ["venue_name.currency.1"]     = "CURRENCY EXCHANGE",
+    ["venue_name.currency.2"]     = "CENTRAL BANK",
+    ["venue_name.currency.3"]     = "MARKET STALLS",
+    ["venue_name.language.1"]     = "LANGUAGE INSTITUTE",
+    ["venue_name.language.2"]     = "OLD BOOKSTORE",
+    ["venue_name.language.3"]     = "TRANSLATOR'S OFFICE",
+    ["venue_name.geography.1"]    = "OBSERVATORY",
+    ["venue_name.geography.2"]    = "TOURIST OFFICE",
+    ["venue_name.geography.3"]    = "SCENIC OVERLOOK",
+    ["venue_name.wildlife.1"]     = "NATURE RESERVE",
+    ["venue_name.wildlife.2"]     = "CITY ZOO",
+    ["venue_name.wildlife.3"]     = "WILDLIFE SANCTUARY",
+    ["venue_name.culture.1"]      = "CULTURAL CENTER",
+    ["venue_name.culture.2"]      = "GRAND THEATER",
+    ["venue_name.culture.3"]      = "ART GALLERY",
+    ["venue_name.industry.1"]     = "TRADE OFFICE",
+    ["venue_name.industry.2"]     = "HARBOR WAREHOUSE",
+    ["venue_name.industry.3"]     = "FACTORY DISTRICT",
+    ["venue_name.trait.1"]        = "INFORMANT'S TAVERN",
+    ["venue_name.trait.2"]        = "BACK-ALLEY CONTACT",
+    ["venue_name.trait.3"]        = "WITNESS CORNER",
+    ["venue_name.terminal.1"]     = "SUSPICIOUS HIDEOUT",
+    ["venue_name.terminal.2"]     = "QUIET BACK STREET",
+    ["venue_name.generic.1"]      = "LOCAL PRECINCT",
+
+    -- Investigation transition (walking from the city hub to a venue)
+    ["investigating.heading_over"] = "HEADING OVER...",
+
     -- Crime computer
     ["crime.title"]               = "INTERPOL CRIME COMPUTER",
     ["crime.sex"]                 = "SEX",

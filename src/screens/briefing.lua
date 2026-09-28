@@ -37,13 +37,13 @@ end
 function S.update(dt)
     if done then return end
     timer    = timer + dt
-    revealed = math.min(#full_text, math.floor(timer * settings.get().typewriter_speed))
-    if revealed >= #full_text then done = true end
+    revealed = math.min(ui.utf8_len(full_text), math.floor(timer * settings.get().typewriter_speed))
+    if revealed >= ui.utf8_len(full_text) then done = true end
 end
 
 function S.draw()
     ui.panel(20, 15, ui.VIRTUAL_W - 40, ui.VIRTUAL_H - 50)
-    ui.text(30, 25, full_text:sub(1, revealed), ui.C.highlight, "left", ui.VIRTUAL_W - 60)
+    ui.text(30, 25, ui.utf8_sub(full_text, revealed), ui.C.highlight, "left", ui.VIRTUAL_W - 60)
     if done then
         ui.text(0, ui.VIRTUAL_H - 26,
             "[ PRESS ANY KEY ]", ui.C.dim, "center", ui.VIRTUAL_W)
@@ -51,7 +51,7 @@ function S.draw()
 end
 
 function S.keypressed()
-    if not done then revealed = #full_text; done = true; return end
+    if not done then revealed = ui.utf8_len(full_text); done = true; return end
     SM.switch(require("src.screens.city_info"))
 end
 

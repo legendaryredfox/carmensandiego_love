@@ -47,6 +47,38 @@ return {
     ["venue.clue_trait"]          = "O suspeito foi descrito como {trait}.",
     ["venue.back"]                = "VOLTAR",
 
+    -- Nomes de locais (derivados da categoria da pista naquele local)
+    ["venue_name.landmark.1"]     = "MUSEU",
+    ["venue_name.landmark.2"]     = "RUINAS ANTIGAS",
+    ["venue_name.landmark.3"]     = "PRACA DO MONUMENTO",
+    ["venue_name.currency.1"]     = "CASA DE CAMBIO",
+    ["venue_name.currency.2"]     = "BANCO CENTRAL",
+    ["venue_name.currency.3"]     = "BARRACAS DO MERCADO",
+    ["venue_name.language.1"]     = "INSTITUTO DE IDIOMAS",
+    ["venue_name.language.2"]     = "SEBO ANTIGO",
+    ["venue_name.language.3"]     = "ESCRITORIO DE TRADUCAO",
+    ["venue_name.geography.1"]    = "OBSERVATORIO",
+    ["venue_name.geography.2"]    = "POSTO DE TURISMO",
+    ["venue_name.geography.3"]    = "MIRANTE",
+    ["venue_name.wildlife.1"]     = "RESERVA NATURAL",
+    ["venue_name.wildlife.2"]     = "ZOOLOGICO",
+    ["venue_name.wildlife.3"]     = "SANTUARIO DE FAUNA",
+    ["venue_name.culture.1"]      = "CENTRO CULTURAL",
+    ["venue_name.culture.2"]      = "GRANDE TEATRO",
+    ["venue_name.culture.3"]      = "GALERIA DE ARTE",
+    ["venue_name.industry.1"]     = "ESCRITORIO DE COMERCIO",
+    ["venue_name.industry.2"]     = "ARMAZEM DO PORTO",
+    ["venue_name.industry.3"]     = "DISTRITO INDUSTRIAL",
+    ["venue_name.trait.1"]        = "TAVERNA DO INFORMANTE",
+    ["venue_name.trait.2"]        = "CONTATO DO BECO",
+    ["venue_name.trait.3"]        = "ESQUINA DA TESTEMUNHA",
+    ["venue_name.terminal.1"]     = "ESCONDERIJO SUSPEITO",
+    ["venue_name.terminal.2"]     = "RUA TRANQUILA",
+    ["venue_name.generic.1"]      = "DELEGACIA LOCAL",
+
+    -- Transicao de investigacao (indo do centro da cidade ate o local)
+    ["investigating.heading_over"] = "A CAMINHO...",
+
     -- Computador do crime
     ["crime.title"]               = "COMPUTADOR DO CRIME - INTERPOL",
     ["crime.sex"]                 = "SEXO",

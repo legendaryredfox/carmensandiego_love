@@ -3,9 +3,9 @@ local locale      = require("src.locale")
 local ui          = require("src.ui")
 local game        = require("src.game")
 local detective_mod = require("src.detective")
-local mission_mod   = require("src.mission")
 local clue_pool   = require("src.clue_pool")
 local settings    = require("src.settings")
+local venue_name_mod = require("src.venue_name")
 
 local S = {}
 S.venue_index = 1
@@ -42,15 +42,16 @@ end
 function S.update(dt)
     if done then return end
     timer    = timer + dt
-    revealed = math.min(#text_full, math.floor(timer * settings.get().typewriter_speed))
-    if revealed >= #text_full then done = true end
+    revealed = math.min(ui.utf8_len(text_full), math.floor(timer * settings.get().typewriter_speed))
+    if revealed >= ui.utf8_len(text_full) then done = true end
 end
 
 function S.draw()
-    local venue_name = "VENUE " .. tostring(S.venue_index)
+    local venue_name = venue_name_mod.name_for(game.mission,
+        game.detective.current_city_id, S.venue_index)
     ui.title(0, 8, venue_name)
     ui.panel(20, 30, ui.VIRTUAL_W - 40, ui.VIRTUAL_H - 80)
-    ui.text(30, 44, text_full:sub(1, revealed), ui.C.highlight, "left", ui.VIRTUAL_W - 60)
+    ui.text(30, 44, ui.utf8_sub(text_full, revealed), ui.C.highlight, "left", ui.VIRTUAL_W - 60)
 
     if done then
         ui.button(ui.VIRTUAL_W / 2 - 50, ui.VIRTUAL_H - 40, 100, 16,
@@ -59,7 +60,7 @@ function S.draw()
 end
 
 function S.keypressed(key)
-    if not done then revealed = #text_full; done = true; return end
+    if not done then revealed = ui.utf8_len(text_full); done = true; return end
     if key == "return" or key == "escape" or key == "space" then
         SM.switch(require("src.screens.city"))
     end

@@ -254,30 +254,27 @@ Goal: all 30 cities have complete, verified clue pools.
 
 ### City screen redesign — named venues + travel animation
 
-Requested 2026-09-28, not yet implemented. Current `src/screens/city.lua` shows
-5 generic equal-width zones ("CRIME COMPUTER", "VENUE 1/2/3", "AIRPORT") in a
-single row with a sliding selection cursor (see `ui.new_smooth`).
+Requested 2026-09-28, implemented 2026-09-28. `src/screens/city.lua` now
+shows a top row of 3 venue cards and a bottom row with the crime computer
+and airport actions, replacing the old 5-zone single-row strip.
 
-- [ ] Give each venue a real, per-city name instead of "VENUE N" — venues must
-      differ from city to city (e.g. not the same 3 names everywhere). The
-      per-city clue data in `data/clues/<id>.lua` already tags each clue with
-      a `category` (`landmark`, `currency`, `language`, `geography`,
-      `wildlife`, `culture`, ...) — a natural source to derive a venue
-      name/type from (e.g. `currency` → "Bank"/"Market", `landmark` →
-      "Museum"/"Overlook", `wildlife` → "Nature Reserve"). Needs a
-      category→venue-name mapping (localized, EN+PT) or dedicated per-city
-      venue name data — decide which when implementing.
-- [ ] Layout: venues move to a top row, each showing its name (text, already
-      required by i18n rules) **and** a representative image. The other
-      actions (crime computer, airport) move to a row below the venues.
-- [ ] When the player selects a venue, don't cut straight to the venue
-      screen — play a short "traveling to location" transition first while
-      the in-game clock visibly advances (see `detective.investigate`'s
-      `INVESTIGATION_HOURS` in `src/detective.lua`, currently applied
-      instantly with no visual feedback), mirroring the original 1985 game's
-      travel-time feel. Likely its own screen/overlay between `city` and
-      `venue`, analogous to how `city_info.lua` sits between `travel`/
-      `briefing` and `city` today.
+- [x] Give each venue a real, per-city name instead of "VENUE N" — venues
+      must differ from city to city. Implemented in `src/venue_name.lua`:
+      derives the name from the venue's own clue `category` (falling back to
+      `trait`/`terminal`/`generic`), with 2-3 localized variants per category
+      picked deterministically per (city, venue) via a hash, so redraws don't
+      flicker but different cities/missions don't all show identical labels.
+      Locale keys added under `venue_name.<category>.<n>` in both
+      `locales/en.lua` and `locales/pt.lua`.
+- [x] Layout: venues moved to a top row, each showing its name and a
+      representative image (falls back to a bordered placeholder box when
+      the clue has no `image`, same pattern as `city_info.lua`'s photo
+      fallback). Crime computer and airport moved to a row below.
+- [x] Selecting a venue no longer cuts straight to the venue screen — a new
+      `src/screens/investigating.lua` transition plays first, visually
+      ticking the clock from the current time toward
+      `detective.INVESTIGATION_HOURS` later before handing off to
+      `src/screens/venue.lua`.
 
 ---
 

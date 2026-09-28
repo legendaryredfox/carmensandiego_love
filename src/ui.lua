@@ -1,3 +1,5 @@
+local utf8 = require("utf8")
+
 local M = {}
 
 M.VIRTUAL_W = 640
@@ -24,7 +26,7 @@ local font_md   -- 10px
 local font_lg   -- 14px
 
 local FONT_PATH        = "assets/fonts/PressStart2P.ttf"
-local LINE_HEIGHT       = 1.3 -- multiplier over the font's natural line height
+local LINE_HEIGHT       = 1.45 -- multiplier over the font's natural line height
 
 local function load_font(size)
     local font
@@ -177,6 +179,22 @@ function M.title(x, y, str, color)
     love.graphics.printf(str, x, y, M.VIRTUAL_W - x * 2, "center")
     love.graphics.setFont(font_sm)
     love.graphics.setColor(1, 1, 1, 1)
+end
+
+-- Character count (not byte count) — accented letters and — take several
+-- bytes, so #str overcounts for typewriter reveal effects.
+function M.utf8_len(str)
+    return utf8.len(str) or #str
+end
+
+-- First `n` UTF-8 characters of str. Unlike str:sub(1, n), this never
+-- splits a multi-byte codepoint in half (which corrupts the string and
+-- crashes love.graphics.print with a UTF-8 decoding error).
+function M.utf8_sub(str, n)
+    if n <= 0 then return "" end
+    local len = M.utf8_len(str)
+    if n >= len then return str end
+    return str:sub(1, utf8.offset(str, n + 1) - 1)
 end
 
 -- Full-screen black fade overlay.
