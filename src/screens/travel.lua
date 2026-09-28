@@ -82,20 +82,9 @@ function S.keypressed(key)
     if key == "up"   then selected = math.max(1, selected - 1)
     elseif key == "down" then selected = math.min(#destinations, selected + 1)
     elseif key == "return" and #destinations > 0 then
-        local dest   = destinations[selected]
-        local result = det_mod.travel(game.detective, dest.id, dest.hours)
-        if result == "time_expired" then
-            SM.switch(require("src.screens.game_over"))
-        else
-            -- Check auto-arrest condition on arrival
-            local m = game.mission
-            local d = game.detective
-            if d.warrant_id and d.current_city_id == require("src.mission").thief_city(m) then
-                SM.switch(require("src.screens.arrest"))
-            else
-                SM.switch(require("src.screens.city_info"))
-            end
-        end
+        local flying = require("src.screens.flying")
+        flying.dest  = destinations[selected]
+        SM.switch(flying)
     elseif key == "escape" then
         SM.switch(require("src.screens.city"))
     end

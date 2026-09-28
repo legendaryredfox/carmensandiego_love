@@ -212,16 +212,16 @@ Acceptance: full game loop playable from title to arrest with keyboard.
 
 Goal: music and SFX integrated.
 
-- [ ] Download and convert assets (MP3→OGG where needed: `ffmpeg -i in.mp3 out.ogg`)
-- [ ] Place in `assets/sounds/music/` and `assets/sounds/sfx/`
-- [ ] Add to `assets/CREDITS.md`
-- [ ] `src/audio.lua`
-  - `audio.load()` — loads all sources
-  - `audio.play_music(track)` — fades out current, fades in new (0.5s crossfade)
-  - `audio.stop_music()`
-  - `audio.play_sfx(name)`
-- [ ] Wire music to screen transitions (see SPEC §5.1)
-- [ ] Wire SFX to button clicks, clue reveals, warrant issue, arrest
+- [x] Download and convert assets — all present under `assets/sounds/`
+- [x] Place in `assets/sounds/music/` and `assets/sounds/sfx/`
+- [x] Add to `assets/CREDITS.md`
+- [x] `src/audio.lua` — sources are loaded lazily on first use (`get_music`/
+      `get_sfx`) rather than eagerly via a single `load()`, but the public
+      surface matches: `play_music`, `crossfade`, `stop_music`, `play_sfx`,
+      `update` (for fade tweening)
+- [x] Wire music to screen transitions — every screen calls
+      `audio.crossfade(key)` in `S.enter()`
+- [x] Wire SFX to button clicks, clue reveals, warrant issue, arrest
 
 ---
 
@@ -229,15 +229,22 @@ Goal: music and SFX integrated.
 
 Goal: all 30 cities have complete, verified clue pools.
 
-- [ ] Author clue pools for remaining 25 cities
-- [ ] Verify all geographic facts against current sources (Wikipedia / CIA Factbook)
-- [ ] Remove all `-- TODO: verify` markers
-- [ ] Download CC0 clue images for each city (coins, animals, landmarks)
+- [x] Author clue pools for all 30 cities (`data/clues/<id>.lua`, 4 clues each)
+- [x] Verify all geographic facts against current sources — every clue has
+      `verified = true`, no `-- TODO: verify` markers remain
+- [ ] Download CC0 clue images for each city (coins, animals, landmarks) —
+      still outstanding. Clue tables have an `image` field and the city
+      screen's venue cards already render it when present (falling back to
+      a "?" placeholder otherwise, see `src/screens/city.lua`), but almost
+      no `data/clues/*.lua` entries actually set one yet — venue cards are
+      showing placeholders for nearly every city.
   - Source: Wikimedia Commons CC0/CC-BY
   - Resize to max 128×128 px for pixel art feel; nearest-neighbor downscale
   - No flags as images
 - [ ] Add all image credits to `assets/CREDITS.md`
-- [ ] Localize all clue text keys for both EN and PT-BR
+- [x] Localize all clue text keys for both EN and PT-BR (clue text is
+      inline `{en=..., pt=...}` per entry, not locale-key based, but both
+      languages are present for all 30 cities)
 
 ---
 
@@ -247,7 +254,10 @@ Goal: all 30 cities have complete, verified clue pools.
 - [x] Typewriter effect speed configurable (fast/slow in settings)
 - [x] Settings screen: language, music volume, SFX volume
 - [ ] City exterior pixel art backgrounds (1 unique image per city — or 5 regional variants)
-- [ ] Animated airplane on travel screen
+- [x] Animated airplane on travel screen (`src/screens/flying.lua` — a
+      transition between `travel` and `city_info`/`arrest` that flies a
+      triangle marker along the map between origin and destination while
+      the clock ticks forward, mirroring `investigating.lua`'s pattern)
 - [ ] Hall of Fame screen (after catching final target)
 - [ ] Confirm working on Linux, macOS, Windows (LÖVE is cross-platform)
 - [ ] Package as `.love` file: `zip -9 -r game.love . -x "*.git*" "tests/*" "SPEC.md" "PLAN.md"`

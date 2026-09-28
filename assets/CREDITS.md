@@ -46,6 +46,12 @@ rectangles when the files are absent, so the game runs without them too.
 
 Board Game Icons and Roguelike Characters (Kenney, CC0) remain unused for now.
 
+| File | Source | License |
+|---|---|---|
+| ui/icon.png | Original artwork for this project | N/A (project asset) |
+
+Used as the window/taskbar icon via `conf.lua`'s `t.window.icon`.
+
 ## Clue Images (planned)
 
 Country-specific images sourced from Wikimedia Commons under CC0 or CC-BY.
