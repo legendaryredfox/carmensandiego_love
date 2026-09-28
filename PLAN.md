@@ -269,7 +269,13 @@ Goal: all 30 cities have complete, verified clue pools.
       Also fixed `rank_up.lua`, which existed but was never wired in —
       `arrest.lua` now detects a rank change and shows it before briefing.
 - [ ] Confirm working on Linux, macOS, Windows (LÖVE is cross-platform)
-- [ ] Package as `.love` file: `zip -9 -r game.love . -x "*.git*" "tests/*" "SPEC.md" "PLAN.md"`
+- [x] Package as `.love` file: `./package.sh [output-path]` (defaults to
+      `game.love`). Also excludes `references/*` (76MB of local-only clone
+      repos, already gitignored but not excluded by the plan's original zip
+      line — would have bloated the distributable), `CLAUDE.md`,
+      `README.md`, and `assets/download_assets.sh` alongside the
+      already-planned `tests/`, `SPEC.md`, `PLAN.md`, `.git*`. Verified the
+      output boots cleanly under `love game.love`.
 
 ### City screen redesign — named venues + travel animation
 
