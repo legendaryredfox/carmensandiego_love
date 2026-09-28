@@ -18,7 +18,18 @@ local STOLEN_ITEMS = {
 
 local TRAIT_ATTRS = { "sex", "hair", "hobby", "vehicle", "feature", "food" }
 
--- Builds a route of `length` unique city ids following graph connections.
+-- Cap on hideout re-picks before giving up and returning a shorter route.
+-- Mirrors the original's "dead end rings the bell and restarts the case"
+-- behavior below, but bounded so a pathological rng can't hang forever.
+local MAX_ROUTE_ATTEMPTS = 200
+
+-- Builds a route of `length` unique city ids, mirroring the 1985 original's
+-- N_BEGIN_CASE: pick the hideout city first (it ends up last in the route,
+-- see M.thief_city), then walk backward from it over the connectivity graph
+-- — each city's route graph entry is symmetric (see data/routes.lua), so
+-- walking backward and forward draw from the same adjacency lists. A dead
+-- end (no unused connection left) discards the whole attempt and re-picks
+-- a fresh hideout, rather than just truncating the route short.
 -- rng(n) must return an integer in [1, n].
 function M._build_route(cities_by_id, graph, length, rng)
     local all_ids = {}
@@ -27,27 +38,42 @@ function M._build_route(cities_by_id, graph, length, rng)
     end
     table.sort(all_ids)
 
-    local start   = all_ids[rng(#all_ids)]
-    local route   = { start }
-    local visited = { [start] = true }
-    local current = start
+    local best_route = nil
 
-    for _ = 2, length do
-        local connections = graph[current] or {}
-        local available   = {}
-        for _, c in ipairs(connections) do
-            if not visited[c] then
-                table.insert(available, c)
+    for _ = 1, MAX_ROUTE_ATTEMPTS do
+        local hideout = all_ids[rng(#all_ids)]
+        local route   = { hideout }
+        local visited = { [hideout] = true }
+        local current = hideout
+        local dead_end = false
+
+        for _ = 2, length do
+            local connections = graph[current] or {}
+            local available   = {}
+            for _, c in ipairs(connections) do
+                if not visited[c] then
+                    table.insert(available, c)
+                end
             end
+            if #available == 0 then
+                dead_end = true
+                break
+            end
+            local prev_city = available[rng(#available)]
+            table.insert(route, 1, prev_city) -- prepend: walking backward
+            visited[prev_city] = true
+            current = prev_city
         end
-        if #available == 0 then break end
-        local next_city = available[rng(#available)]
-        table.insert(route, next_city)
-        visited[next_city] = true
-        current = next_city
+
+        if not dead_end then
+            return route
+        end
+        if not best_route or #route > #best_route then
+            best_route = route
+        end
     end
 
-    return route
+    return best_route
 end
 
 -- Generates clue tables per city in route.
