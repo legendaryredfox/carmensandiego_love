@@ -127,7 +127,7 @@ describe("suspect.by_id", function()
     it("finds suspect by id", function()
         local s = suspect.by_id(suspects, "igor_volkov")
         assert_not_nil(s)
-        assert_eq(s.name, "Igor Volkov")
+        assert_eq(s.name, "Boris Kessler")
     end)
 
     it("returns nil for unknown id", function()

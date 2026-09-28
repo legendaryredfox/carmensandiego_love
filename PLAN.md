@@ -457,18 +457,19 @@ JSON assets, same as SPEC.md already does for the 29-case leader rule.
    paragraph that states sex up front, in both `locales/en.lua` and
    `locales/pt.lua` together per CLAUDE.md's i18n rule.
 
-3. **Change the suspect names again.** Current roster
-   (`data/suspects.lua`): Scarlet Vega, Marina Delacroix, Blaze Fontaine,
-   Lady Constance, Kat Sterling, Red Malone, Victor Crain, Jack Moreau,
-   Eddie Flash, Igor Volkov — already loosely inspired by (but renamed
-   from) the original 10 (`assets/decoded/po/C-names.json`: Carmen
-   Sandiego herself plus Merey LaRoc, Dazzle Annie, Lady Agatha, Katherine
-   Drib, Len Bulk, Scar Graynolt, Nick Brunch, Fast Eddie B, Ihor
-   Ihorovitch). No replacement roster drafted yet — next session should
-   write a fresh set of 10 names, keeping CLAUDE.md's "renamed, not the
-   originals" IP rule and the existing trait-distinctness invariant (each
-   suspect's `(sex, hair, hobby, vehicle, feature)` combo must stay
-   unique — enforced by `tests/suspect_test.lua`).
+3. **FIXED (2026-09-28)** — Suspect names changed again. Old roster
+   (Scarlet Vega, Marina Delacroix, Blaze Fontaine, Lady Constance, Kat
+   Sterling, Red Malone, Victor Crain, Jack Moreau, Eddie Flash, Igor
+   Volkov) replaced with: Ruby Steele, Vivian Cross, Coral Vance, Dame
+   Odessa, Nadia Quill, Crimson Boyle, Duke Ashford, Wolf Delgado, Zippy
+   Larkin, Boris Kessler (`data/suspects.lua`'s `name` field only — the
+   `id` field each suspect is keyed/matched/saved by, e.g.
+   `"scarlet_vega"`, is untouched, so this didn't need to touch
+   `warrant_id` matching, save compatibility, or any test that references
+   suspects by id). `sex`/`hair`/`hobby`/`vehicle`/`feature`/`food` per
+   suspect are unchanged, so the trait-distinctness invariant still holds
+   as before. Updated the one test asserting a literal name
+   (`tests/suspect_test.lua`'s `suspect.by_id` case).
 
 4. **FIXED (2026-09-28)** — Arrest required only arriving in the hideout
    city with a warrant, not entering the suspect's actual venue.
@@ -517,14 +518,33 @@ JSON assets, same as SPEC.md already does for the 29-case leader rule.
    `tests/detective_test.lua`'s new "case clock always starts Monday
    08:00" and `detective.begin_mission` cases.
 
-6. **Witness clue text should be direct speech, not reported speech.**
-   Current phrasing is indirect: `locale.t("venue.witness_says")` =
-   "A witness reports:" followed by "The informant mentioned {hint}." /
-   "The suspect was described as {trait}." (`locales/en.lua:52-55`).
-   Needs rewriting as an actual first-person quote from the witness (e.g.
-   `"I saw someone matching that near the harbor..."`) for both the
-   destination-hint and trait-description templates, in `locales/en.lua`
-   and `locales/pt.lua` together.
+6. **Witness clue text should be direct speech, not reported speech —
+   scope turned out bigger than the two wrapper strings.** Original
+   estimate was just `locale.t("venue.witness_says")` = "A witness
+   reports:" + "The informant mentioned {hint}." / "The suspect was
+   described as {trait}." (`locales/en.lua:52-55`). Investigated further
+   before touching it: `{hint}` isn't a short phrase — `clue_pool.clue_text`
+   (`src/clue_pool.lua:58-69`) returns each clue's full `text.en`/`text.pt`
+   sentence straight from `data/clues/<city_id>.lua`, and every one of
+   those (108 clue entries across 30 cities, so 216 strings counting both
+   languages) is already written in third-person reported form — e.g.
+   Paris's landmark clue: "A metalworker described the suspect gazing up
+   at an iron lattice tower...". So wrapping `{hint}` in quotes without
+   rewriting the underlying sentences would just produce an odd
+   double-reported quote, not real direct speech. Separately,
+   `{trait}` (`venue.clue_trait`) pulls from the 18 `trait.*.*` locale
+   values (`locales/en.lua:159-179`), which are inconsistent grammatical
+   fragments — noun phrases ("Brown hair"), and verb phrases with mixed
+   implicit subjects ("Plays tennis", "Drives a convertible", "Has a
+   tattoo") — so even that template can't cleanly become a first-person
+   quote without rewriting those 18 values too. Left untouched rather
+   than ship awkward/broken-grammar text. Real next step is a proper
+   content pass: rewrite the 18 trait values into a uniform quotable
+   form, rewrite all 108 clue sentences (`data/clues/*.lua`, en+pt) into
+   actual first-person witness quotes, then simplify the
+   `venue.witness_says`/`venue.clue_destination`/`venue.clue_trait`
+   wrapper templates to fit. Budget this as its own content pass, not a
+   quick locale edit.
 
 7. **Source a detective-office background for the dispatch/briefing
    screen.** Candidate found: "Vintage Office Interiors" by Croomfolk on
@@ -541,20 +561,37 @@ JSON assets, same as SPEC.md already does for the 29-case leader rule.
    OGA-BY 3.0 is acceptable before use, or keep looking for a strict
    CC0/CC-BY equivalent if not.
 
-8. **World map city markers sometimes don't line up with real
-   lat/lon.** `src/map.lua`'s `lat_lon_to_xy` (line 35-39) is a plain,
-   correct equirectangular projection (`nx=(lon+180)/360`,
-   `ny=(90-lat)/180`) — it's only correct if `assets/images/map/world_map.png`
-   is itself a pixel-perfect full-bleed equirectangular image (lon
-   -180..180, lat -90..90, no padding/crop/different projection).
-   `assets/CREDITS.md` already flags that file's source/license as
-   unconfirmed ("TODO: source/license — confirm with whoever supplied
-   it"), which lines up with it possibly not being true equirectangular.
-   Next step: verify the image itself against a few high-confidence
-   reference points (e.g. equator × prime meridian, or compare marker
-   placement against `data/continents.lua`'s fallback coastline polygons,
-   which are known-good Natural Earth data) before assuming the
-   projection math is at fault.
+8. **DIAGNOSED (2026-09-28), not yet fixed** — World map city markers
+   sometimes don't line up with real lat/lon. Verified with a script
+   (Pillow, not committed) that projects every one of the 30 cities in
+   `data/cities.csv` through `src/map.lua`'s exact `lat_lon_to_xy` formula
+   and samples `assets/images/map/world_map.png` at that pixel, checking
+   whether it landed on the image's green "land" color or blue "ocean"
+   color. Result: the projection math itself is fine — no letterboxing/
+   padding/wrong-projection issue (checked top/bottom/left/right edges
+   too, all plain ocean as expected for full -180..180/-90..90 bleed),
+   and 22 of 30 cities land exactly on land, 2 more (cairo, london) are
+   within 2px (sub-pixel rounding at this image's ~4.9px/degree
+   resolution, not a real bug). The other 8 are genuinely off, and by
+   inconsistent, non-uniform offsets (no single dx/dy correction fixes
+   more than one of them — ruling out a global bug):
+   `rio_de_janeiro` (38px), `reykjavik` (32px), `moroni` (30px), `tokyo`
+   (27px), `port_moresby` (17px), `kigali` (9px), `mexico_city` (7px),
+   `sydney` (7px), `bangkok` (5px). The common thread is small islands
+   (Reykjavik/Iceland, Moroni/Comoros, Port Moresby/New Guinea) and
+   complex bay/delta coastlines (Tokyo Bay, Rio's Guanabara Bay, Sydney
+   Harbour, Bangkok's river delta) — exactly where a compact 1774×887
+   hand-drawn coastline is most likely to be simplified or drawn slightly
+   off from real coordinates. So this is a content accuracy issue in the
+   map art for those 8-9 specific cities, not a code bug. Two ways to fix,
+   next session should pick one: (a) touch up the coastline art near
+   those specific pixel coordinates so it matches the real coastline
+   there, or (b) add a small per-city pixel-nudge override table applied
+   only where city markers are drawn (not to `lat_lon_to_xy` itself,
+   which `flying.lua`'s plane-path math and the continent-polygon
+   fallback also rely on for unrelated, already-correct purposes) —
+   (a) is more honest but needs an artist/tool pass; (b) is a quick
+   code-only patch but treats the symptom, not the art.
 
 ### Rank promotion thresholds — should match the original (flagged 2026-09-28)
 

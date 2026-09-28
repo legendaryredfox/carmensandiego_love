@@ -4,7 +4,7 @@
 return {
     {
         id      = "scarlet_vega",
-        name    = "Scarlet Vega",
+        name    = "Ruby Steele",
         sex     = "female",
         hair    = "brown",
         hobby   = "tennis",
@@ -14,7 +14,7 @@ return {
     },
     {
         id      = "marina_delacroix",
-        name    = "Marina Delacroix",
+        name    = "Vivian Cross",
         sex     = "female",
         hair    = "brown",
         hobby   = "mountain_climbing",
@@ -24,7 +24,7 @@ return {
     },
     {
         id      = "blaze_fontaine",
-        name    = "Blaze Fontaine",
+        name    = "Coral Vance",
         sex     = "female",
         hair    = "blonde",
         hobby   = "tennis",
@@ -34,7 +34,7 @@ return {
     },
     {
         id      = "lady_constance",
-        name    = "Lady Constance",
+        name    = "Dame Odessa",
         sex     = "female",
         hair    = "red",
         hobby   = "tennis",
@@ -44,7 +44,7 @@ return {
     },
     {
         id      = "kat_sterling",
-        name    = "Kat Sterling",
+        name    = "Nadia Quill",
         sex     = "female",
         hair    = "brown",
         hobby   = "mountain_climbing",
@@ -54,7 +54,7 @@ return {
     },
     {
         id      = "red_malone",
-        name    = "Red Malone",
+        name    = "Crimson Boyle",
         sex     = "male",
         hair    = "red",
         hobby   = "mountain_climbing",
@@ -64,7 +64,7 @@ return {
     },
     {
         id      = "victor_crain",
-        name    = "Victor Crain",
+        name    = "Duke Ashford",
         sex     = "male",
         hair    = "red",
         hobby   = "croquet",
@@ -74,7 +74,7 @@ return {
     },
     {
         id      = "jack_moreau",
-        name    = "Jack Moreau",
+        name    = "Wolf Delgado",
         sex     = "male",
         hair    = "black",
         hobby   = "mountain_climbing",
@@ -84,7 +84,7 @@ return {
     },
     {
         id      = "eddie_flash",
-        name    = "Eddie Flash",
+        name    = "Zippy Larkin",
         sex     = "male",
         hair    = "black",
         hobby   = "croquet",
@@ -94,7 +94,7 @@ return {
     },
     {
         id      = "igor_volkov",
-        name    = "Igor Volkov",
+        name    = "Boris Kessler",
         sex     = "male",
         hair    = "blonde",
         hobby   = "croquet",
