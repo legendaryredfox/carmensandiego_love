@@ -4,7 +4,6 @@ local locale         = require("src.locale")
 local ui             = require("src.ui")
 local game           = require("src.game")
 local detective_mod  = require("src.detective")
-local mission_mod    = require("src.mission")
 local venue_name_mod = require("src.venue_name")
 
 local S = {}
@@ -21,20 +20,23 @@ local ACTION_H  = 30
 local selected   = 1
 local selector_x = nil
 
--- Cached venue images, keyed by clue image path (same fallback pattern as
--- src/screens/city_info.lua: missing files just fall back to a placeholder).
-local image_cache = {}
+-- Venue cards show a generic icon for the clue's category, not the clue's
+-- own image — the actual clue art/text is a spoiler until the player
+-- investigates (see src/screens/venue.lua). One icon per category, shared
+-- across every city (see assets/CREDITS.md for source/license).
+local VENUE_ICON_PATH = "assets/images/venues/"
+local icon_cache = {}
 
-local function get_image(path)
-    if not path then return nil end
-    if image_cache[path] == nil then
+local function get_venue_icon(category)
+    if icon_cache[category] == nil then
+        local path = VENUE_ICON_PATH .. category .. ".png"
         local ok, img = false, nil
         if love.filesystem.getInfo(path) then
             ok, img = pcall(love.graphics.newImage, path)
         end
-        image_cache[path] = ok and img or false
+        icon_cache[category] = ok and img or false
     end
-    return image_cache[path] or nil
+    return icon_cache[category] or nil
 end
 
 -- Zone layout: 1-3 are the venue cards (top row), 4 is the crime computer
@@ -85,22 +87,24 @@ function S.update(dt)
 end
 
 local function draw_venue_card(i)
-    local r       = zone_rect(i)
-    local city_id = game.detective.current_city_id
-    local name    = venue_name_mod.name_for(game.mission, city_id, i)
-    local clue    = mission_mod.clue_at(game.mission, city_id, i)
+    local r        = zone_rect(i)
+    local city_id  = game.detective.current_city_id
+    local name     = venue_name_mod.name_for(game.mission, city_id, i)
+    local category = venue_name_mod.category_for(game.mission, city_id, i)
 
     ui.panel(r.x, r.y, r.w, r.h)
     ui.text(r.x + 4, r.y + 6, name, ui.C.text, "center", r.w - 8)
 
     local img_y = r.y + 24
     local img_h = r.h - 30
-    local img   = clue and get_image(clue.image)
+    local img   = get_venue_icon(category)
     if img then
         local scale = math.min((r.w - 12) / img:getWidth(), img_h / img:getHeight())
         local iw, ih = img:getWidth() * scale, img:getHeight() * scale
+        love.graphics.setColor(ui.C.border)
         love.graphics.draw(img, r.x + (r.w - iw) / 2, img_y + (img_h - ih) / 2,
             0, scale, scale)
+        love.graphics.setColor(1, 1, 1, 1)
     else
         love.graphics.setColor(ui.C.border)
         love.graphics.rectangle("line", r.x + 6, img_y, r.w - 12, img_h)

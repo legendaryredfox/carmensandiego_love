@@ -10,6 +10,11 @@ local MUSIC_VOL = 0.6
 local SFX_VOL   = 0.8
 local FADE_STEP = 0.02  -- volume change per update tick during crossfade
 
+-- Human loudness perception is roughly logarithmic; a linear 0-1 slider
+-- crowds all the useful range into its bottom 10-20%. Squaring the stored
+-- linear setting before it reaches setVolume spreads that range out.
+local function to_gain(v) return v * v end
+
 local fade_out_src  = nil
 local fade_in_key   = nil
 
@@ -38,7 +43,7 @@ local function try_load_music(path)
     local ok, src = pcall(love.audio.newSource, path, "stream")
     if not ok then return nil end
     src:setLooping(true)
-    src:setVolume(MUSIC_VOL)
+    src:setVolume(to_gain(MUSIC_VOL))
     return src
 end
 
@@ -46,7 +51,7 @@ local function try_load_sfx(path)
     if not love.filesystem.getInfo(path) then return nil end
     local ok, src = pcall(love.audio.newSource, path, "static")
     if not ok then return nil end
-    src:setVolume(SFX_VOL)
+    src:setVolume(to_gain(SFX_VOL))
     return src
 end
 
@@ -103,9 +108,10 @@ function M.update()
     if fade_in_key then
         local src = get_music(fade_in_key)
         if src then
+            local target = to_gain(MUSIC_VOL)
             local v = src:getVolume() + FADE_STEP
-            if v >= MUSIC_VOL then
-                src:setVolume(MUSIC_VOL)
+            if v >= target then
+                src:setVolume(target)
                 fade_in_key = nil
             else
                 src:setVolume(v)
@@ -129,14 +135,14 @@ function M.play_sfx(key)
     if not src then return end
     -- Clone so overlapping SFX work.
     local clone = src:clone()
-    clone:setVolume(SFX_VOL)
+    clone:setVolume(to_gain(SFX_VOL))
     clone:play()
 end
 
 function M.set_music_volume(v)
     MUSIC_VOL = math.max(0, math.min(1, v))
     local src  = current_music and get_music(current_music)
-    if src then src:setVolume(MUSIC_VOL) end
+    if src then src:setVolume(to_gain(MUSIC_VOL)) end
 end
 
 function M.set_sfx_volume(v)

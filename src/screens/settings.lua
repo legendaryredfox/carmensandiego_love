@@ -7,7 +7,7 @@ local settings = require("src.settings")
 local S = {}
 local selected = 1
 
-local VOLUME_STEP = 0.1
+local VOLUME_STEP = 0.05
 local SPEED_STEP  = 10
 local SPEED_MIN, SPEED_MAX = 10, 100
 

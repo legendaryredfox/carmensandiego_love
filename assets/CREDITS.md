@@ -77,8 +77,12 @@ Per-clue images sourced from Wikimedia Commons under CC0 or CC-BY (never
 CC-BY-SA, per this project's license policy), resized to 128x128 with
 nearest-neighbor downscaling. Referenced from the `image` field in
 `data/clues/<city_id>.lua`. Flags are NEVER used as clue images (see
-CLAUDE.md). Most cities' clue pools still have no image set — the venue
-card falls back to a bordered "?" placeholder in that case.
+CLAUDE.md). Not currently displayed anywhere in-game — the `image` field
+is parsed by `src/mission.lua` but no screen reads it yet (the venue card
+on `src/screens/city.lua` shows a generic category icon instead, see
+"Venue Category Icons" below; `src/screens/venue.lua`'s investigate screen
+is text + witness portrait only). Kept for a future rank-gated reveal
+(SPEC.md: image-only clues at Ace Detective rank).
 
 | File | Source file | Author | License |
 |---|---|---|---|
@@ -105,6 +109,34 @@ card falls back to a bordered "?" placeholder in that case.
 | clues/rome/colosseum.png | [Colosseum of Rome, Italy.jpg](https://commons.wikimedia.org/wiki/File:Colosseum_of_Rome,_Italy.jpg) | Wilfredor | CC0 |
 | clues/sydney/platypus.png | [Platypus (Ornithorhynchus anatinus). First Description 1799.jpg](https://commons.wikimedia.org/wiki/File:Platypus_(Ornithorhynchus_anatinus)._First_Description_1799.jpg) | Frederick Polydore Nodder | CC0 |
 | clues/tokyo/macaque.png | [Macaca fuscata - Zoo Sauvage de Saint-Félicien - 2016-07-19 (2).jpg](https://commons.wikimedia.org/wiki/File:Macaca_fuscata_-_Zoo_Sauvage_de_Saint-F%C3%A9licien_-_2016-07-19_(2).jpg) | Letartean | CC BY 3.0 |
+
+## Venue Category Icons
+
+`src/screens/city.lua`'s three venue cards each show a generic icon for
+the clue category behind that venue (landmark, currency, language,
+geography, wildlife, culture, industry, trait, terminal, generic — see
+`src/venue_name.lua`'s `category_for`), never the clue's own photo, so
+the card can't spoil the clue before the player investigates. One PNG per
+category, white silhouette on transparent background at 64x64, tinted at
+draw time via `ui.C.border` (same tint pattern as the panel sprites
+above). Source SVGs from [game-icons.net](https://game-icons.net),
+CC BY 3.0, rasterized locally with ImageMagick.
+
+| File | Source icon | Author | License |
+|---|---|---|---|
+| venues/landmark.png | [greek-temple](https://game-icons.net/1x1/delapouite/greek-temple.html) | Delapouite | CC BY 3.0 |
+| venues/currency.png | [coins](https://game-icons.net/1x1/delapouite/coins.html) | Delapouite | CC BY 3.0 |
+| venues/language.png | [open-book](https://game-icons.net/1x1/lorc/open-book.html) | Lorc | CC BY 3.0 |
+| venues/geography.png | [compass](https://game-icons.net/1x1/lorc/compass.html) | Lorc | CC BY 3.0 |
+| venues/wildlife.png | [paw-print](https://game-icons.net/1x1/lorc/paw-print.html) | Lorc | CC BY 3.0 |
+| venues/culture.png | [drama-masks](https://game-icons.net/1x1/lorc/drama-masks.html) | Lorc | CC BY 3.0 |
+| venues/industry.png | [factory](https://game-icons.net/1x1/delapouite/factory.html) | Delapouite | CC BY 3.0 |
+| venues/trait.png | [magnifying-glass](https://game-icons.net/1x1/lorc/magnifying-glass.html) | Lorc | CC BY 3.0 |
+| venues/terminal.png | [hood](https://game-icons.net/1x1/lorc/hood.html) | Lorc | CC BY 3.0 |
+| venues/generic.png | [police-badge](https://game-icons.net/1x1/andymeneely/police-badge.html) | Andy Meneely | CC BY 3.0 |
+
+Icons made by Lorc, Delapouite, and Andy Meneely. Available on
+https://game-icons.net.
 
 ## Witness Portraits (planned)
 
