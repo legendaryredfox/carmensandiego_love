@@ -23,14 +23,18 @@ local font_sm   -- 8px
 local font_md   -- 10px
 local font_lg   -- 14px
 
-local FONT_PATH = "assets/fonts/PressStart2P.ttf"
+local FONT_PATH        = "assets/fonts/PressStart2P.ttf"
+local LINE_HEIGHT       = 1.3 -- multiplier over the font's natural line height
 
 local function load_font(size)
+    local font
     if love.filesystem.getInfo(FONT_PATH) then
-        local ok, font = pcall(love.graphics.newFont, FONT_PATH, size)
-        if ok then return font end
+        local ok, f = pcall(love.graphics.newFont, FONT_PATH, size)
+        if ok then font = f end
     end
-    return love.graphics.newFont(size)
+    font = font or love.graphics.newFont(size)
+    font:setLineHeight(LINE_HEIGHT)
+    return font
 end
 
 local PANEL_PATH         = "assets/images/ui/panel.png"

@@ -7,6 +7,8 @@
 
 > *A faithful, bilingual (PT-BR / EN) reimagining of the classic 1985 detective game — rebuilt from scratch in Lua + LÖVE2D with pixel art retro aesthetics.*
 
+> Working title only — see [CLAUDE.md](CLAUDE.md#ip-constraints--read-carefully) for the IP constraints this project follows and what must change before any public release.
+
 ---
 
 ![Screenshot placeholder](assets/images/screenshot_placeholder.png)
@@ -15,38 +17,48 @@
 
 ## About
 
-You are an Interpol detective. A priceless national treasure has been stolen. A suspect from the V.I.L.E. criminal organization was spotted at the scene. You have **7 days** to track them across the globe, gather clues, identify the thief, issue an arrest warrant, and make the arrest.
+You are an Interpol detective. A priceless national treasure has been stolen. A suspect was spotted fleeing the scene. You have limited days (7 at Rookie rank, tightening as you rank up) to track them across the globe, gather clues, identify the thief, issue an arrest warrant, and make the arrest.
 
-This project is a complete rewrite of the original [carmensandiego](https://github.com/pointtonull/carmensandiego) Python CLI prototype — now as a full LÖVE2D game with:
-
-- **Pixel art retro visuals** — 640×360 virtual canvas, 2× scaled to 1280×720
-- **Real world geography** — city coordinates from a curated dataset, distances via the Haversine formula
-- **Bilingual** — Portuguese (PT-BR) and English selectable at the title screen
-- **Save/load** — multiple detective slots persisted via `love.filesystem`
-- **Detective ranking** — local leaderboard tracking time-to-arrest and rank progression
+- **Pixel art retro visuals** — 640×360 virtual canvas, 2× scaled to 1280×720, Press Start 2P font
+- **Real world geography** — 30 cities with real lat/lon, distances and flight times via the Haversine formula
+- **Bilingual** — Portuguese (PT-BR) and English selectable at the title screen or in settings
+- **Real, verified clues** — 30 per-city clue pools (currency, landmark, language, geography, wildlife, culture), current-reality facts, no outdated Cold War-era trivia
+- **Save/load** — persisted via `love.filesystem` + JSON
+- **Detective ranking** — local leaderboard tracking cases solved and score
+- **Settings** — language, music/SFX volume, typewriter text speed, all persisted
 
 ## Gameplay
 
 1. Read the mission briefing — a treasure was stolen, a suspect seen
-2. Travel between cities following the trail of clues
-3. Interrogate witnesses — each clue narrows down the suspect's traits
-4. Cross-reference the V.I.L.E. dossier to identify the criminal
-5. Issue an arrest warrant with enough evidence
-6. Arrest them before time runs out
+2. Land in a city — see a real photo and a short blurb about it
+3. Travel between cities following the trail of clues
+4. Interrogate witnesses at each venue — clues narrow down the suspect's traits or point to the next city
+5. Cross-reference the Crime Computer to identify the suspect from gathered traits
+6. Issue an arrest warrant once exactly one suspect matches
+7. Fly to the thief's city and make the arrest before time runs out
 
 ## Features
 
 | Feature | Status |
 |---|---|
-| Core travel system (Haversine distances) | 🚧 In progress |
-| Clue generation & suspect deduction | 🚧 In progress |
-| V.I.L.E. dossier (10 suspects) | 🚧 In progress |
-| Arrest warrant system | 🚧 In progress |
-| World map with city markers | 🚧 In progress |
-| Pixel art UI & animations | 🚧 In progress |
-| PT-BR / EN localization | 🚧 In progress |
-| Save / load (multiple slots) | 🚧 In progress |
-| Detective ranking & leaderboard | 🚧 In progress |
+| Core travel system (Haversine distances) | ✅ Done |
+| Clue generation & suspect deduction | ✅ Done |
+| Suspect roster (10, renamed from the 1985 originals) | ✅ Done |
+| Arrest warrant system | ✅ Done |
+| Real per-city clue pools (30/30 cities, verified) | ✅ Done |
+| World map with city markers | ✅ Done |
+| City arrival photos (30/30, real, CC0/CC-BY) | ✅ Done |
+| 9-slice pixel UI panels/buttons | ✅ Done |
+| Screen transitions (fade) | ✅ Done |
+| PT-BR / EN localization | ✅ Done |
+| Save / load | ✅ Done |
+| Settings (language, volume, text speed) | ✅ Done |
+| Detective ranking & leaderboard | ✅ Done |
+| Music & SFX | ✅ Done |
+| Named venues with per-city images | 🚧 Planned (see PLAN.md Phase 6) |
+| Travel-to-venue animation w/ advancing clock | 🚧 Planned (see PLAN.md Phase 6) |
+| Clue images (coins, animals, landmarks) | 🚧 Planned |
+| City exterior pixel art backgrounds | 🚧 Planned |
 
 ## Requirements
 
@@ -79,34 +91,53 @@ Test files follow the `*_test.lua` naming convention and live in `tests/`.
 
 ```
 carmensandiego_love/
-├── main.lua              # LÖVE entry point
-├── conf.lua              # Window config (640×360 @ 2×)
+├── main.lua                  # LÖVE entry point — thin dispatcher
+├── conf.lua                  # Window config (640×360 @ 2×)
+├── SPEC.md                   # Game specification
+├── PLAN.md                   # Implementation plan (phases, backlog)
 ├── data/
-│   └── cities.csv        # city;english_name;country;lat;lon;population
+│   ├── cities.csv            # id;name_en;name_pt;country_en;country_pt;lat;lon;population
+│   ├── suspects.lua          # 10-suspect roster
+│   ├── routes.lua            # City-connection graphs (from the 1985 original)
+│   └── clues/                # One file per city, 30 total
 ├── locales/
-│   ├── en.lua            # English strings
-│   └── pt.lua            # Portuguese strings
+│   ├── en.lua
+│   └── pt.lua
+├── lib/
+│   └── json.lua              # rxi/json.lua
 ├── src/
-│   ├── state_machine.lua # Screen state manager
-│   ├── city.lua          # City data + Haversine distance
-│   ├── thief.lua         # Suspect roster + search logic
-│   ├── mission.lua       # Mission generation + clue system
-│   ├── detective.lua     # Player state: location, rank, days
-│   ├── save.lua          # Save/load via love.filesystem
-│   ├── ranking.lua       # Local leaderboard
-│   ├── map.lua           # World map rendering
-│   └── ui.lua            # Shared UI primitives
+│   ├── state_machine.lua     # Screen state manager + fade transitions
+│   ├── locale.lua            # locale.t("key") accessor
+│   ├── city.lua              # City data loading + Haversine distance
+│   ├── suspect.lua           # Suspect roster + trait-filter search
+│   ├── mission.lua           # Mission generation + clue assignment
+│   ├── clue_pool.lua         # Per-city clue pool loading
+│   ├── detective.lua         # Player state: location, rank, days, clock
+│   ├── save.lua               # Save/load via love.filesystem + json
+│   ├── ranking.lua           # Local leaderboard (top 10)
+│   ├── settings.lua          # Language/volume/text-speed persistence
+│   ├── audio.lua             # Music crossfade + SFX
+│   ├── game.lua              # Session state glue (detective/mission/save)
+│   ├── map.lua               # World map rendering + city markers
+│   ├── ui.lua                # 9-slice panels/buttons, fonts, fade, smoothing
+│   └── screens/
+│       ├── title.lua, language.lua, menu.lua, settings.lua
+│       ├── name_entry.lua, briefing.lua, city_info.lua, city.lua
+│       ├── venue.lua, crime_computer.lua, travel.lua
+│       ├── arrest.lua, rank_up.lua, leaderboard.lua, game_over.lua
 ├── assets/
-│   ├── fonts/
+│   ├── fonts/                # Press Start 2P
 │   ├── images/
-│   └── sounds/
+│   │   ├── cities/           # 30 city arrival photos
+│   │   ├── ui/                # 9-slice panel sprites
+│   │   ├── clues/            # Per-clue images (planned)
+│   │   └── map/               # World map base image (planned)
+│   ├── sounds/{music,sfx}/   # 7 tracks, 6 SFX
+│   ├── CREDITS.md            # Full asset attribution
+│   └── download_assets.sh    # Re-downloads music/SFX/font from source
 └── tests/
-    ├── runner.lua         # Minitest runner
-    ├── city_test.lua
-    ├── thief_test.lua
-    ├── mission_test.lua
-    ├── detective_test.lua
-    └── save_test.lua
+    ├── runner.lua            # Minitest runner
+    └── *_test.lua            # One per src/ module with pure-Lua logic
 ```
 
 ## Tech Stack
@@ -122,16 +153,11 @@ carmensandiego_love/
 
 ## Assets & Licenses
 
-All game assets are free for commercial use:
+All game assets are CC0, Public Domain, CC-BY, or OFL — never CC-BY-SA. Full per-file attribution (30 city photos, 7 music tracks, 6 SFX, font, UI sprites) is in [assets/CREDITS.md](assets/CREDITS.md). Re-download the audio/font set anytime with:
 
-| Asset type | Source | License |
-|---|---|---|
-| UI sprites | [Kenney Pixel UI Pack](https://kenney.nl/assets/pixel-ui-pack) | CC0 |
-| Character sprites | [Kenney Roguelike Characters](https://kenney.nl/assets/roguelike-characters) | CC0 |
-| Map icons | [Kenney Board Game Icons](https://kenney.nl/assets/board-game-icons) | CC0 |
-| Music | [OpenGameArt — 15 Melodic RPG Chiptunes](https://opengameart.org/content/15-melodic-rpg-chiptunes) | CC0 |
-| SFX | [OpenGameArt — 512 Sound Effects 8-bit](https://opengameart.org/content/512-sound-effects-8-bit-style) | CC0 |
-| Font | [Press Start 2P](https://fonts.google.com/specimen/Press+Start+2P) | OFL |
+```bash
+bash assets/download_assets.sh
+```
 
 ## Contributing
 
@@ -141,11 +167,12 @@ Key rules:
 - All player-visible strings go through `locale.t("key")` — never hardcode
 - Every public function needs at least one test in `tests/*_test.lua`
 - No globals except `love.*`
+- No AI attribution in commits — see [CLAUDE.md](CLAUDE.md#authorship)
 
 ## Inspiration & References
 
 - Original Python prototype: [pointtonull/carmensandiego](https://github.com/pointtonull/carmensandiego)
-- Classic game: *Where in the World is Carmen Sandiego?* (Broderbund, 1985)
+- Classic game: *Where in the World is Carmen Sandiego?* (Broderbund, 1985) — referenced as historical/educational context only, see [CLAUDE.md](CLAUDE.md#ip-constraints--read-carefully)
 
 ## License
 
