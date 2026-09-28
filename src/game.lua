@@ -9,6 +9,7 @@ local M = {}
 
 -- Static data — loaded once
 M.suspects       = nil
+M.leader         = nil
 M.cities_by_id   = nil
 M.cities_ordered = nil
 M.routes         = nil
@@ -22,6 +23,7 @@ M.save_slot  = 1
 function M.init()
     if M.suspects then return end
     M.suspects                       = suspect_mod.load()
+    M.leader                         = require("data.leader")
     M.cities_by_id, M.cities_ordered = city_mod.load("data/cities.csv")
     M.routes                         = require("data.routes")
     M.ranking                        = ranking_mod.new()
@@ -36,18 +38,39 @@ local function make_rng()
     end
 end
 
+-- Returns the organization leader if the detective's next case should be
+-- the career-capping final one (see SPEC.md §2.7), else nil.
+local function leader_for(detective)
+    if detective.cases_solved >= mission_mod.FINAL_CASE_CASES_SOLVED then
+        return M.leader
+    end
+    return nil
+end
+
+-- Suspects searchable via the crime computer for the current mission: the
+-- regular 10-suspect roster, plus the leader herself once she's the thief,
+-- so deduction still narrows down to exactly one match on the final case.
+function M.suspect_pool()
+    if not (M.mission and M.mission.is_final) then
+        return M.suspects
+    end
+    local pool = { M.leader }
+    for _, s in ipairs(M.suspects) do table.insert(pool, s) end
+    return pool
+end
+
 function M.new_game(name)
     local rng    = make_rng()
     M.detective  = detective_mod.new(name)
     M.mission    = mission_mod.new(M.suspects, M.cities_by_id, M.routes,
-                                    M.detective.rank, rng)
+                                    M.detective.rank, rng, leader_for(M.detective))
     detective_mod.begin_mission(M.detective, M.mission)
 end
 
 function M.next_mission()
     local rng   = make_rng()
     M.mission   = mission_mod.new(M.suspects, M.cities_by_id, M.routes,
-                                   M.detective.rank, rng)
+                                   M.detective.rank, rng, leader_for(M.detective))
     detective_mod.begin_mission(M.detective, M.mission)
 end
 

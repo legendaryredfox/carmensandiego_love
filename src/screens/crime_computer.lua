@@ -45,7 +45,7 @@ end
 function S.enter()
     cursor     = 1
     status_msg = ""
-    match_list = suspect_mod.filter(game.suspects, get_filter())
+    match_list = suspect_mod.filter(game.suspect_pool(), get_filter())
     audio.crossfade("computer")
 end
 
@@ -90,7 +90,7 @@ function S.draw()
 
     -- Warrant indicator
     if game.detective.warrant_id then
-        local ws = suspect_mod.by_id(game.suspects, game.detective.warrant_id)
+        local ws = suspect_mod.by_id(game.suspect_pool(), game.detective.warrant_id)
         if ws then
             ui.text(10, by + 40,
                 "WARRANT: " .. ws.name, ui.C.success)
@@ -108,12 +108,12 @@ function S.keypressed(key)
     elseif key == "left"  and cursor <= 6 then cycle(ATTRS[cursor], -1)
     elseif key == "right" and cursor <= 6 then cycle(ATTRS[cursor], 1)
     elseif key == "s" or (key == "return" and cursor == 7) then
-        match_list = suspect_mod.filter(game.suspects, get_filter())
+        match_list = suspect_mod.filter(game.suspect_pool(), get_filter())
         status_msg = #match_list == 0 and locale.t("crime.no_match")
                   or (#match_list > 1  and locale.t("crime.multiple_match"))
                   or ""
     elseif key == "w" or (key == "return" and cursor == 8) then
-        local result, match = detective_mod.issue_warrant(game.detective, game.suspects)
+        local result, match = detective_mod.issue_warrant(game.detective, game.suspect_pool())
         if result == "issued" then
             status_msg = locale.t("crime.warrant_issued", { name = match.name })
         elseif result == "multiple" then

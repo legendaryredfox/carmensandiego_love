@@ -198,6 +198,7 @@ describe("detective serialize/deserialize", function()
         d.time_limit_hours = 144
         d.gathered_traits  = { sex = "female", hair = "red" }
         d.warrant_id       = "some_suspect"
+        d.career_complete  = true
 
         local t  = detective.serialize(d)
         local d2 = detective.deserialize(t)
@@ -211,6 +212,7 @@ describe("detective serialize/deserialize", function()
         assert_eq(d2.warrant_id,       d.warrant_id)
         assert_eq(d2.gathered_traits.sex,  "female")
         assert_eq(d2.gathered_traits.hair, "red")
+        assert_true(d2.career_complete)
     end)
 
     it("deserialize handles nil optional fields gracefully", function()
@@ -218,5 +220,6 @@ describe("detective serialize/deserialize", function()
         assert_eq(d2.rank, "rookie")
         assert_eq(d2.cases_solved, 0)
         assert_eq(d2.hours_elapsed, 0)
+        assert_false(d2.career_complete)
     end)
 end)

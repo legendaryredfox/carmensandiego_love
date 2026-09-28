@@ -107,6 +107,10 @@ return {
     ["arrest.wrong_warrant"]      = "Wrong suspect!\n{name} escaped.",
     ["arrest.no_warrant"]         = "No warrant.\nThe suspect escaped.",
     ["arrest.wrong_city"]         = "The thief is not here.",
+    ["arrest.title_success"]      = "CASE CLOSED!",
+    ["arrest.title_failed"]       = "MISSION FAILED",
+    ["arrest.next_mission"]       = "[ PRESS ENTER FOR NEXT MISSION ]",
+    ["arrest.continue"]           = "[ PRESS ENTER TO CONTINUE ]",
 
     -- Rank up
     ["rankup.title"]              = "PROMOTION!",
@@ -116,6 +120,11 @@ return {
     ["gameover.title"]            = "MISSION FAILED",
     ["gameover.time"]             = "You ran out of time.\nThe thief escaped.",
     ["gameover.retry"]            = "PRESS ENTER TO TRY AGAIN",
+
+    -- Hall of Fame (career-capping arrest of the organization leader)
+    ["hallfame.title"]            = "HALL OF FAME",
+    ["hallfame.message"]          = "You caught {leader} and dismantled the\norganization for good, {rank} {name}.\n\nYour career as a detective is complete.",
+    ["hallfame.continue"]         = "[ PRESS ENTER TO RETURN TO THE MENU ]",
 
     -- Leaderboard
     ["leaderboard.title"]         = "TOP DETECTIVES",

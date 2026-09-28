@@ -9,6 +9,7 @@ local audio    = require("src.audio")
 local S = {}
 local result_key, msg, thief_name = "", "", ""
 local timer = 0
+local rank_before_success = nil
 
 function S.enter()
     local result = det_mod.attempt_arrest(game.detective, game.mission)
@@ -17,6 +18,7 @@ function S.enter()
 
     if result == "success" then
         result_key = "arrest.success"
+        rank_before_success = game.detective.rank
         det_mod.on_success(game.detective)
         audio.play_sfx("arrest_ok")
         audio.crossfade("success")
@@ -47,20 +49,15 @@ function S.update(dt) timer = timer + dt end
 function S.draw()
     local success = (result_key == "arrest.success")
 
-    ui.title(0, 30, success and "CASE CLOSED!" or "MISSION FAILED",
+    ui.title(0, 30, locale.t(success and "arrest.title_success" or "arrest.title_failed"),
         success and ui.C.success or ui.C.danger)
 
     ui.panel(60, 80, ui.VIRTUAL_W - 120, 120)
     ui.text(70, 95, msg, success and ui.C.success or ui.C.danger)
 
     if timer > 1.5 then
-        if success then
-            ui.text(0, 220, "[ PRESS ENTER FOR NEXT MISSION ]",
-                ui.C.dim, "center", ui.VIRTUAL_W)
-        else
-            ui.text(0, 220, "[ PRESS ENTER TO CONTINUE ]",
-                ui.C.dim, "center", ui.VIRTUAL_W)
-        end
+        local hint_key = success and "arrest.next_mission" or "arrest.continue"
+        ui.text(0, 220, locale.t(hint_key), ui.C.dim, "center", ui.VIRTUAL_W)
     end
 end
 
@@ -68,13 +65,24 @@ function S.keypressed(key)
     if timer < 1.5 then return end
     if key ~= "return" and key ~= "space" then return end
     local success = (result_key == "arrest.success")
-    if success then
-        -- Check rank up
-        local old_rank = game.mission and game.mission.thief and "rookie" or "rookie"
-        game.next_mission()
-        SM.switch(require("src.screens.briefing"))
-    else
+    if not success then
         SM.switch(require("src.screens.game_over"))
+        return
+    end
+
+    if game.mission.is_final then
+        game.detective.career_complete = true
+        game.save()
+        SM.switch(require("src.screens.hall_of_fame"))
+        return
+    end
+
+    local ranked_up = game.detective.rank ~= rank_before_success
+    game.next_mission()
+    if ranked_up then
+        SM.switch(require("src.screens.rank_up"))
+    else
+        SM.switch(require("src.screens.briefing"))
     end
 end
 

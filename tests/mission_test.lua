@@ -200,6 +200,23 @@ describe("mission.new", function()
             assert_eq(m1.route[i], m2.route[i])
         end
     end)
+
+    it("regular case (no leader passed) never selects the leader as thief", function()
+        for seed = 1, 100 do
+            local m = mission.new(suspects, cities_by_id, routes, "ace_detective", make_seed_rng(seed))
+            assert_false(m.thief.is_leader == true,
+                "leader picked as thief without being passed in, seed " .. seed)
+            assert_false(m.is_final)
+        end
+    end)
+
+    it("passing a leader forces her as thief and marks the mission final", function()
+        local leader = require("data.leader")
+        local m = mission.new(suspects, cities_by_id, routes, "ace_detective",
+            make_seed_rng(3), leader)
+        assert_eq(m.thief.id, leader.id)
+        assert_true(m.is_final)
+    end)
 end)
 
 describe("mission helpers", function()

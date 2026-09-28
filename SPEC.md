@@ -115,7 +115,14 @@ When the detective is in the same city as the thief:
 | Investigator | 10 | 7 | 5 |
 | Ace Detective | 15 | 8 | 5 |
 
-At Ace Detective, the final target (mission 16+) is the organization leader.
+Once the detective is Ace Detective **and** has solved 29 cases total, the
+next case's thief is always the organization leader — a separate, higher
+gate than the rank-up threshold itself, matching the 1985 original exactly
+(N_BEGIN_CASE checks rank ≥ top AND cases_solved ≥ 29 as two conditions, not
+one; see `references/apple2-carmen-sandiego-world-disasm`). The briefing
+never announces this in advance — it reads like any other dispatch, no
+thief name, no special hint. The player only discovers it's the leader mid
+case, the same way they'd discover any other suspect's identity.
 Catching the leader ends the detective's career → Hall of Fame entry → new game required.
 
 ---

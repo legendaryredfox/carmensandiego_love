@@ -152,17 +152,29 @@ function M._generate_clues(route, thief, rng)
     return clues
 end
 
+-- Cases needed (at Ace Detective) before the next case is the organization
+-- leader's — see SPEC.md §2.7. Matches the 1985 original exactly: N_BEGIN_CASE
+-- (references/apple2-carmen-sandiego-world-disasm src/disk1/N.s:330-338)
+-- requires top rank AND cases_solved >= $1D (29) before forcing the leader as
+-- suspect — the rank-up threshold alone (15, in RANK_CONFIG.ace_detective)
+-- isn't enough on its own, matching the original's separate, higher gate.
+M.FINAL_CASE_CASES_SOLVED = 29
+
 -- Creates a new mission.
--- suspects: list of Suspect tables
+-- suspects: list of Suspect tables (the regular 10-suspect roster)
 -- cities_by_id: { [id] = City }
 -- routes: the 8 route graphs (data/routes.lua)
 -- rank_name: string key into RANK_CONFIG
 -- rng: function(n) → integer in [1, n]
-function M.new(suspects, cities_by_id, routes, rank_name, rng)
+-- leader: the organization-leader Suspect table (data/leader.lua), or nil
+--   for a regular case. Pass it once the detective has reached
+--   M.FINAL_CASE_CASES_SOLVED to make this the career-capping final case.
+function M.new(suspects, cities_by_id, routes, rank_name, rng, leader)
     local cfg    = M.RANK_CONFIG[rank_name]
     assert(cfg, "unknown rank: " .. tostring(rank_name))
 
-    local thief       = suspects[rng(#suspects)]
+    local is_final    = leader ~= nil
+    local thief       = is_final and leader or suspects[rng(#suspects)]
     local graph_index = rng(8)
     local graph       = routes[graph_index]
 
@@ -173,6 +185,7 @@ function M.new(suspects, cities_by_id, routes, rank_name, rng)
 
     return {
         thief             = thief,
+        is_final          = is_final,
         stolen_item       = item_key,
         graph_index       = graph_index,
         route             = route,

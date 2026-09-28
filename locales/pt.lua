@@ -108,6 +108,10 @@ return {
     ["arrest.wrong_warrant"]      = "Suspeito errado!\n{name} escapou.",
     ["arrest.no_warrant"]         = "Sem mandado.\nO suspeito escapou.",
     ["arrest.wrong_city"]         = "O ladrao nao esta aqui.",
+    ["arrest.title_success"]      = "CASO ENCERRADO!",
+    ["arrest.title_failed"]       = "MISSAO FRACASSADA",
+    ["arrest.next_mission"]       = "[ PRESSIONE ENTER PARA A PROXIMA MISSAO ]",
+    ["arrest.continue"]           = "[ PRESSIONE ENTER PARA CONTINUAR ]",
 
     -- Promocao
     ["rankup.title"]              = "PROMOCAO!",
@@ -117,6 +121,11 @@ return {
     ["gameover.title"]            = "MISSAO FRACASSADA",
     ["gameover.time"]             = "Voce ficou sem tempo.\nO ladrao escapou.",
     ["gameover.retry"]            = "PRESSIONE ENTER PARA TENTAR NOVAMENTE",
+
+    -- Hall da Fama (prisao final da lider da organizacao)
+    ["hallfame.title"]            = "HALL DA FAMA",
+    ["hallfame.message"]          = "Voce prendeu {leader} e desmantelou a\norganizacao de vez, {rank} {name}.\n\nSua carreira como detetive esta completa.",
+    ["hallfame.continue"]         = "[ PRESSIONE ENTER PARA VOLTAR AO MENU ]",
 
     -- Placar
     ["leaderboard.title"]         = "MELHORES DETETIVES",

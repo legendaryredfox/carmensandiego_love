@@ -258,7 +258,16 @@ Goal: all 30 cities have complete, verified clue pools.
       transition between `travel` and `city_info`/`arrest` that flies a
       triangle marker along the map between origin and destination while
       the clock ticks forward, mirroring `investigating.lua`'s pattern)
-- [ ] Hall of Fame screen (after catching final target)
+- [x] Hall of Fame screen (after catching final target) — `data/leader.lua`
+      (the organization leader, excluded from the regular 10-suspect draw),
+      `src/mission.lua`'s `M.new(..., leader)` param forces her as thief and
+      sets `mission.is_final`, `src/game.lua`'s `leader_for()` passes her in
+      once `cases_solved >= M.FINAL_CASE_CASES_SOLVED` (29 — matches the
+      original's separate rank+cases gate, see SPEC.md §2.7). Catching her
+      sets `detective.career_complete`, routes to `src/screens/hall_of_fame.lua`
+      instead of the next mission, and disables Continue on the main menu.
+      Also fixed `rank_up.lua`, which existed but was never wired in —
+      `arrest.lua` now detects a rank change and shows it before briefing.
 - [ ] Confirm working on Linux, macOS, Windows (LÖVE is cross-platform)
 - [ ] Package as `.love` file: `zip -9 -r game.love . -x "*.git*" "tests/*" "SPEC.md" "PLAN.md"`
 

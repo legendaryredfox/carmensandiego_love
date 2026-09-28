@@ -37,6 +37,7 @@ function M.new(name)
         gathered_traits  = {},
         warrant_id       = nil,
         mission          = nil,
+        career_complete  = false,
     }
 end
 
@@ -174,6 +175,7 @@ function M.serialize(det)
         start_timestamp  = det.start_timestamp,
         gathered_traits  = det.gathered_traits,
         warrant_id       = det.warrant_id,
+        career_complete  = det.career_complete,
     }
 end
 
@@ -187,6 +189,7 @@ function M.deserialize(t)
     det.start_timestamp  = t.start_timestamp  or os.time()
     det.gathered_traits  = t.gathered_traits  or {}
     det.warrant_id       = t.warrant_id
+    det.career_complete  = t.career_complete  or false
     return det
 end
 

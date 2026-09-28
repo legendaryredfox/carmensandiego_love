@@ -7,6 +7,14 @@ local save   = require("src.save")
 local S = {}
 local selected = 1
 
+-- A save whose detective already caught the organization leader has no
+-- more mission to continue — Continue must be disabled, new game required.
+local function continue_available()
+    if not save.exists(1) then return false end
+    local data = save.read(1)
+    return data ~= nil and not (data.detective and data.detective.career_complete)
+end
+
 local function items()
     return {
         { label = locale.t("menu.new_game"),
@@ -16,7 +24,7 @@ local function items()
               if game.load(1) then SM.switch(require("src.screens.briefing"))
               else end
           end,
-          disabled = not save.exists(1) },
+          disabled = not continue_available() },
         { label = locale.t("menu.leaderboard"),
           action = function() SM.switch(require("src.screens.leaderboard")) end },
         { label = locale.t("menu.settings"),
