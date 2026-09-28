@@ -111,6 +111,11 @@ return {
     ["trait.food.mexican"]        = "PREFERE COMIDA MEXICANA",
     ["trait.food.seafood"]        = "PREFERE FRUTOS DO MAR",
 
+    -- Hora / barra de status
+    ["status.time"]               = "HORA: {time}",
+    ["status.deadline"]           = "PRAZO: {time}",
+    ["briefing.deadline"]         = "PRENDA O SUSPEITO ATÉ {deadline}.",
+
     -- Pistas genéricas
     ["clue.generic.destination"]  = "atividade incomum em uma terra distante",
     ["clue.terminal"]             = "Nada suspeito aqui.",

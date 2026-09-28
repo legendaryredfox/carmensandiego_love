@@ -8,10 +8,8 @@ local mission_mod   = require("src.mission")
 
 local S = {}
 
--- Zones: 1=Interpol, 2=Venue1, 3=Venue2, 4=Venue3, 5=Airport
 local ZONE_LABELS = { "CRIME\nCOMPUTER", "VENUE\n1", "VENUE\n2", "VENUE\n3", "AIRPORT" }
 local ZONE_W      = 128
-local ZONE_H      = ui and ui.VIRTUAL_H - 40 or 320
 local selected    = 1
 local fade        = nil
 
@@ -40,41 +38,39 @@ end
 
 function S.draw()
     local d    = game.detective
-    local m    = game.mission
-    local on   = mission_mod.on_route(m, d.current_city_id)
+    local lang = locale.get_lang()
 
     -- Zone areas
     for i = 1, 5 do
         local x   = zone_x(i)
         local sel = (i == selected)
-        if sel then
-            love.graphics.setColor(ui.C.highlight)
-        else
-            love.graphics.setColor(ui.C.panel)
-        end
+        love.graphics.setColor(sel and ui.C.highlight or ui.C.panel)
         love.graphics.rectangle("fill", x, 30, ZONE_W, ui.VIRTUAL_H - 68)
         love.graphics.setColor(ui.C.border)
         love.graphics.rectangle("line", x, 30, ZONE_W, ui.VIRTUAL_H - 68)
-
-        local label_color = sel and ui.C.bg or ui.C.text
-        love.graphics.setColor(label_color)
+        love.graphics.setColor(sel and ui.C.bg or ui.C.text)
         love.graphics.printf(ZONE_LABELS[i], x + 4, ui.VIRTUAL_H / 2 - 20, ZONE_W - 8, "center")
     end
 
-    -- Location header
-    local city_name = game.city_name(d.current_city_id)
-    ui.title(0, 8, city_name)
+    -- City name header
+    ui.title(0, 8, game.city_name(d.current_city_id))
 
-    -- Clue indicator (show venue status)
-    if on then
-        love.graphics.setColor(ui.C.success)
-        love.graphics.printf("TRAIL IS HOT", 0, 12, ui.VIRTUAL_W, "right")
-    end
+    -- Status bar: city | rank | current time + deadline
+    local rank_str     = locale.t("rank." .. d.rank)
+    local time_str     = locale.t("status.time",     { time = detective_mod.current_time_str(d, lang) })
+    local deadline_str = locale.t("status.deadline",  { time = detective_mod.deadline_str(d, lang) })
+    local right_str    = time_str .. "  " .. deadline_str
 
-    -- Status bar
-    local days_str = string.format("DAYS: %.1f", detective_mod.days_remaining(d))
-    local rank_str = locale.t("rank." .. d.rank)
-    ui.status_bar(city_name, days_str, rank_str)
+    local bar_y = ui.VIRTUAL_H - 18
+    love.graphics.setColor(ui.C.panel)
+    love.graphics.rectangle("fill", 0, bar_y, ui.VIRTUAL_W, 18)
+    love.graphics.setColor(ui.C.border)
+    love.graphics.line(0, bar_y, ui.VIRTUAL_W, bar_y)
+    love.graphics.setColor(ui.C.text)
+    love.graphics.print(game.city_name(d.current_city_id), 6, bar_y + 5)
+    love.graphics.printf(rank_str, 0, bar_y + 5, ui.VIRTUAL_W, "center")
+    love.graphics.printf(right_str, 0, bar_y + 5, ui.VIRTUAL_W - 6, "right")
+    love.graphics.setColor(1, 1, 1, 1)
 
     -- Nav hint
     ui.text(0, ui.VIRTUAL_H - 30, "[ LEFT / RIGHT  ENTER ]",
@@ -94,9 +90,7 @@ function S.mousepressed(x, y, btn)
     for i = 1, 5 do
         local zx = zone_x(i)
         if x >= zx and x < zx + ZONE_W and y >= 30 and y < ui.VIRTUAL_H - 38 then
-            selected = i
-            S._activate(i)
-            return
+            selected = i; S._activate(i); return
         end
     end
 end

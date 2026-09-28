@@ -111,6 +111,11 @@ return {
     ["trait.food.mexican"]        = "PREFERS MEXICAN FOOD",
     ["trait.food.seafood"]        = "PREFERS SEAFOOD",
 
+    -- Time / status bar
+    ["status.time"]               = "TIME: {time}",
+    ["status.deadline"]           = "DUE: {time}",
+    ["briefing.deadline"]         = "CATCH THE SUSPECT BY {deadline}.",
+
     -- Generic clue fallbacks
     ["clue.generic.destination"]  = "unusual activity in a distant land",
     ["clue.terminal"]             = "Nothing suspicious here.",

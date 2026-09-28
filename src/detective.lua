@@ -11,31 +11,62 @@ local RANKS = {
     { id = "ace_detective",    cases = 15 },
 }
 
+local DAY_EN = { "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" }
+local DAY_PT = { "Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sab" }
+
+local INVESTIGATION_HOURS = 2
+
 local function rank_for_cases(cases_solved)
     local current = RANKS[1]
     for _, r in ipairs(RANKS) do
-        if cases_solved >= r.cases then
-            current = r
-        end
+        if cases_solved >= r.cases then current = r end
     end
     return current.id
 end
 
 function M.new(name)
     return {
-        name            = name,
-        rank            = "rookie",
-        cases_solved    = 0,
-        current_city_id = nil,
-        hours_elapsed   = 0,
+        name             = name,
+        rank             = "rookie",
+        cases_solved     = 0,
+        current_city_id  = nil,
+        hours_elapsed    = 0,
         time_limit_hours = 7 * 24,
-        gathered_traits = {},
-        warrant_id      = nil,
-        mission         = nil,
+        start_timestamp  = os.time(),
+        gathered_traits  = {},
+        warrant_id       = nil,
+        mission          = nil,
     }
 end
 
--- Moves detective to city_id, consuming hours.
+-- Returns the in-game unix timestamp for the current moment.
+function M.current_timestamp(det)
+    return det.start_timestamp + math.floor(det.hours_elapsed * 3600)
+end
+
+-- Returns the deadline unix timestamp.
+function M.deadline_timestamp(det)
+    return det.start_timestamp + math.floor(det.time_limit_hours * 3600)
+end
+
+-- Formats a unix timestamp as "Mon 14:30" (or PT equivalent).
+function M.format_datetime(ts, lang)
+    local t    = os.date("*t", ts)
+    local days = (lang == "pt") and DAY_PT or DAY_EN
+    return string.format("%s %02d:%02d", days[t.wday], t.hour, t.min)
+end
+
+-- Returns formatted current game time string.
+function M.current_time_str(det, lang)
+    return M.format_datetime(M.current_timestamp(det), lang)
+end
+
+-- Returns formatted deadline string.
+function M.deadline_str(det, lang)
+    return M.format_datetime(M.deadline_timestamp(det), lang)
+end
+
+-- Moves detective to city_id, consuming flight hours.
 -- Returns "ok" or "time_expired".
 function M.travel(det, city_id, hours)
     if det.hours_elapsed + hours >= det.time_limit_hours then
@@ -48,9 +79,13 @@ function M.travel(det, city_id, hours)
 end
 
 -- Investigates venue_index (1–3) in current city.
--- Returns the Clue table, or nil when city is not on the route (no leads).
+-- Costs INVESTIGATION_HOURS in-game hours.
+-- Returns the Clue table, or nil if city is not on the route (no leads).
 function M.investigate(det, mission, venue_index)
     local city_id = det.current_city_id
+    -- Advance clock regardless (time passes even on wrong city)
+    det.hours_elapsed = math.min(det.time_limit_hours,
+                                  det.hours_elapsed + INVESTIGATION_HOURS)
     if not require("src.mission").on_route(mission, city_id) then
         return nil
     end
@@ -63,7 +98,6 @@ function M.add_trait(det, attr, value)
 end
 
 -- Tries to issue an arrest warrant from gathered traits.
--- suspects: full suspect list
 -- Returns "issued", "multiple", or "none".
 function M.issue_warrant(det, suspects)
     local matches = suspect_mod.filter(suspects, det.gathered_traits)
@@ -77,7 +111,7 @@ function M.issue_warrant(det, suspects)
     end
 end
 
--- Attempts to arrest the thief at the current city.
+-- Attempts to arrest the suspect at the current city.
 -- Returns "success", "wrong_warrant", "no_warrant", or "wrong_city".
 function M.attempt_arrest(det, mission)
     local thief_city = require("src.mission").thief_city(mission)
@@ -93,24 +127,21 @@ function M.attempt_arrest(det, mission)
     return "wrong_warrant"
 end
 
--- Called after a successful arrest. Updates cases_solved and rank.
+-- Called after a successful arrest.
 function M.on_success(det)
     det.cases_solved = det.cases_solved + 1
     det.rank         = rank_for_cases(det.cases_solved)
 end
 
--- Returns hours remaining before time limit.
 function M.hours_remaining(det)
     return math.max(0, det.time_limit_hours - det.hours_elapsed)
 end
 
--- Returns fractional days remaining (rounded down to nearest 0.5).
 function M.days_remaining(det)
-    local h   = M.hours_remaining(det)
+    local h = M.hours_remaining(det)
     return math.floor(h / 24 * 2) / 2
 end
 
--- Score = rank_index * cases_solved * 1000 / max(1, hours_elapsed)
 function M.score(det)
     local rank_index = 1
     for i, r in ipairs(RANKS) do
@@ -126,11 +157,11 @@ function M.begin_mission(det, mission)
     det.current_city_id  = mission.route[1]
     det.hours_elapsed    = 0
     det.time_limit_hours = mission.time_limit_hours
+    det.start_timestamp  = os.time()
     det.gathered_traits  = {}
     det.warrant_id       = nil
 end
 
--- Serializes detective to a plain table (for JSON save).
 function M.serialize(det)
     return {
         name             = det.name,
@@ -139,12 +170,12 @@ function M.serialize(det)
         current_city_id  = det.current_city_id,
         hours_elapsed    = det.hours_elapsed,
         time_limit_hours = det.time_limit_hours,
+        start_timestamp  = det.start_timestamp,
         gathered_traits  = det.gathered_traits,
         warrant_id       = det.warrant_id,
     }
 end
 
--- Reconstructs a detective from a serialized table.
 function M.deserialize(t)
     local det = M.new(t.name)
     det.rank             = t.rank             or "rookie"
@@ -152,12 +183,12 @@ function M.deserialize(t)
     det.current_city_id  = t.current_city_id
     det.hours_elapsed    = t.hours_elapsed    or 0
     det.time_limit_hours = t.time_limit_hours or (7 * 24)
+    det.start_timestamp  = t.start_timestamp  or os.time()
     det.gathered_traits  = t.gathered_traits  or {}
     det.warrant_id       = t.warrant_id
     return det
 end
 
--- Exposed for tests.
 M._rank_for_cases = rank_for_cases
 
 return M

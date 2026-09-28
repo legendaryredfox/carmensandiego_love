@@ -1,26 +1,28 @@
-local SM     = require("src.state_machine")
-local audio  = require("src.audio")
-local locale = require("src.locale")
-local ui     = require("src.ui")
-local game   = require("src.game")
+local SM      = require("src.state_machine")
+local audio   = require("src.audio")
+local locale  = require("src.locale")
+local ui      = require("src.ui")
+local game    = require("src.game")
+local det_mod = require("src.detective")
 
 local S = {}
 local full_text, revealed, timer, done = "", 0, 0, false
 local CHARS_PER_SEC = 40
 
 local function build_text()
-    local d  = game.detective
-    local m  = game.mission
-    local l  = locale
+    local d        = game.detective
+    local m        = game.mission
+    local l        = locale
+    local lang     = l.get_lang()
     local item_name  = l.t(m.stolen_item)
     local city_name  = game.city_name(m.route[1])
     local rank_name  = l.t("rank." .. d.rank)
-    local days       = tostring(math.floor(m.time_limit_hours / 24))
+    local deadline   = det_mod.deadline_str(d, lang)
     return
         l.t("briefing.title") .. "\n\n" ..
-        l.t("briefing.stolen",  { item = item_name, city = city_name }) .. "\n" ..
+        l.t("briefing.stolen",   { item = item_name, city = city_name }) .. "\n" ..
         l.t("briefing.suspect_seen") .. "\n\n" ..
-        l.t("briefing.mission", { days = days }) .. "\n\n" ..
+        l.t("briefing.deadline", { deadline = deadline }) .. "\n\n" ..
         l.t("briefing.good_luck", { rank = rank_name, name = d.name })
 end
 
