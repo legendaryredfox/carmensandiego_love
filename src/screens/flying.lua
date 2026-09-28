@@ -58,8 +58,8 @@ function S.draw()
 
     local origin = game.cities_by_id[origin_id]
     local dest   = game.cities_by_id[S.dest.id]
-    local ox, oy = map_mod.lat_lon_to_xy(origin.lat, origin.lon, MAP_X, MAP_Y, MAP_W, MAP_H)
-    local dx, dy = map_mod.lat_lon_to_xy(dest.lat, dest.lon, MAP_X, MAP_Y, MAP_W, MAP_H)
+    local ox, oy = map_mod.city_xy(origin, MAP_X, MAP_Y, MAP_W, MAP_H)
+    local dx, dy = map_mod.city_xy(dest, MAP_X, MAP_Y, MAP_W, MAP_H)
 
     love.graphics.setColor(0.30, 0.60, 0.35, 0.6)
     love.graphics.line(ox, oy, dx, dy)

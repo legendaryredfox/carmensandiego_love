@@ -18,10 +18,14 @@ local function build_text()
     local city_name  = game.city_name(m.route[1])
     local rank_name  = l.t("rank." .. d.rank)
     local deadline   = det_mod.deadline_str(d, lang)
+    -- The original's opening announcement states the suspect's sex from
+    -- the start (via pronouns) rather than holding it back for the crime
+    -- computer — see PLAN.md's "Playtest feedback" item 2.
+    local suspect_seen_key = "briefing.suspect_seen_" .. m.thief.sex
     return
         l.t("briefing.title") .. "\n\n" ..
         l.t("briefing.stolen",   { item = item_name, city = city_name }) .. "\n" ..
-        l.t("briefing.suspect_seen") .. "\n\n" ..
+        l.t(suspect_seen_key) .. "\n\n" ..
         l.t("briefing.deadline", { deadline = deadline }) .. "\n\n" ..
         l.t("briefing.good_luck", { rank = rank_name, name = d.name })
 end

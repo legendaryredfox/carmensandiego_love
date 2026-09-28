@@ -439,23 +439,24 @@ JSON assets, same as SPEC.md already does for the 29-case leader rule.
    Route length itself is untouched and still available as a secondary
    knob if cases still feel short after playtesting this.
 
-2. **Briefing text is too concise; state the suspect's sex up front,
-   like the original did.** Current `src/screens/briefing.lua` +
-   locale keys (`briefing.stolen`, `briefing.suspect_seen`,
-   `briefing.deadline`, `briefing.good_luck`) produce four short generic
-   lines and never mention the suspect at all beyond "a suspect was seen
-   fleeing" — no sex, no description. The original's opening announcement
-   is a "news flash" built from dictionary text with gender-dependent
-   pronoun substitution (`reconstruction.md:503-505`; the formatter
-   substitutes `#`/`@`/`^` placeholders for the suspect's subject/
-   possessive/object pronoun, `reconstruction.md:544-549`) — i.e. the
-   briefing itself states the suspect's sex (via pronouns) from the
-   start, not just later on the crime computer. `data/suspects.lua`
-   already has a `sex` field (`"male"`/`"female"`); it's just never read
-   before the crime computer's SEX row (`src/screens/crime_computer.lua:17`).
-   Next step: expand the briefing template into a fuller news-flash-style
-   paragraph that states sex up front, in both `locales/en.lua` and
-   `locales/pt.lua` together per CLAUDE.md's i18n rule.
+2. **FIXED (2026-09-28)** — Briefing was too concise and never stated the
+   suspect's sex up front, unlike the original's opening "news flash"
+   with gender-dependent pronoun substitution (`reconstruction.md:503-505,
+   544-549`). `src/screens/briefing.lua`'s `build_text` now picks
+   `"briefing.suspect_seen_" .. m.thief.sex` instead of one generic
+   `briefing.suspect_seen` key, so the second line reads "He was seen
+   fleeing the scene, and Interpol believes he's already crossed the
+   border." / "She was..." (and PT equivalents with matching gender
+   agreement) — stated immediately, not held back for the crime
+   computer's SEX row. Also prefixed `briefing.stolen` with "NEWS FLASH:"
+   ("ÚLTIMA HORA:" in PT) to read closer to the original's framing, and
+   added a touch more flavor to the suspect-seen line so the whole
+   briefing isn't four bare sentences. Note: PT's old comment explaining
+   why it deliberately used gender-neutral "pessoa suspeita" (to avoid
+   hinting at sex) is now the opposite of what's wanted — replaced with a
+   comment noting the original states sex from the opening announcement
+   onward. Test: `tests/locale_test.lua`'s interpolation fixture updated
+   for the new `briefing.stolen` text.
 
 3. **FIXED (2026-09-28)** — Suspect names changed again. Old roster
    (Scarlet Vega, Marina Delacroix, Blaze Fontaine, Lady Constance, Kat
@@ -561,7 +562,7 @@ JSON assets, same as SPEC.md already does for the 29-case leader rule.
    OGA-BY 3.0 is acceptable before use, or keep looking for a strict
    CC0/CC-BY equivalent if not.
 
-8. **DIAGNOSED (2026-09-28), not yet fixed** — World map city markers
+8. **FIXED (2026-09-28)**, via option (b) below — World map city markers
    sometimes don't line up with real lat/lon. Verified with a script
    (Pillow, not committed) that projects every one of the 30 cities in
    `data/cities.csv` through `src/map.lua`'s exact `lat_lon_to_xy` formula
@@ -583,15 +584,24 @@ JSON assets, same as SPEC.md already does for the 29-case leader rule.
    Harbour, Bangkok's river delta) — exactly where a compact 1774×887
    hand-drawn coastline is most likely to be simplified or drawn slightly
    off from real coordinates. So this is a content accuracy issue in the
-   map art for those 8-9 specific cities, not a code bug. Two ways to fix,
-   next session should pick one: (a) touch up the coastline art near
-   those specific pixel coordinates so it matches the real coastline
-   there, or (b) add a small per-city pixel-nudge override table applied
-   only where city markers are drawn (not to `lat_lon_to_xy` itself,
-   which `flying.lua`'s plane-path math and the continent-polygon
-   fallback also rely on for unrelated, already-correct purposes) —
-   (a) is more honest but needs an artist/tool pass; (b) is a quick
-   code-only patch but treats the symptom, not the art.
+   map art for those 8-9 specific cities, not a code bug — two ways to
+   fix it: (a) touch up the coastline art near those specific pixel
+   coordinates, needing an artist/tool pass; or (b) a per-city pixel-nudge
+   override applied only where city markers are drawn. Went with (b) for
+   now since it's a quick, low-risk code-only fix — `src/map.lua`'s new
+   `MARKER_NUDGE_PX` table (the measured dx/dy above, as fractions of the
+   source image's 1774x887) plus `M.city_xy(city, ...)`, a
+   `lat_lon_to_xy` wrapper that applies the nudge when a city has one.
+   Replaced every place a *city's* marker position gets computed (dots,
+   connection lines, the flying screen's plane start/end in
+   `src/screens/flying.lua`) with `city_xy` so the plane still visibly
+   lands exactly on its destination's dot — `lat_lon_to_xy` itself stays
+   untouched and is still what the continent-polygon fallback uses
+   (coastline points aren't cities, don't need the nudge). This still
+   doesn't fix the art itself — option (a) remains open for whoever wants
+   the coastline to actually be accurate there, not just the dot. Tests:
+   new `tests/map_test.lua` (`lat_lon_to_xy` corner cases, `city_xy`
+   no-op vs. nudged vs. nudge scaling with rect size).
 
 ### Rank promotion thresholds — should match the original (flagged 2026-09-28)
 

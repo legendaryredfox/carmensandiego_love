@@ -38,6 +38,44 @@ function M.lat_lon_to_xy(lat, lon, map_x, map_y, map_w, map_h)
     return map_x + nx * map_w, map_y + ny * map_h
 end
 
+-- Small nudges for the few cities whose real lat/lon lands slightly off
+-- world_map.png's hand-drawn coastline (small islands and tight bay/delta
+-- coastlines are where a compact 1774x887 pixel-art map is most likely to
+-- simplify or misdraw the shoreline) — measured 2026-09-28 by sampling
+-- this image's land/water color at every city's projected pixel; see
+-- PLAN.md's "Playtest feedback" item 8. Offsets are fractions of the
+-- source image's own pixel dimensions, not the map rect's, so they still
+-- make sense at any rect size. This nudges the marker only — the
+-- underlying art still shows the coastline slightly off in these spots.
+local IMG_W, IMG_H = 1774, 887
+local MARKER_NUDGE_PX = {
+    rio_de_janeiro = { -38, -20 },
+    reykjavik      = {  32,  31 },
+    moroni         = {  30, -20 },
+    tokyo          = { -27, -27 },
+    port_moresby   = { -14,  17 },
+    kigali         = {  -9,  -5 },
+    mexico_city    = {   5,  -7 },
+    sydney         = {   7,  -7 },
+    bangkok        = {  -5,  -5 },
+}
+
+-- Like M.lat_lon_to_xy, but for an actual City table — applies
+-- MARKER_NUDGE_PX when this city has one. Use this (not lat_lon_to_xy
+-- directly) anywhere a specific city's marker position is needed — city
+-- dots, connection lines, the flying screen's plane endpoints — so the
+-- nudge lives in exactly one place. lat_lon_to_xy itself stays pure for
+-- non-city uses like the continent-polygon fallback's coastline points.
+function M.city_xy(city, map_x, map_y, map_w, map_h)
+    local x, y = M.lat_lon_to_xy(city.lat, city.lon, map_x, map_y, map_w, map_h)
+    local nudge = MARKER_NUDGE_PX[city.id]
+    if nudge then
+        x = x + nudge[1] / IMG_W * map_w
+        y = y + nudge[2] / IMG_H * map_h
+    end
+    return x, y
+end
+
 -- Projects a continent's {lat,lon} outline to a flat {x1,y1,x2,y2,...}
 -- list, cached per (continent, map rect) since the rect is fixed per
 -- screen and this would otherwise re-project ~100 points every frame.
@@ -124,22 +162,21 @@ function M.draw(cities_ordered, cities_by_id, map_x, map_y, map_w, map_h,
     if active_id and #connection_ids > 0 then
         local ac = cities_by_id[active_id]
         if ac then
-            local ax, ay = M.lat_lon_to_xy(ac.lat, ac.lon, map_x, map_y, map_w, map_h)
+            local ax, ay = M.city_xy(ac, map_x, map_y, map_w, map_h)
             love.graphics.setLineWidth(1)
             love.graphics.setColor(0.45, 0.75, 0.55, 0.55)
             for _, cid in ipairs(connection_ids) do
                 if cid ~= selected_id then
                     local cc = cities_by_id[cid]
                     if cc then
-                        local cx, cy = M.lat_lon_to_xy(cc.lat, cc.lon,
-                                                        map_x, map_y, map_w, map_h)
+                        local cx, cy = M.city_xy(cc, map_x, map_y, map_w, map_h)
                         love.graphics.line(ax, ay, cx, cy)
                     end
                 end
             end
             if selected_id and cities_by_id[selected_id] then
                 local sc = cities_by_id[selected_id]
-                local sx, sy = M.lat_lon_to_xy(sc.lat, sc.lon, map_x, map_y, map_w, map_h)
+                local sx, sy = M.city_xy(sc, map_x, map_y, map_w, map_h)
                 love.graphics.setLineWidth(2)
                 love.graphics.setColor(1.0, 0.85, 0.10, 0.95)
                 love.graphics.line(ax, ay, sx, sy)
@@ -158,7 +195,7 @@ function M.draw(cities_ordered, cities_by_id, map_x, map_y, map_w, map_h,
     for _, cid in ipairs(shown_ids) do
         local city = cities_by_id[cid]
         if city then
-            local px, py = M.lat_lon_to_xy(city.lat, city.lon, map_x, map_y, map_w, map_h)
+            local px, py = M.city_xy(city, map_x, map_y, map_w, map_h)
             local r = 3
 
             if cid == active_id then

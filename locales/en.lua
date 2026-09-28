@@ -34,8 +34,9 @@ return {
     -- Briefing
     ["briefing.title"]            = "*** INTERPOL DISPATCH ***",
     -- {item} already carries its own article ("The Mona Lisa", "A relic")
-    ["briefing.stolen"]           = "{item} has been stolen from {city}.",
-    ["briefing.suspect_seen"]     = "A suspect was seen fleeing the scene.",
+    ["briefing.stolen"]           = "NEWS FLASH: {item} has been stolen from {city}.",
+    ["briefing.suspect_seen_male"]   = "He was seen fleeing the scene, and Interpol believes he's already crossed the border.",
+    ["briefing.suspect_seen_female"] = "She was seen fleeing the scene, and Interpol believes she's already crossed the border.",
     ["briefing.mission"]          = "Your mission: track down the thief\nand make the arrest.\nYou have {days} days.",
     ["briefing.good_luck"]        = "Good luck, {rank} {name}.",
     ["briefing.press_any_key"]    = "[ PRESS ANY KEY ]",

@@ -33,10 +33,12 @@ return {
 
     -- Briefing
     ["briefing.title"]            = "*** DESPACHO DA INTERPOL ***",
-    ["briefing.stolen"]           = "{item} foi roubado(a) de {city}.",
-    -- "pessoa suspeita" avoids the masculine default of "um suspeito",
-    -- which would misleadingly hint at the thief's sex before any clue does
-    ["briefing.suspect_seen"]     = "Uma pessoa suspeita foi vista fugindo da cena.",
+    ["briefing.stolen"]           = "ÚLTIMA HORA: {item} foi roubado(a) de {city}.",
+    -- Stating sex here (via a gendered pronoun) matches the 1985 original,
+    -- which named the suspect's sex from the opening announcement onward,
+    -- not just later on the crime computer.
+    ["briefing.suspect_seen_male"]   = "Ele foi visto fugindo da cena, e a Interpol acredita que já cruzou a fronteira.",
+    ["briefing.suspect_seen_female"] = "Ela foi vista fugindo da cena, e a Interpol acredita que já cruzou a fronteira.",
     ["briefing.mission"]          = "Sua missao: rastrear o ladrao\ne efetuar a prisao.\nVoce tem {days} dias.",
     ["briefing.good_luck"]        = "Boa sorte, {rank} {name}.",
     ["briefing.press_any_key"]    = "[ PRESSIONE QUALQUER TECLA ]",
