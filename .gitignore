@@ -1,0 +1,15 @@
+# LÖVE save directory
+*.love
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Test output
+tests/output/
