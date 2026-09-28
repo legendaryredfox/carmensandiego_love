@@ -10,6 +10,7 @@ the previous to be complete. Phases 0–3 have no LÖVE dependency and are fully
 Goal: runnable skeleton, all infrastructure in place, tests passing.
 
 ### 0.1 Project skeleton
+
 - [x] `conf.lua` — window 1280×720, title, disable unused modules (physics, joystick)
 - [x] `main.lua` — thin dispatcher: `love.load/update/draw/keypressed/mousepressed` → state machine
 - [x] `src/state_machine.lua` — `switch(state)`, `update(dt)`, `draw()`, `keypressed(key)`, `mousepressed(x,y,b)`
@@ -18,11 +19,13 @@ Goal: runnable skeleton, all infrastructure in place, tests passing.
 - [x] `locales/pt.lua` — same keys in PT-BR
 
 ### 0.2 Minitest runner
+
 - [x] `tests/runner.lua` — discovers `tests/*_test.lua` via hardcoded list, `pcall`-based, prints PASS/FAIL, exits 1 on failure
 - [x] Helper functions: `assert_eq(a, b, msg)`, `assert_near(a, b, tolerance, msg)`, `assert_true(v, msg)`, `assert_nil(v, msg)`
 - [x] `tests/locale_test.lua` — key lookup, missing key, interpolation, language switch
 
 ### 0.3 Virtual canvas
+
 - [x] `src/ui.lua` — `ui.init()` creates 640×360 canvas; `ui.begin_frame()` / `ui.end_frame(scale)` wraps draw calls; `ui.scale` constant = 2
 
 Acceptance: `love .` opens 1280×720 black window; `lua tests/runner.lua` reports all passing.
@@ -34,6 +37,7 @@ Acceptance: `love .` opens 1280×720 black window; `lua tests/runner.lua` report
 Goal: all game data loadable and queryable. No rendering.
 
 ### 1.1 Cities
+
 - [x] `data/cities.csv` — 30 cities: `id;name_en;name_pt;country_en;country_pt;lat;lon;population`
   - Populate all 30 from original game (see SPEC.md §8)
   - Verify lat/lon values against current sources
@@ -51,6 +55,7 @@ Goal: all game data loadable and queryable. No rendering.
   - Each city has ≥ 2 connections in every graph
 
 ### 1.2 Suspects
+
 - [x] `data/suspects.lua` — 10 suspects as Lua table (renamed from originals)
   - Fields: `id, name, sex, hair, hobby, vehicle, feature, food`
   - Trait distribution preserves deduction logic (verify unique trait-set combos)
@@ -65,6 +70,7 @@ Goal: all game data loadable and queryable. No rendering.
   - All 10 suspects have distinct `(sex, hair, hobby, vehicle, feature)` combinations
 
 ### 1.3 Clues
+
 - [x] `data/clues/<city_id>.lua` — per-city clue pools (3–6 clues each)
   - Each clue: `{type, category, value, text_key, image, verified}`
   - Start with 5 cities fully authored; rest marked `-- TODO`
@@ -82,6 +88,7 @@ Acceptance: `lua tests/runner.lua` all pass; `city.haversine` error < 1%.
 Goal: complete game loop as pure Lua, no rendering. All testable.
 
 ### 2.1 Mission generation
+
 - [x] `src/mission.lua` (complete)
   - `mission.new(suspects, cities, route_graphs, rank, rng)` → Mission
     - Random suspect selection
@@ -98,6 +105,7 @@ Goal: complete game loop as pure Lua, no rendering. All testable.
   - Terminal city clues differ from mid-route clues
 
 ### 2.2 Detective state
+
 - [x] `src/detective.lua`
   - `detective.new(name)` → Detective
   - `detective.travel(det, city, hours)` → ok | "time_expired"
@@ -114,6 +122,7 @@ Goal: complete game loop as pure Lua, no rendering. All testable.
   - Arrest outcomes cover all 4 cases
 
 ### 2.3 Save / Load
+
 - [x] `lib/json.lua` — rxi/json.lua (copy single file, no modification)
 - [x] `src/save.lua`
   - `save.write(slot, detective)` — serialize to JSON via love.filesystem
@@ -127,6 +136,7 @@ Goal: complete game loop as pure Lua, no rendering. All testable.
   - Corrupt JSON returns nil without crash
 
 ### 2.4 Ranking
+
 - [x] `src/ranking.lua`
   - `ranking.load(save_slot)` → Entry[]
   - `ranking.add(ranking, entry)` — insert sorted, keep top 10
@@ -146,6 +156,7 @@ Acceptance: `lua tests/runner.lua` all pass; full game loop simulatable by calli
 Goal: all screens implemented, game playable end-to-end.
 
 ### 3.1 Shared UI primitives
+
 - [x] `src/ui.lua` (complete)
   - `ui.panel(x, y, w, h)` — draws 9-slice panel from Kenney Pixel UI Pack
   - `ui.button(x, y, label, selected)` → draws button; returns true if clicked this frame
@@ -155,15 +166,18 @@ Goal: all screens implemented, game playable end-to-end.
   - `ui.load_assets()` — loads fonts, sprites; called once in love.load
 
 ### 3.2 Title + Language + Menu screens
+
 - [x] `src/screens/title.lua` — game logo, press-any-key prompt, retro scanline effect
 - [x] `src/screens/language.lua` — EN / PT-BR selection; stores to save slot 0
 - [x] `src/screens/menu.lua` — New Game / Continue / Leaderboard / Quit; Continue grayed if no save
 
 ### 3.3 Name entry + Briefing
+
 - [x] `src/screens/name_entry.lua` — text input (love.textinput), max 20 chars, confirm with Enter
 - [x] `src/screens/briefing.lua` — teleprinter effect (reveal text char by char), mission summary
 
 ### 3.4 City screen (main game screen)
+
 - [x] `src/screens/city.lua`
   - Shows city exterior layout (left: Interpol | 3 venues | right: Airport)
   - Status bar: city name, days remaining, rank
@@ -171,6 +185,7 @@ Goal: all screens implemented, game playable end-to-end.
   - Dispatches to venue, crime computer, travel, or arrest screens
 
 ### 3.5 Venue screen
+
 - [x] `src/screens/venue.lua`
   - Witness dialogue with typewriter effect
   - Clue reveal: text + optional image (side by side)
@@ -178,6 +193,7 @@ Goal: all screens implemented, game playable end-to-end.
   - "Back" returns to city screen
 
 ### 3.6 Crime Computer screen
+
 - [x] `src/screens/crime_computer.lua`
   - 6 attribute dropdowns (sex, hair, hobby, vehicle, feature, food)
   - Each cycles through known values + blank (unset)
@@ -186,12 +202,14 @@ Goal: all screens implemented, game playable end-to-end.
   - Suspect dossier view: traits listed, no photo (avoid IP)
 
 ### 3.7 Travel screen
+
 - [x] `src/screens/travel.lua`
   - Lists connected cities with Haversine distance and travel time
   - World map inset showing current city + destinations as dots
   - Confirm → triggers travel animation → city screen for destination
 
 ### 3.8 Map rendering
+
 - [x] `src/map.lua`
   - `map.load()` — loads world map base image
   - `map.draw(cities, current_city, connections)` — renders map with markers
@@ -199,6 +217,7 @@ Goal: all screens implemented, game playable end-to-end.
   - `map.lat_lon_to_screen(lat, lon, map_w, map_h)` — equirectangular projection
 
 ### 3.9 Arrest + Outcome screens
+
 - [x] `src/screens/arrest.lua` — confrontation text, result (success/failure), animation
 - [x] `src/screens/rank_up.lua` — rank promotion announcement
 - [x] `src/screens/game_over.lua` — time expired or wrong arrest message
@@ -262,7 +281,6 @@ Goal: all 30 cities have complete, verified clue pools.
 - [x] Screen transitions: fade-in/out between all state switches (centralized in `src/state_machine.lua`)
 - [x] Typewriter effect speed configurable (fast/slow in settings)
 - [x] Settings screen: language, music volume, SFX volume
-- [ ] City exterior pixel art backgrounds (1 unique image per city — or 5 regional variants)
 - [x] Animated airplane on travel screen (`src/screens/flying.lua` — a
       transition between `travel` and `city_info`/`arrest` that flies a
       triangle marker along the map between origin and destination while
@@ -378,64 +396,209 @@ for the circular dependencies a screen-graph state machine like this one
 inherently has. Clue images and per-city exterior art remain outstanding
 (need sourced assets, not code).
 
-### Known issues — next up (flagged 2026-09-28, not yet fixed)
+### Known issues — next up (flagged 2026-09-28)
 
-- **Venue card images are real photos; they need to be new pixel-art
-  illustrations instead — not a filter over the photos.** The 23 clue
-  images sourced from Wikimedia Commons (see `assets/CREDITS.md`'s "Clue
-  Images" table) are real-world photographs dropped straight into a
-  128x128 card. Downscaling or posterizing a photo doesn't get there —
-  the ask is genuinely new, hand-drawn-style pixel art per clue subject,
-  matching this project's stated aesthetic (`CLAUDE.md`: "Pixel art retro
-  aesthetic"). This applies to the venue-type images specifically — the
-  small icon-like pictures standing in for each venue (museum, airport,
-  bank, currency exchange, witness corner, etc. — see the current
-  `src/screens/city.lua` venue cards), not full illustrated backgrounds.
-  For a sense of the target look, see
-  `references/apple2-carmen-sandiego-world-disasm/docs/runtime/po-paris-investigation.png`
-  — the three small building-silhouette icons (Bank / Library / Hotel)
-  overlaid on the location screen are the closest 1985 equivalent of what
-  this project's venue cards need. That reference is for *style/mood*
-  only — per `CLAUDE.md`'s IP section, this project must not trace or
-  reuse the original's actual asset files, only take inspiration from the
-  general look (simple flat silhouettes, minimal detail, low palette).
-  Affects all 23 existing images plus the ~97 still-unsourced ones —
-  worth deciding the art pipeline (manual pixel art vs. a generation
-  workflow) before sourcing more, so work isn't redone twice.
-- **Volume control is too coarse, and even the lowest step is too loud.**
-  `src/screens/settings.lua`'s `VOLUME_STEP = 0.1` gives only 10 steps
-  from 0.0-1.0 (`src/settings.lua`'s `clamp01`) — reported as needing
-  finer-grained control. Also reported that the lowest non-zero setting
-  still sounds too loud, which smells like the classic issue with linear
-  volume controls: human loudness perception is roughly logarithmic, so a
-  linear 0.0-1.0 gain (what `src/audio.lua:136-147`'s
-  `set_music_volume`/`set_sfx_volume` feed straight into LÖVE's
-  `Source:setVolume`) makes most of the useful range crowd into the
-  bottom 10-20% of the slider. Likely fix: smaller step (e.g. 0.05) *and*
-  an exponential/log curve between the stored 0-1 setting and the actual
-  `setVolume()` call, not just a smaller linear step.
+- **FIXED (2026-09-28)** — Volume control coarse + lowest step too loud.
+  `VOLUME_STEP` cut to 0.05 (20 steps) in `src/screens/settings.lua`.
+  `src/audio.lua` now squares the stored 0-1 setting (`to_gain`) before
+  every `Source:setVolume()` call — music load, sfx load, sfx clone,
+  crossfade fade-in target — so the perceptual curve matches linear
+  loudness instead of linear gain. Stored setting stays linear 0-1
+  (unchanged in `src/settings.lua`, still what the % display reads).
+- **FIXED (2026-09-28)** — Venue card images were real photos (the clue's
+  own Wikimedia photo shown on the city-screen card, spoiling the clue
+  before investigation) instead of pixel-art-style icons. Rather than
+  commissioning per-clue art, reframed the problem: the card only needs
+  to represent the venue's *category* (10 fixed categories — landmark,
+  currency, language, geography, wildlife, culture, industry, trait,
+  terminal, generic — see `src/venue_name.lua`'s `category_for`), not the
+  specific clue subject, so 10 reusable icons cover all cities instead of
+  ~120 per-clue images. Sourced 10 flat single-color silhouette icons from
+  game-icons.net (CC BY 3.0), stripped their black preview background,
+  rasterized to 64x64 white-on-transparent PNGs
+  (`assets/images/venues/<category>.png`), tinted at draw time via
+  `ui.C.border` — same tintable-greyscale pattern as the existing panel
+  sprites. `src/screens/city.lua`'s `draw_venue_card` now looks up the
+  category icon instead of `clue.image`. See `assets/CREDITS.md`'s "Venue
+  Category Icons" table for per-icon attribution. `clue.image` itself is
+  now unused in-game (kept for a possible future rank-gated image reveal
+  per SPEC.md); the 23 sourced clue photos and ~97 unsourced ones are no
+  longer blocking — this issue is closed regardless of that backlog.
+
+### Playtest feedback — next up (flagged 2026-09-28, first case solved)
+
+Documentation only — nothing in this section has been implemented yet.
+Facts below cite `references/apple2-carmen-sandiego-world-disasm/docs/reconstruction.md`
+(the disassembly/reconstruction of the actual 1985 game) and its decoded
+JSON assets, same as SPEC.md already does for the 29-case leader rule.
+
+1. **First case was solved too fast — needs more steps before an arrest
+   is possible.** Root cause is very likely item 4 below, not route
+   length: `src/mission.lua`'s Rookie `route_length = 4` already matches
+   the original's formula (hideout picked first, walk backward rank+3
+   steps — `reconstruction.md:494-497` — Rookie = rank 0, so 3 steps = 4
+   cities). What's missing is the gate at the end of that route: right
+   now `game.should_auto_arrest()` (`src/game.lua:81-84`) fires the
+   instant the detective's `current_city_id` matches the hideout and a
+   warrant is held — no venue visit required, so arriving ends the case
+   immediately. Fixing item 4 (visit-gated arrest, with the evasion
+   shuffle) should already make cases feel longer without touching route
+   length. Route length itself is still a secondary knob if it still
+   feels short after that.
+
+2. **Briefing text is too concise; state the suspect's sex up front,
+   like the original did.** Current `src/screens/briefing.lua` +
+   locale keys (`briefing.stolen`, `briefing.suspect_seen`,
+   `briefing.deadline`, `briefing.good_luck`) produce four short generic
+   lines and never mention the suspect at all beyond "a suspect was seen
+   fleeing" — no sex, no description. The original's opening announcement
+   is a "news flash" built from dictionary text with gender-dependent
+   pronoun substitution (`reconstruction.md:503-505`; the formatter
+   substitutes `#`/`@`/`^` placeholders for the suspect's subject/
+   possessive/object pronoun, `reconstruction.md:544-549`) — i.e. the
+   briefing itself states the suspect's sex (via pronouns) from the
+   start, not just later on the crime computer. `data/suspects.lua`
+   already has a `sex` field (`"male"`/`"female"`); it's just never read
+   before the crime computer's SEX row (`src/screens/crime_computer.lua:17`).
+   Next step: expand the briefing template into a fuller news-flash-style
+   paragraph that states sex up front, in both `locales/en.lua` and
+   `locales/pt.lua` together per CLAUDE.md's i18n rule.
+
+3. **Change the suspect names again.** Current roster
+   (`data/suspects.lua`): Scarlet Vega, Marina Delacroix, Blaze Fontaine,
+   Lady Constance, Kat Sterling, Red Malone, Victor Crain, Jack Moreau,
+   Eddie Flash, Igor Volkov — already loosely inspired by (but renamed
+   from) the original 10 (`assets/decoded/po/C-names.json`: Carmen
+   Sandiego herself plus Merey LaRoc, Dazzle Annie, Lady Agatha, Katherine
+   Drib, Len Bulk, Scar Graynolt, Nick Brunch, Fast Eddie B, Ihor
+   Ihorovitch). No replacement roster drafted yet — next session should
+   write a fresh set of 10 names, keeping CLAUDE.md's "renamed, not the
+   originals" IP rule and the existing trait-distinctness invariant (each
+   suspect's `(sex, hair, hobby, vehicle, feature)` combo must stay
+   unique — enforced by `tests/suspect_test.lua`).
+
+4. **Arrest should require entering the suspect's actual venue within the
+   city, not just arriving in the city.** `reconstruction.md:510-514`: at
+   the hideout city, one of the three investigation slots is secretly
+   marked as the suspect's location. If the player's *first* investigation
+   there lands on an unmarked slot, the mark *moves* to a different slot
+   (the suspect evades to another venue) instead of the case simply
+   failing; a later visit to whichever slot currently holds the mark
+   triggers the arrest sequence. None of that exists today —
+   `game.should_auto_arrest()` (`src/game.lua:81-84`, called from
+   `src/screens/city.lua:66-70` and `src/screens/flying.lua:41`) only
+   checks city + warrant, not venue. Needs: a marked-venue concept in
+   mission/detective state for the hideout city, the evasion-shuffle on a
+   wrong first visit, and arrest.lua triggered only by investigating the
+   currently-marked venue — still subject to the existing deadline (a
+   correct venue visited after time's up should not arrest; see
+   `detective.travel`'s `"time_expired"` handling for the existing
+   deadline-check pattern to mirror).
+
+5. **Every case should start Monday 08:00, in-game clock.** Currently
+   `detective.begin_mission` (`src/detective.lua:172-179`) sets
+   `det.start_timestamp = os.time()` — the real-world wall-clock moment
+   the mission begins — and `format_datetime`/`current_time_str`/
+   `deadline_str` derive the displayed weekday via `os.date(ts).wday` on
+   that real epoch. So today there's no deliberate in-game weekday at
+   all, just whatever real day/time the player happens to launch the
+   game. (For reference/contrast: the original randomizes both — weekday
+   0-6 and starting hour 08:00-17:00 at case start,
+   `reconstruction.md:99-102` — but the ask here is deliberately simpler:
+   always Monday 08:00, not randomized.) Deadlines (days-remaining per
+   rank in `RANK_CONFIG.time_days`) stay as currently configured — only
+   the start anchor changes. Implementation note: deriving weekday from
+   real epoch via `os.date` is fragile (timezone/DST, and "Monday" would
+   need picking a real date that happens to fall on one) — better to stop
+   reading weekday from `os.date` at all and drive display off an
+   explicit in-game day-of-week counter seeded at Monday.
+
+6. **Witness clue text should be direct speech, not reported speech.**
+   Current phrasing is indirect: `locale.t("venue.witness_says")` =
+   "A witness reports:" followed by "The informant mentioned {hint}." /
+   "The suspect was described as {trait}." (`locales/en.lua:52-55`).
+   Needs rewriting as an actual first-person quote from the witness (e.g.
+   `"I saw someone matching that near the harbor..."`) for both the
+   destination-hint and trait-description templates, in `locales/en.lua`
+   and `locales/pt.lua` together.
+
+7. **Source a detective-office background for the dispatch/briefing
+   screen.** Candidate found: "Vintage Office Interiors" by Croomfolk on
+   OpenGameArt — https://opengameart.org/content/vintage-office-interiors
+   — a pixel-art 1950s/60s office & police-station furniture set (desks,
+   file cabinets, phone, lamp, safe, tileable wall/floor boards, benches,
+   coat rack), explicitly grouped into an OGA "Detective Game" collection.
+   Matches CLAUDE.md's pixel-art aesthetic far better than a stock photo
+   would. Two caveats before using it: (a) it's a prop/furniture sprite
+   sheet, not a single composed background — someone still needs to lay
+   pieces out into a scene for the briefing screen's dimensions; (b) its
+   license is **OGA-BY 3.0** (attribution required), which is not
+   literally one of CLAUDE.md's enumerated licenses (CC0/CC-BY/OFL) — confirm
+   OGA-BY 3.0 is acceptable before use, or keep looking for a strict
+   CC0/CC-BY equivalent if not.
+
+8. **World map city markers sometimes don't line up with real
+   lat/lon.** `src/map.lua`'s `lat_lon_to_xy` (line 35-39) is a plain,
+   correct equirectangular projection (`nx=(lon+180)/360`,
+   `ny=(90-lat)/180`) — it's only correct if `assets/images/map/world_map.png`
+   is itself a pixel-perfect full-bleed equirectangular image (lon
+   -180..180, lat -90..90, no padding/crop/different projection).
+   `assets/CREDITS.md` already flags that file's source/license as
+   unconfirmed ("TODO: source/license — confirm with whoever supplied
+   it"), which lines up with it possibly not being true equirectangular.
+   Next step: verify the image itself against a few high-confidence
+   reference points (e.g. equator × prime meridian, or compare marker
+   placement against `data/continents.lua`'s fallback coastline polygons,
+   which are known-good Natural Earth data) before assuming the
+   projection math is at fault.
+
+### Rank promotion thresholds — should match the original (flagged 2026-09-28)
+
+`reconstruction.md:59-61`: the original's promotion thresholds are 1, 5,
+12, and 20 cases solved (cumulative) to advance through its first five
+ranks (Rookie → Sleuth → Private Eye → Investigator → Ace Detective); the
+remaining table entries are `$FF` (unused) because the sixth rank, Super
+Sleuth, isn't reached by a plain solved-case count — see the existing
+29-case organization-leader gate already documented in SPEC.md (§ "Once
+the detective is Ace Detective **and** has solved 29 cases total").
+
+This project's current thresholds (`src/detective.lua:6-13`, cumulative
+cases-solved required per rank) are **0, 1, 3, 6, 10, 15** across six
+ranks named Rookie, Junior Detective, Sleuth, Private Eye, Investigator,
+Ace Detective — note "Junior Detective" isn't one of the original's six
+rank names at all (original: Rookie, Sleuth, Private Eye, Investigator,
+Ace Detective, Super Sleuth), and this project's "Ace Detective" is
+already the *top* rank (matches SPEC.md's leader-case design, which
+folds the original's separate "Super Sleuth" tier into "solve the leader
+case while at Ace Detective" rather than adding a 7th rank).
+
+Next step: decide how to reconcile the extra "Junior Detective" rank
+(drop it, keeping five ranks at 0/1/5/12/20; or keep it and decide where
+it sits in the threshold sequence) and update `src/detective.lua`'s
+`RANKS` table + `src/mission.lua`'s `RANK_CONFIG` keys to match, then
+update `tests/detective_test.lua`'s threshold assertions accordingly.
 
 ---
 
 ## Technical Decisions
 
-| Decision | Choice | Reason |
-|---|---|---|
-| State machine | Custom (no lib) | Simple, zero deps, fits the project scope |
-| JSON | rxi/json.lua | Single file, no LuaRocks, proven in production |
-| Camera | None (map is static) | World map is not panned; no camera lib needed |
-| Animation | Manual quads | Simple frame-based, no overdependence on libs |
-| Virtual resolution | Manual canvas | push lib is overkill for a fixed 2× scale |
-| CSV parsing | Pure Lua | Semicolon-delimited, no quoted fields in cities.csv |
-| Route graphs | Lua tables | Loaded once, no runtime modification |
-| Clue data | Per-city Lua files | Easier to author and review than CSV |
+| Decision           | Choice               | Reason                                              |
+| ------------------ | -------------------- | --------------------------------------------------- |
+| State machine      | Custom (no lib)      | Simple, zero deps, fits the project scope           |
+| JSON               | rxi/json.lua         | Single file, no LuaRocks, proven in production      |
+| Camera             | None (map is static) | World map is not panned; no camera lib needed       |
+| Animation          | Manual quads         | Simple frame-based, no overdependence on libs       |
+| Virtual resolution | Manual canvas        | push lib is overkill for a fixed 2× scale           |
+| CSV parsing        | Pure Lua             | Semicolon-delimited, no quoted fields in cities.csv |
+| Route graphs       | Lua tables           | Loaded once, no runtime modification                |
+| Clue data          | Per-city Lua files   | Easier to author and review than CSV                |
 
 ---
 
 ## Libraries (copy into `lib/`, no LuaRocks)
 
-| Lib | File | Why |
-|---|---|---|
+| Lib          | File           | Why                     |
+| ------------ | -------------- | ----------------------- |
 | rxi/json.lua | `lib/json.lua` | Save file serialization |
 
 No other external libraries. Keep deps minimal.
