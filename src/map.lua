@@ -1,11 +1,49 @@
 local M = {}
 
+local CONTINENTS = require("data.continents")
+
 -- Equirectangular projection: maps lat/lon to canvas x/y.
 -- Map area covers full world: lat [-90,90], lon [-180,180].
 function M.lat_lon_to_xy(lat, lon, map_x, map_y, map_w, map_h)
     local nx = (lon + 180) / 360
     local ny = (90 - lat) / 180
     return map_x + nx * map_w, map_y + ny * map_h
+end
+
+-- Projects a continent's {lat,lon} outline to a flat {x1,y1,x2,y2,...}
+-- list, cached per (continent, map rect) since the rect is fixed per
+-- screen and this would otherwise re-project ~100 points every frame.
+local _land_cache = {}
+
+local function land_polygons(map_x, map_y, map_w, map_h)
+    local rect_key = table.concat({ map_x, map_y, map_w, map_h }, ":")
+    local cached = _land_cache[rect_key]
+    if cached then return cached end
+
+    local polygons = {}
+    for _, continent in ipairs(CONTINENTS) do
+        -- A few landmasses (e.g. eastern Siberia, near the Bering Strait)
+        -- genuinely cross the antimeridian. Projecting lon -179 and +179
+        -- straight through would draw a line clear across the map, so
+        -- split into a new sub-polygon wherever consecutive points jump
+        -- more than 180° — the real coastline never does that.
+        local points = {}
+        local prev_lon = nil
+        for _, ll in ipairs(continent) do
+            local lat, lon = ll[1], ll[2]
+            if prev_lon and math.abs(lon - prev_lon) > 180 then
+                if #points >= 6 then polygons[#polygons + 1] = points end
+                points = {}
+            end
+            local x, y = M.lat_lon_to_xy(lat, lon, map_x, map_y, map_w, map_h)
+            points[#points + 1] = x
+            points[#points + 1] = y
+            prev_lon = lon
+        end
+        if #points >= 6 then polygons[#polygons + 1] = points end
+    end
+    _land_cache[rect_key] = polygons
+    return polygons
 end
 
 -- Draws a placeholder world map background with city markers.
@@ -23,6 +61,22 @@ function M.draw(cities_ordered, cities_by_id, map_x, map_y, map_w, map_h,
     -- indistinguishable from it).
     love.graphics.setColor(0.10, 0.22, 0.42, 1)
     love.graphics.rectangle("fill", map_x, map_y, map_w, map_h)
+
+    -- Landmasses — stylized outlines (see data/continents.lua), not a
+    -- sourced map image (none exists yet). Clipped to the map rect since
+    -- a couple of continent polygons dip slightly outside their bounding
+    -- box at this simplification level.
+    love.graphics.setScissor(map_x, map_y, map_w, map_h)
+    love.graphics.setColor(0.16, 0.32, 0.20, 1)
+    for _, points in ipairs(land_polygons(map_x, map_y, map_w, map_h)) do
+        -- love.graphics.polygon requires a simple (non-self-intersecting)
+        -- polygon to triangulate; these are hand-approximated coastlines,
+        -- not verified simple, so a bad one skips instead of crashing the
+        -- whole map.
+        pcall(love.graphics.polygon, "fill", points)
+    end
+    love.graphics.setScissor()
+
     love.graphics.setColor(0.35, 0.50, 0.75, 1)
     love.graphics.rectangle("line", map_x, map_y, map_w, map_h)
 

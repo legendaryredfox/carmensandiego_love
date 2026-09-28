@@ -52,6 +52,17 @@ Board Game Icons and Roguelike Characters (Kenney, CC0) remain unused for now.
 
 Used as the window/taskbar icon via `conf.lua`'s `t.window.icon`.
 
+## World Map Data
+
+`data/continents.lua` — simplified continent/major-island coastline outlines
+drawn on the travel/flying screens' map inset (`src/map.lua`). Not an image;
+this is coordinate data (Natural Earth's 1:110m land dataset, public domain,
+no attribution required), fetched via the
+[world-atlas](https://github.com/topojson/world-atlas) npm package (ISC
+license) and simplified with Douglas-Peucker for legibility at ~300x200px.
+Rendered as filled polygons using the same lat/lon → screen projection as
+the city markers, so land and cities always line up exactly.
+
 ## Clue Images (planned)
 
 Country-specific images sourced from Wikimedia Commons under CC0 or CC-BY.
