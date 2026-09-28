@@ -1,14 +1,20 @@
 local SM     = require("src.state_machine")
 local ui     = require("src.ui")
 local locale = require("src.locale")
-
-local title_screen = require("src.screens.title")
+local game   = require("src.game")
 
 function love.load()
     love.graphics.setDefaultFilter("nearest", "nearest")
     ui.init()
     locale.set("en")
-    SM.switch(title_screen)
+    game.init()
+    SM.switch(require("src.screens.title"))
+end
+
+function love.quit()
+    if game.detective and game.mission then
+        game.save()
+    end
 end
 
 function love.update(dt)

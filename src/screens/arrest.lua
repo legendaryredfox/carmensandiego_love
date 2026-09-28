@@ -1,13 +1,77 @@
--- TODO: implement arrest screen
-local SM = require("src.state_machine")
-local ui = require("src.ui")
-local screen = {}
-function screen.draw()
-    love.graphics.setColor(0.5,0.5,0.5,1)
-    love.graphics.printf("arrest (not implemented)", 0, ui.VIRTUAL_H/2, ui.VIRTUAL_W, "center")
-    love.graphics.setColor(1,1,1,1)
+local SM      = require("src.state_machine")
+local locale  = require("src.locale")
+local ui      = require("src.ui")
+local game    = require("src.game")
+local det_mod = require("src.detective")
+local rank_mod = require("src.ranking")
+
+local S = {}
+local result_key, msg, thief_name = "", "", ""
+local timer = 0
+
+function S.enter()
+    local result = det_mod.attempt_arrest(game.detective, game.mission)
+    local thief  = game.mission.thief
+    thief_name   = thief.name
+
+    if result == "success" then
+        result_key = "arrest.success"
+        det_mod.on_success(game.detective)
+        -- Add to ranking
+        rank_mod.add(game.ranking, {
+            name         = game.detective.name,
+            rank         = game.detective.rank,
+            cases_solved = game.detective.cases_solved,
+            score        = det_mod.score(game.detective),
+            date         = os.date("%Y-%m-%d"),
+        })
+        game.save()
+    elseif result == "wrong_warrant" then
+        result_key = "arrest.wrong_warrant"
+    elseif result == "no_warrant" then
+        result_key = "arrest.no_warrant"
+    else
+        result_key = "arrest.wrong_city"
+    end
+
+    msg   = locale.t(result_key, { name = thief_name })
+    timer = 0
 end
-function screen.keypressed(key)
-    if key == "escape" then SM.switch(require("src.screens.menu")) end
+
+function S.update(dt) timer = timer + dt end
+
+function S.draw()
+    local success = (result_key == "arrest.success")
+
+    ui.title(0, 30, success and "CASE CLOSED!" or "MISSION FAILED",
+        success and ui.C.success or ui.C.danger)
+
+    ui.panel(60, 80, ui.VIRTUAL_W - 120, 120)
+    ui.text(70, 95, msg, success and ui.C.success or ui.C.danger)
+
+    if timer > 1.5 then
+        if success then
+            ui.text(0, 220, "[ PRESS ENTER FOR NEXT MISSION ]",
+                ui.C.dim, "center", ui.VIRTUAL_W)
+        else
+            ui.text(0, 220, "[ PRESS ENTER TO CONTINUE ]",
+                ui.C.dim, "center", ui.VIRTUAL_W)
+        end
+    end
 end
-return screen
+
+function S.keypressed(key)
+    if timer < 1.5 then return end
+    if key ~= "return" and key ~= "space" then return end
+    local success = (result_key == "arrest.success")
+    if success then
+        -- Check rank up
+        local old_rank = game.mission and game.mission.thief and "rookie" or "rookie"
+        game.next_mission()
+        SM.switch(require("src.screens.briefing"))
+    else
+        SM.switch(require("src.screens.game_over"))
+    end
+end
+
+return S
