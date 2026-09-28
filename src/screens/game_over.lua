@@ -1,4 +1,5 @@
 local SM     = require("src.state_machine")
+local audio  = require("src.audio")
 local locale = require("src.locale")
 local ui     = require("src.ui")
 local game   = require("src.game")

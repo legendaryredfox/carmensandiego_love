@@ -1,9 +1,10 @@
-local SM      = require("src.state_machine")
-local locale  = require("src.locale")
-local ui      = require("src.ui")
-local game    = require("src.game")
-local det_mod = require("src.detective")
+local SM       = require("src.state_machine")
+local locale   = require("src.locale")
+local ui       = require("src.ui")
+local game     = require("src.game")
+local det_mod  = require("src.detective")
 local rank_mod = require("src.ranking")
+local audio    = require("src.audio")
 
 local S = {}
 local result_key, msg, thief_name = "", "", ""
@@ -17,7 +18,8 @@ function S.enter()
     if result == "success" then
         result_key = "arrest.success"
         det_mod.on_success(game.detective)
-        -- Add to ranking
+        audio.play_sfx("arrest_ok")
+        audio.crossfade("success")
         rank_mod.add(game.ranking, {
             name         = game.detective.name,
             rank         = game.detective.rank,
@@ -28,6 +30,8 @@ function S.enter()
         game.save()
     elseif result == "wrong_warrant" then
         result_key = "arrest.wrong_warrant"
+        audio.play_sfx("arrest_fail")
+        audio.crossfade("failure")
     elseif result == "no_warrant" then
         result_key = "arrest.no_warrant"
     else

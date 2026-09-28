@@ -1,4 +1,5 @@
 local SM     = require("src.state_machine")
+local audio  = require("src.audio")
 local locale = require("src.locale")
 local ui     = require("src.ui")
 local game   = require("src.game")
@@ -45,6 +46,7 @@ function S.enter()
     cursor     = 1
     status_msg = ""
     match_list = suspect_mod.filter(game.suspects, get_filter())
+    audio.crossfade("computer")
 end
 
 function S.draw()

@@ -27,6 +27,7 @@ end
 function S.enter()
     destinations = build_destinations()
     selected     = 1
+    audio.crossfade("travel")
 end
 
 function S.draw()

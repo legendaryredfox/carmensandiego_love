@@ -1,4 +1,5 @@
 local SM     = require("src.state_machine")
+local audio  = require("src.audio")
 local locale = require("src.locale")
 local ui     = require("src.ui")
 local game   = require("src.game")
@@ -29,6 +30,7 @@ end
 function S.enter()
     selected = 1
     fade     = ui.new_fade(0.35)
+    audio.crossfade("city")
     if check_auto_arrest() then return end
 end
 

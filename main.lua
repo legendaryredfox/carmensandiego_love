@@ -1,7 +1,8 @@
-local SM     = require("src.state_machine")
-local ui     = require("src.ui")
+local SM    = require("src.state_machine")
+local ui    = require("src.ui")
 local locale = require("src.locale")
-local game   = require("src.game")
+local game  = require("src.game")
+local audio = require("src.audio")
 
 function love.load()
     love.graphics.setDefaultFilter("nearest", "nearest")
@@ -9,15 +10,18 @@ function love.load()
     locale.set("en")
     game.init()
     SM.switch(require("src.screens.title"))
+    audio.play_music("title")
 end
 
 function love.quit()
+    audio.stop_music()
     if game.detective and game.mission then
         game.save()
     end
 end
 
 function love.update(dt)
+    audio.update()
     SM.update(dt)
 end
 
