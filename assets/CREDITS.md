@@ -52,16 +52,24 @@ Board Game Icons and Roguelike Characters (Kenney, CC0) remain unused for now.
 
 Used as the window/taskbar icon via `conf.lua`'s `t.window.icon`.
 
-## World Map Data
+## World Map
 
-`data/continents.lua` — simplified continent/major-island coastline outlines
-drawn on the travel/flying screens' map inset (`src/map.lua`). Not an image;
-this is coordinate data (Natural Earth's 1:110m land dataset, public domain,
-no attribution required), fetched via the
+| File | Source | License |
+|---|---|---|
+| map/world_map.png | TODO: source/license — confirm with whoever supplied it | TODO |
+
+Pixel-art equirectangular world map (1774x887, exact 2:1) drawn on the
+travel/flying screens' map inset (`src/map.lua`). Drawn stretched
+independently on x/y to exactly fill the map rect, which keeps every
+pixel's (lon, lat) fraction aligned with city markers regardless of the
+rect's own aspect ratio.
+
+`data/continents.lua` — simplified continent/major-island coastline
+outlines, used as a fallback only when `map/world_map.png` is missing. Not
+an image; this is coordinate data (Natural Earth's 1:110m land dataset,
+public domain, no attribution required), fetched via the
 [world-atlas](https://github.com/topojson/world-atlas) npm package (ISC
 license) and simplified with Douglas-Peucker for legibility at ~300x200px.
-Rendered as filled polygons using the same lat/lon → screen projection as
-the city markers, so land and cities always line up exactly.
 
 ## Clue Images (planned)
 

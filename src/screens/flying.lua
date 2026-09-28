@@ -19,12 +19,14 @@ local MAP_X, MAP_Y, MAP_W, MAP_H = 40, 60, ui.VIRTUAL_W - 80, ui.VIRTUAL_H - 130
 local NO_IDS = {}
 
 local elapsed, origin_id, start_ts, end_ts = 0, nil, 0, 0
+local dest_id_list = {}
 
 function S.enter()
-    elapsed   = 0
-    origin_id = game.detective.current_city_id
-    start_ts  = detective_mod.current_timestamp(game.detective)
-    end_ts    = start_ts + S.dest.hours * 3600
+    elapsed      = 0
+    origin_id    = game.detective.current_city_id
+    dest_id_list = { S.dest.id }
+    start_ts     = detective_mod.current_timestamp(game.detective)
+    end_ts       = start_ts + S.dest.hours * 3600
     audio.crossfade("travel")
 end
 
@@ -49,8 +51,11 @@ function S.update(dt)
 end
 
 function S.draw()
+    -- active_id/connection_ids drive which cities map_mod labels — origin
+    -- and the destination being flown to, same as the travel screen only
+    -- ever labels the current city and its reachable destinations.
     map_mod.draw(game.cities_ordered, game.cities_by_id,
-        MAP_X, MAP_Y, MAP_W, MAP_H, NO_IDS, nil, NO_IDS)
+        MAP_X, MAP_Y, MAP_W, MAP_H, NO_IDS, origin_id, dest_id_list)
 
     local origin = game.cities_by_id[origin_id]
     local dest   = game.cities_by_id[S.dest.id]
