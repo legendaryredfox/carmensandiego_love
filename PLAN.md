@@ -547,27 +547,25 @@ JSON assets, same as SPEC.md already does for the 29-case leader rule.
    wrapper templates to fit. Budget this as its own content pass, not a
    quick locale edit.
 
-7. **FIXED (2026-09-28)** — Detective-office background for the
-   dispatch/briefing screen. Used "Vintage Office Interiors" by Croomfolk
-   on OpenGameArt (OGA-BY 3.0 — confirmed acceptable by the user despite
-   not being literally CC0/CC-BY/OFL, since it's an attribution-only
-   license in the same spirit as CC-BY). Composed `assets/images/ui/briefing_bg.png`
-   (640x360, matches the virtual canvas exactly) with ImageMagick from
-   four of its sprites: `wallpiece-clean.png` tiled into a wood wainscot
-   band across the bottom ~140px, plus `largetable-clean.png` (desk),
-   `filecabinet-clean.png`, and `safe-clean.png` as silhouettes standing
-   on it. Full attribution in `assets/CREDITS.md`'s new "Briefing Screen
-   Background" section. `src/screens/briefing.lua` draws it full-canvas
-   before the panel (same load/cache/fallback pattern as this project's
-   other optional art) and shrinks the panel from nearly-full-screen down
-   to the upper ~200px so the furniture band actually shows below it —
-   verified by actually launching the game (`love .` under `xvfb-run`
-   with `SDL_AUDIODRIVER=dummy` to avoid any audio output, screenshotting
-   the briefing screen via `love.graphics.captureScreenshot`) rather than
-   just trusting the composited PNG looked right in isolation; caught and
-   fixed one real issue that way — the "press any key" hint was unreadable
-   over the busy wood pattern, fixed with a small dark backdrop strip
-   behind it.
+7. **FIXED (2026-09-28), then REDONE same day** — Detective-office
+   background for the dispatch/briefing screen. First attempt composed
+   `assets/images/ui/briefing_bg.png` from four CC-licensed pixel-art
+   furniture sprites (Croomfolk's "Vintage Office Interiors", OGA-BY
+   3.0) — tiled wood wainscot, desk, file cabinet, safe. User tried it
+   and called it out as looking bad, and said a real photo was fine too
+   (didn't need to stay pixel art for this one asset). Replaced it with
+   an actual 1929 public-domain photo from Wikimedia Commons/Spaarnestad
+   Photo (full credit in `assets/CREDITS.md`): the director's desk at a
+   Dutch private-investigation bureau, cropped to the cluttered desk
+   surface only (papers, books, inkwell) with both people's faces
+   deliberately cropped out, composited onto a flat sepia fill sampled
+   from the photo's own wallpaper tone. Same panel layout as before
+   (shrunk to the upper ~200px so the photo band shows below it) — kept
+   after confirming it still worked with the new image via the same
+   `love .` + `xvfb-run` + `SDL_AUDIODRIVER=dummy` screenshot check.
+   Lesson: rendering out a composited image and eyeballing it in
+   isolation isn't the same as it actually being good — get the actual
+   opinion (here, the user's) before considering an art task done.
 
 8. **FIXED (2026-09-28)**, via option (b) below — World map city markers
    sometimes don't line up with real lat/lon. Verified with a script

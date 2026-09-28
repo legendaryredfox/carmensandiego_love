@@ -56,14 +56,18 @@ Used as the window/taskbar icon via `conf.lua`'s `t.window.icon`.
 
 | File | Source | Author | License |
 |---|---|---|---|
-| ui/briefing_bg.png | Composed from "Vintage Office Interiors" — https://opengameart.org/content/vintage-office-interiors | Croomfolk | OGA-BY 3.0 |
+| ui/briefing_bg.png | [Detectivebureaus, SFA022824674.jpg](https://commons.wikimedia.org/wiki/File:Detectivebureaus,_SFA022824674.jpg) (Wikimedia Commons, via Spaarnestad Photo / Nationaal Archief) | Unknown (1929) | Public domain |
 
-`src/screens/briefing.lua`'s dispatch screen backdrop, composed (ImageMagick,
-not by hand) from four sprites in the pack above: `wallpiece-clean.png`
-(tiled as the wood wainscot band), `largetable-clean.png` (the desk),
-`filecabinet-clean.png`, and `safe-clean.png`. OGA-BY 3.0 requires
-attribution, not a specific format — the line above is that credit.
-Falls back to a flat `ui.C.bg` fill if the file is absent.
+`src/screens/briefing.lua`'s dispatch screen backdrop. A real 1929 photo —
+"the director with an employee of the Curo bureau, a private office for
+information and investigation, in Amsterdam" — cropped (ImageMagick) to
+the desk surface and its clutter of papers/books/inkwell, deliberately
+excluding both people's faces, and composited onto a flat sepia fill
+sampled from the photo's own wallpaper tone so the two blend as one
+backdrop. Replaced an earlier version composed from CC-BY-licensed pixel
+art (`wallpiece-clean.png` + furniture silhouettes from Croomfolk's
+"Vintage Office Interiors") after that one didn't read well in practice —
+see PLAN.md. Falls back to a flat `ui.C.bg` fill if the file is absent.
 
 ## World Map
 
