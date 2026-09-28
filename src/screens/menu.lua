@@ -19,6 +19,8 @@ local function items()
           disabled = not save.exists(1) },
         { label = locale.t("menu.leaderboard"),
           action = function() SM.switch(require("src.screens.leaderboard")) end },
+        { label = locale.t("menu.settings"),
+          action = function() SM.switch(require("src.screens.settings")) end },
         { label = locale.t("menu.quit"),
           action = function() love.event.quit() end },
     }

@@ -1,6 +1,11 @@
-local SM = { current = nil }
+local ui = require("src.ui")
 
-function SM.switch(state)
+local FADE_DURATION = 0.25
+
+local SM = { current = nil, fade = nil }
+
+function SM.switch(state, opts)
+    opts = opts or {}
     if SM.current and SM.current.exit then
         SM.current.exit()
     end
@@ -8,9 +13,15 @@ function SM.switch(state)
     if state and state.enter then
         state.enter()
     end
+    -- A nested SM.switch() called from state.enter() (e.g. auto-arrest)
+    -- already owns SM.current/SM.fade by the time we get here — don't clobber it.
+    if SM.current == state then
+        SM.fade = opts.no_fade and nil or ui.new_fade(opts.fade_duration or FADE_DURATION)
+    end
 end
 
 function SM.update(dt)
+    if SM.fade then ui.update_fade(SM.fade, dt) end
     if SM.current and SM.current.update then
         SM.current.update(dt)
     end
@@ -20,6 +31,7 @@ function SM.draw()
     if SM.current and SM.current.draw then
         SM.current.draw()
     end
+    if SM.fade then ui.fade(SM.fade.alpha) end
 end
 
 function SM.keypressed(key, scancode, isrepeat)

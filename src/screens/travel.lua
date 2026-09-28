@@ -1,4 +1,5 @@
 local SM       = require("src.state_machine")
+local audio    = require("src.audio")
 local locale   = require("src.locale")
 local ui       = require("src.ui")
 local game     = require("src.game")
@@ -92,7 +93,7 @@ function S.keypressed(key)
             if d.warrant_id and d.current_city_id == require("src.mission").thief_city(m) then
                 SM.switch(require("src.screens.arrest"))
             else
-                SM.switch(require("src.screens.city"))
+                SM.switch(require("src.screens.city_info"))
             end
         end
     elseif key == "escape" then

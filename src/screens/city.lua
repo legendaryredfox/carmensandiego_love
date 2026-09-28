@@ -11,7 +11,6 @@ local S = {}
 local ZONE_LABELS = { "CRIME\nCOMPUTER", "VENUE\n1", "VENUE\n2", "VENUE\n3", "AIRPORT" }
 local ZONE_W      = 128
 local selected    = 1
-local fade        = nil
 
 local function zone_x(i) return (i - 1) * ZONE_W end
 
@@ -27,13 +26,8 @@ end
 
 function S.enter()
     selected = 1
-    fade     = ui.new_fade(0.35)
     audio.crossfade("city")
     if check_auto_arrest() then return end
-end
-
-function S.update(dt)
-    if fade then ui.update_fade(fade, dt) end
 end
 
 function S.draw()
@@ -75,8 +69,6 @@ function S.draw()
     -- Nav hint
     ui.text(0, ui.VIRTUAL_H - 30, "[ LEFT / RIGHT  ENTER ]",
         ui.C.dim, "center", ui.VIRTUAL_W)
-
-    if fade then ui.fade(fade.alpha) end
 end
 
 function S.keypressed(key)

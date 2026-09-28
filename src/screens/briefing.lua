@@ -1,13 +1,13 @@
-local SM      = require("src.state_machine")
-local audio   = require("src.audio")
-local locale  = require("src.locale")
-local ui      = require("src.ui")
-local game    = require("src.game")
-local det_mod = require("src.detective")
+local SM       = require("src.state_machine")
+local audio    = require("src.audio")
+local locale   = require("src.locale")
+local ui       = require("src.ui")
+local game     = require("src.game")
+local det_mod  = require("src.detective")
+local settings = require("src.settings")
 
 local S = {}
 local full_text, revealed, timer, done = "", 0, 0, false
-local CHARS_PER_SEC = 40
 
 local function build_text()
     local d        = game.detective
@@ -37,7 +37,7 @@ end
 function S.update(dt)
     if done then return end
     timer    = timer + dt
-    revealed = math.min(#full_text, math.floor(timer * CHARS_PER_SEC))
+    revealed = math.min(#full_text, math.floor(timer * settings.get().typewriter_speed))
     if revealed >= #full_text then done = true end
 end
 
@@ -52,7 +52,7 @@ end
 
 function S.keypressed()
     if not done then revealed = #full_text; done = true; return end
-    SM.switch(require("src.screens.city"))
+    SM.switch(require("src.screens.city_info"))
 end
 
 function S.mousepressed() S.keypressed() end

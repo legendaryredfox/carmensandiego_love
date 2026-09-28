@@ -76,6 +76,7 @@ local test_files = {
     "tests/mission_test",
     "tests/detective_test",
     "tests/save_test",
+    "tests/settings_test",
 }
 
 local sep = string.rep("=", 60)

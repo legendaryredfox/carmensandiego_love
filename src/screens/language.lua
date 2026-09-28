@@ -1,6 +1,7 @@
-local SM     = require("src.state_machine")
-local locale = require("src.locale")
-local ui     = require("src.ui")
+local SM       = require("src.state_machine")
+local locale   = require("src.locale")
+local ui       = require("src.ui")
+local settings = require("src.settings")
 
 local lang_screen = {}
 
@@ -39,6 +40,7 @@ function lang_screen.keypressed(key)
     elseif key == "down" then
         selected = selected == #options and 1 or selected + 1
     elseif key == "return" then
+        settings.set_lang(options[selected].lang)
         locale.set(options[selected].lang)
         SM.switch(require("src.screens.menu"))
     end

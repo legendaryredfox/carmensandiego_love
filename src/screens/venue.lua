@@ -5,12 +5,12 @@ local game        = require("src.game")
 local detective_mod = require("src.detective")
 local mission_mod   = require("src.mission")
 local clue_pool   = require("src.clue_pool")
+local settings    = require("src.settings")
 
 local S = {}
 S.venue_index = 1
 
 local text_full, revealed, timer, done, clue = "", 0, 0, false, nil
-local CHARS_PER_SEC = 30
 
 local function clue_to_text(c)
     if not c then return locale.t("venue.nobody_suspicious") end
@@ -42,7 +42,7 @@ end
 function S.update(dt)
     if done then return end
     timer    = timer + dt
-    revealed = math.min(#text_full, math.floor(timer * CHARS_PER_SEC))
+    revealed = math.min(#text_full, math.floor(timer * settings.get().typewriter_speed))
     if revealed >= #text_full then done = true end
 end
 

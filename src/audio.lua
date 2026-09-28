@@ -143,4 +143,7 @@ function M.set_sfx_volume(v)
     SFX_VOL = math.max(0, math.min(1, v))
 end
 
+function M.get_music_volume() return MUSIC_VOL end
+function M.get_sfx_volume()   return SFX_VOL end
+
 return M
