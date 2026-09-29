@@ -10,7 +10,7 @@ return {
     { category="currency", text={
         en="A trader recalled the suspect exchanging for one of Asia's strongest and most stable currencies — backed by this island nation's massive foreign reserves",
         pt="Um comerciante lembrou o suspeito trocando por uma das moedas mais fortes e estáveis da Ásia — respaldada pelas massivas reservas estrangeiras desta nação insular",
-    }, image=nil, verified=true },
+    }, image="assets/images/clues/singapore/dollar_coin.png", verified=true },
     { category="industry", text={
         en="A shipping broker described the suspect asking about container volumes — this tiny island is the world's second busiest container port by throughput",
         pt="Um corretor de navegação descreveu o suspeito perguntando sobre volumes de contêineres — esta minúscula ilha é o segundo porto de contêineres mais movimentado do mundo por volume",

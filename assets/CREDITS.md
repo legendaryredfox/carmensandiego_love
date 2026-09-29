@@ -133,6 +133,11 @@ is text + witness portrait only). Kept for a future rank-gated reveal
 | clues/rome/colosseum.png | [Colosseum of Rome, Italy.jpg](https://commons.wikimedia.org/wiki/File:Colosseum_of_Rome,_Italy.jpg) | Wilfredor | CC0 |
 | clues/sydney/platypus.png | [Platypus (Ornithorhynchus anatinus). First Description 1799.jpg](https://commons.wikimedia.org/wiki/File:Platypus_(Ornithorhynchus_anatinus)._First_Description_1799.jpg) | Frederick Polydore Nodder | CC0 |
 | clues/tokyo/macaque.png | [Macaca fuscata - Zoo Sauvage de Saint-Félicien - 2016-07-19 (2).jpg](https://commons.wikimedia.org/wiki/File:Macaca_fuscata_-_Zoo_Sauvage_de_Saint-F%C3%A9licien_-_2016-07-19_(2).jpg) | Letartean | CC BY 3.0 |
+| clues/istanbul/hagia_sophia.png | [Hagia Sophia, Constantinople, Turkey, ca. 1897.jpg](https://commons.wikimedia.org/wiki/File:Hagia_Sophia,_Constantinople,_Turkey,_ca._1897.jpg) | Unknown author (Detroit Publishing Co. photochrom) | Public domain |
+| clues/mexico_city/aztec_calendar_stone.png | [Aztec Calendar Stone (8263450477).jpg](https://commons.wikimedia.org/wiki/File:Aztec_Calendar_Stone_(8263450477).jpg) | Rob Young | CC BY 2.0 |
+| clues/oslo/viking_ship.png | [Oseberg ship - IMG 9186.jpg](https://commons.wikimedia.org/wiki/File:Oseberg_ship_-_IMG_9186.jpg) | Daderot | Public domain |
+| clues/san_marino/three_towers.png | [Towers San Marino.jpg](https://commons.wikimedia.org/wiki/File:Towers_San_Marino.jpg) | Nickel Chromo | Public domain |
+| clues/singapore/dollar_coin.png | [10 Dollars of Singapore - Freighter beside Wharf 1976.png](https://commons.wikimedia.org/wiki/File:10_Dollars_of_Singapore_-_Freighter_beside_Wharf_1976.png) | Windrain | CC0 |
 
 ## Venue Category Icons
 

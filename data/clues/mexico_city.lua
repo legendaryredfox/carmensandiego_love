@@ -2,7 +2,7 @@ return {
     { category="landmark", text={
         en="An archaeologist described the suspect examining a massive carved stone calendar disk — an Aztec artifact showing complex cosmological cycles",
         pt="Um arqueólogo descreveu o suspeito examinando um enorme disco de pedra esculpido com um calendário — um artefato asteca mostrando ciclos cosmológicos complexos",
-    }, image=nil, verified=true },
+    }, image="assets/images/clues/mexico_city/aztec_calendar_stone.png", verified=true },
     { category="wildlife", text={
         en="A dog breeder overheard the suspect asking about a hairless dog breed considered sacred by pre-Columbian civilizations — still raised here today",
         pt="Um criador de cães ouviu o suspeito perguntando sobre uma raça de cão sem pelo considerada sagrada pelas civilizações pré-colombianas — ainda criada aqui hoje",

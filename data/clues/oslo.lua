@@ -14,5 +14,5 @@ return {
     { category="landmark", text={
         en="A museum guide described the suspect studying ancient wooden longships — vessels used by seafarers who explored and raided coastlines over a thousand years ago",
         pt="Um guia de museu descreveu o suspeito estudando antigas embarcações de madeira — navios usados por navegadores que exploraram e saquearam costas há mais de mil anos",
-    }, image=nil, verified=true },
+    }, image="assets/images/clues/oslo/viking_ship.png", verified=true },
 }

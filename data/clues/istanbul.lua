@@ -2,7 +2,7 @@ return {
     { category="landmark", text={
         en="An architect described the suspect staring up at a vast domed building that has served as a Christian church, a mosque, and a museum — and back to a mosque again",
         pt="Um arquiteto descreveu o suspeito olhando para cima para um vasto edifício com cúpula que serviu como igreja cristã, mesquita e museu — e voltou a ser mesquita",
-    }, image=nil, verified=true },
+    }, image="assets/images/clues/istanbul/hagia_sophia.png", verified=true },
     { category="geography", text={
         en="A bridge toll collector recalled the suspect crossing the only major city in the world that straddles two continents",
         pt="Um cobrador de pedágio de ponte lembrou o suspeito cruzando a única grande cidade do mundo que atravessa dois continentes",
