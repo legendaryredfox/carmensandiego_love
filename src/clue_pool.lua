@@ -68,6 +68,13 @@ function M.clue_text(clue)
     return ""
 end
 
+-- Returns the witness's role/occupation in the current language (e.g.
+-- "shipping broker"), or "" for clues authored before this field existed.
+function M.witness_text(clue)
+    if not clue or not clue.witness then return "" end
+    return clue.witness[locale.get_lang()] or clue.witness.en or ""
+end
+
 -- Clears cache (for testing or language switch).
 function M.clear_cache()
     _cache = {}

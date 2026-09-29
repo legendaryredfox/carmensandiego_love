@@ -36,6 +36,40 @@ describe("clue_pool.load", function()
     end)
 end)
 
+describe("clue_pool.witness_text", function()
+    it("returns the witness role in the current language", function()
+        local locale = require("src.locale")
+        locale.set("en")
+        local clue = { witness = { en = "shipping broker", pt = "corretor de navegação" } }
+        assert_eq(clue_pool.witness_text(clue), "shipping broker")
+        locale.set("pt")
+        assert_eq(clue_pool.witness_text(clue), "corretor de navegação")
+        locale.set("en")
+    end)
+
+    it("returns empty string for a clue with no witness field", function()
+        assert_eq(clue_pool.witness_text({}), "")
+        assert_eq(clue_pool.witness_text(nil), "")
+    end)
+
+    it("every real clue pool entry has a witness role", function()
+        -- Regression: mission.lua's destination-clue builder used to drop
+        -- any field not explicitly copied from the pool entry — witness
+        -- would silently vanish by the time venue.lua reads it.
+        local city = require("src.city")
+        local cities = city.load("data/cities.csv")
+        for id in pairs(cities) do
+            local pool = clue_pool.load(id)
+            for _, entry in ipairs(pool) do
+                assert_true(entry.witness ~= nil,
+                    id .. ": clue missing witness field")
+                assert_true(clue_pool.witness_text(entry) ~= "",
+                    id .. ": witness field resolved to empty string")
+            end
+        end
+    end)
+end)
+
 describe("clue_pool.pick_many", function()
     it("returns an empty table for a nil or empty pool", function()
         assert_eq(#clue_pool.pick_many(nil, 2, make_seed_rng(1)), 0)

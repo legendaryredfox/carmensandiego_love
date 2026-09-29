@@ -59,7 +59,7 @@ return {
     -- gets picked in quotes, so this witness is always quoted directly
     -- speaking, never reported/summarized in the third person.
     ["venue.nobody_suspicious"]   = "Nobody suspicious around here, sorry.",
-    ["venue.witness_says"]        = "A witness leans in and says:",
+    ["venue.unknown_witness"]     = "witness",
     ["venue.clue_destination"]    = "{hint}",
     ["venue.clue_trait"]          = "{trait}.",
     -- Pronoun matches thief.sex (see briefing.suspect_seen_male/female for

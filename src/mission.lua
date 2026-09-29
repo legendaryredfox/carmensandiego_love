@@ -194,6 +194,7 @@ function M._generate_clues(route, thief, roster, rng)
                     next_city_id = next_city_id,
                     category     = raw.category,
                     text         = raw.text,
+                    witness      = raw.witness,
                     image        = raw.image,
                     verified     = raw.verified,
                 })

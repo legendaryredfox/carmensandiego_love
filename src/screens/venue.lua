@@ -52,6 +52,25 @@ local function lower_first(s)
     return s:sub(1, 1):lower() .. s:sub(2)
 end
 
+-- Only the first byte is touched, so this stays safe on PT roles with
+-- accented letters later in the string (Lua's string.upper is ASCII-only
+-- and would mangle multi-byte UTF-8 sequences it doesn't recognize) — every
+-- authored witness role happens to start with a plain ASCII letter.
+local function upper_first(s)
+    return s:sub(1, 1):upper() .. s:sub(2)
+end
+
+-- Speaker label shown above the quote — the clue's own witness role
+-- ("SHIPPING BROKER") when one is authored, falling back to a generic
+-- label for trait/terminal clues, which aren't tied to a specific witness.
+local function witness_label(c)
+    if c and c.type == "destination" then
+        local w = clue_pool.witness_text(c)
+        if w ~= "" then return w end
+    end
+    return locale.t("venue.unknown_witness")
+end
+
 local function clue_to_text(c)
     if not c then return locale.t("venue.nobody_suspicious") end
     if c.type == "terminal" then return locale.t("venue.nobody_suspicious") end
@@ -88,9 +107,10 @@ function S.enter()
         SM.switch(require("src.screens.arrest"))
         return
     end
-    -- Quoted directly — see the WHY comments on the venue.* locale keys
-    -- in locales/en.lua/pt.lua for why this is direct, not reported, speech.
-    text_full = locale.t("venue.witness_says") .. "\n\n" ..
+    -- Speaker label + quote, not reported speech ("A witness says a
+    -- shipping broker described the suspect...") — see the WHY comments on
+    -- the venue.* locale keys in locales/en.lua/pt.lua.
+    text_full = upper_first(witness_label(clue)) .. ":\n\n" ..
         "\"" .. clue_to_text(clue) .. "\""
     text_len  = ui.utf8_len(text_full)
     revealed  = 0

@@ -62,7 +62,7 @@ return {
     -- picked in quotes, so this witness is always quoted directly
     -- speaking, never reported/summarized in the third person.
     ["venue.nobody_suspicious"]   = "Ninguem suspeito por aqui, desculpe.",
-    ["venue.witness_says"]        = "Uma testemunha se aproxima e diz:",
+    ["venue.unknown_witness"]     = "testemunha",
     ["venue.clue_destination"]    = "{hint}",
     ["venue.clue_trait"]          = "{trait}.",
     -- Pronoun matches thief.sex, same convention as
