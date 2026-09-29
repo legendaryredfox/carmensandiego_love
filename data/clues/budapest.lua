@@ -10,7 +10,7 @@ return {
     { category="currency", text={
         en="A cashier recalled the suspect counting a currency with a unique name found nowhere else in Europe — the forint, named after an Italian gold coin",
         pt="Um caixa lembrou o suspeito contando uma moeda com um nome único não encontrado em nenhum outro lugar da Europa — o forint, com o nome de uma moeda de ouro italiana",
-    }, image=nil, verified=true },
+    }, image="assets/images/clues/budapest/forint.png", verified=true },
     { category="language", text={
         en="A linguist at the airport noted the suspect reading signs in Magyar — a language unrelated to any neighbor's tongue, with long compound words and unusual vowels",
         pt="Um linguista no aeroporto notou o suspeito lendo placas em Magyar — um idioma sem relação com o idioma de nenhum vizinho, com longas palavras compostas e vogais incomuns",

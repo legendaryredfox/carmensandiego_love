@@ -10,7 +10,7 @@ return {
     { category="currency", text={
         en="A merchant mentioned the suspect paying with a pound — but not the British one; this one features ancient monuments and pharaonic imagery",
         pt="Um comerciante mencionou o suspeito pagando com uma libra — mas não a britânica; esta tem monumentos antigos e imagens faraônicas",
-    }, image=nil, verified=true },
+    }, image="assets/images/clues/cairo/pound.png", verified=true },
     { category="geography", text={
         en="A river guide described the suspect traveling along the world's longest river — one that floods predictably each year, fertilizing the delta farmland",
         pt="Um guia fluvial descreveu o suspeito viajando pelo rio mais longo do mundo — que inunda previsivelmente a cada ano, fertilizando as terras agrícolas do delta",

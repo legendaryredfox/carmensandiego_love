@@ -104,11 +104,18 @@ is text + witness portrait only). Kept for a future rank-gated reveal
 | File | Source file | Author | License |
 |---|---|---|---|
 | clues/athens/parthenon.png | [Restoration work Parthenon facade Acropolis Athens Greece.jpg](https://commons.wikimedia.org/wiki/File:Restoration_work_Parthenon_facade_Acropolis_Athens_Greece.jpg) | Jebulon | CC0 |
+| clues/athens/euro_coin.png | [2020 Greek Commemorative 2 Euro Coin "2500th Anniversary of the Battle of Thermopylae" M.Hoffmann.png](https://commons.wikimedia.org/wiki/File:2020_Greek_Commemorative_2_Euro_Coin_%222500th_Anniversary_of_the_Battle_of_Thermopylae%22_M.Hoffmann.png) | Unknown author | CC BY 4.0 |
+| clues/baghdad/dinar.png | [1IQDking1939front.jpg](https://commons.wikimedia.org/wiki/File:1IQDking1939front.jpg) | Iraqi Currency Board (scan by user:ImAhmedYousif) | Public domain |
 | clues/bamako/hippo.png | [Hippopotamus @ Barcelona zoo.jpg](https://commons.wikimedia.org/wiki/File:Hippopotamus_@_Barcelona_zoo.jpg) | Pedroserafin | Public domain |
+| clues/bamako/cfa_franc.png | [Billet de monnaie - Bénin.jpg](https://commons.wikimedia.org/wiki/File:Billet_de_monnaie_-_B%C3%A9nin.jpg) | Houss 2020 | CC0 |
 | clues/bangkok/elephant.png | [Elephas maximus in Singapore Zoo, 20240206 0857 6202.jpg](https://commons.wikimedia.org/wiki/File:Elephas_maximus_in_Singapore_Zoo,_20240206_0857_6202.jpg) | Jakub Hałun | CC BY 4.0 |
+| clues/bangkok/baht_coin.png | [Currently circulateing coins of the baht.jpg](https://commons.wikimedia.org/wiki/File:Currently_circulateing_coins_of_the_baht.jpg) | Isthisthing | CC0 |
 | clues/beijing/forbidden_city.png | [Meridian Gate Forbidden City Beijing (1).jpg](https://commons.wikimedia.org/wiki/File:Meridian_Gate_Forbidden_City_Beijing_(1).jpg) | Radosław Botev | CC BY 3.0 pl |
 | clues/beijing/panda.png | [Giant Panda 2004-03-2.jpg](https://commons.wikimedia.org/wiki/File:Giant_Panda_2004-03-2.jpg) | Jeff Kubina | Public domain |
+| clues/budapest/forint.png | [Six Hungarian forint banknotes - DPLA - 50c1922bcaee8d769c07d36977907f49 (page 3).jpg](https://commons.wikimedia.org/wiki/File:Six_Hungarian_forint_banknotes_-_DPLA_-_50c1922bcaee8d769c07d36977907f49_(page_3).jpg) | Magyar Kereskedelmi Bank | Public domain |
+| clues/buenos_aires/peso.png | [100 pesos eva peron 2022 a.jpg](https://commons.wikimedia.org/wiki/File:100_pesos_eva_peron_2022_a.jpg) | Argentina.gob.ar | CC BY 4.0 |
 | clues/cairo/pyramids.png | [Great Pyramid (Pyramid of Cheops Khufu), Giza, GG, EGY (47850686472).jpg](https://commons.wikimedia.org/wiki/File:Great_Pyramid_(Pyramid_of_Cheops_Khufu),_Giza,_GG,_EGY_(47850686472).jpg) | Warren LeMay | CC0 |
+| clues/cairo/pound.png | [جنيه مصري - 1967 (وجه أمامي).jpg](https://commons.wikimedia.org/wiki/File:%D8%AC%D9%86%D9%8A%D9%87_%D9%85%D8%B5%D8%B1%D9%8A_-_1967_(%D9%88%D8%AC%D9%87_%D8%A3%D9%85%D8%A7%D9%85%D9%8A).jpg) | Braindot4 | CC BY 4.0 |
 | clues/colombo/tea.png | [Sri Lanka, Tea plantations, Nuwara Eliya.jpg](https://commons.wikimedia.org/wiki/File:Sri_Lanka,_Tea_plantations,_Nuwara_Eliya.jpg) | Vyacheslav Argenberg | CC BY 4.0 |
 | clues/kathmandu/everest.png | [Everest, Himalayas.jpg](https://commons.wikimedia.org/wiki/File:Everest,_Himalayas.jpg) | Vyacheslav Argenberg | CC BY 4.0 |
 | clues/kigali/gorilla.png | [Gorilla Portrait.jpg](https://commons.wikimedia.org/wiki/File:Gorilla_Portrait.jpg) | Bradley Gordon | CC BY 2.0 |

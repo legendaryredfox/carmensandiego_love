@@ -15,7 +15,7 @@ return {
             en = "The informant heard talk of a currency named after an ancient unit of weight, stamped with portraits of past leaders",
             pt = "O informante ouviu falar de uma moeda com o nome de uma antiga unidade de peso, estampada com retratos de líderes passados",
         },
-        image = nil,
+        image = "assets/images/clues/baghdad/dinar.png",
         verified = true,
     },
     {

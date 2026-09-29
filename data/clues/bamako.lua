@@ -15,7 +15,7 @@ return {
             en = "The informant heard the suspect using a franc — a currency shared among several West African nations through a monetary union",
             pt = "O informante ouviu o suspeito usando um franco — uma moeda compartilhada por várias nações da África Ocidental por meio de uma união monetária",
         },
-        image = nil,
+        image = "assets/images/clues/bamako/cfa_franc.png",
         verified = true,
     },
     {

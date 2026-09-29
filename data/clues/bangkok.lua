@@ -10,7 +10,7 @@ return {
     { category="currency", text={
         en="A street vendor mentioned the suspect paying with coins stamped with the portrait of a long-reigning monarch — a currency named after a unit of weight",
         pt="Um vendedor ambulante mencionou o suspeito pagando com moedas estampadas com o retrato de um monarca de longo reinado — uma moeda com o nome de uma unidade de peso",
-    }, image=nil, verified=true },
+    }, image="assets/images/clues/bangkok/baht_coin.png", verified=true },
     { category="culture", text={
         en="A chef overheard the suspect ordering spicy noodle soup with lemongrass and galangal — flavors that perfume the air of this Southeast Asian city",
         pt="Um chef ouviu o suspeito pedir sopa de macarrão picante com capim-limão e galanga — sabores que perfumam o ar desta cidade do Sudeste Asiático",

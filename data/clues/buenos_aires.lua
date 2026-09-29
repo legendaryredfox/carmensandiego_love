@@ -10,7 +10,7 @@ return {
     { category="currency", text={
         en="A money changer recalled the suspect asking about exchange rates for a peso that has suffered dramatic inflation in recent years",
         pt="Um cambista lembrou o suspeito perguntando sobre taxas de câmbio para um peso que sofreu inflação dramática nos últimos anos",
-    }, image=nil, verified=true },
+    }, image="assets/images/clues/buenos_aires/peso.png", verified=true },
     { category="geography", text={
         en="A sailor noted the suspect boarding near a wide estuary where two major rivers meet the southern Atlantic — the world's widest river mouth",
         pt="Um marinheiro notou o suspeito embarcando perto de um largo estuário onde dois grandes rios encontram o Atlântico sul — a foz de rio mais larga do mundo",

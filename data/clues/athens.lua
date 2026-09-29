@@ -15,7 +15,7 @@ return {
             en = "The informant overheard the suspect complaining about prices in a currency shared by many European nations — no coins of their own anymore",
             pt = "O informante ouviu o suspeito reclamando de preços em uma moeda compartilhada por muitas nações europeias — sem moedas próprias",
         },
-        image = nil,
+        image = "assets/images/clues/athens/euro_coin.png",
         verified = true,
     },
     {
