@@ -9,10 +9,12 @@ local mission_mod   = require("src.mission")
 
 local S = {}
 
--- Same list mission.lua uses to decide which trait clues to generate —
--- shared so the two can't drift out of sync (a clued trait the UI never
--- shows, or a UI field no clue ever fills).
-local ATTRS = mission_mod.TRAIT_ATTRS
+-- sex first, then the same order mission.lua uses to decide which trait
+-- clues to generate. sex is deliberately not in mission.TRAIT_ATTRS — the
+-- briefing states it up front (see briefing.lua), so it's never clued at a
+-- venue, but the player still needs a field to enter what they were told.
+local ATTRS = { "sex" }
+for _, a in ipairs(mission_mod.TRAIT_ATTRS) do ATTRS[#ATTRS + 1] = a end
 local ATTR_VALUES = {
     sex     = { "", "male", "female" },
     hair    = { "", "brown", "blonde", "red", "black" },

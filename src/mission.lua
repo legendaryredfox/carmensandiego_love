@@ -20,18 +20,23 @@ local GENERIC_ITEMS = ITEMS.GENERIC
 M.ITEM_BY_CITY  = ITEM_BY_CITY
 M.GENERIC_ITEMS = GENERIC_ITEMS
 
-local TRAIT_ATTRS = { "sex", "hair", "hobby", "vehicle", "feature", "food" }
+-- sex is deliberately excluded from both lists below — the briefing states
+-- it up front (see briefing.lua's suspect_seen_male/female), so it's never
+-- a venue clue and never something that still needs distinguishing.
+local TRAIT_ATTRS = { "hair", "hobby", "vehicle", "feature", "food" }
 M.TRAIT_ATTRS = TRAIT_ATTRS
 
 -- Attributes guaranteed unique in full combination across the roster (see
 -- suspect_test.lua's "full trait combinations are unique" check) — food is
 -- flavor only, not part of that guarantee, so it's excluded here.
-local DEDUCTION_ATTRS = { "sex", "hair", "hobby", "vehicle", "feature" }
+local DEDUCTION_ATTRS = { "hair", "hobby", "vehicle", "feature" }
 
 -- Smallest subset of DEDUCTION_ATTRS (in DEDUCTION_ATTRS order, smallest
--- first) whose values uniquely identify `thief` among `roster`. Falls back
--- to the full list if nothing smaller works — shouldn't happen given the
--- roster's uniqueness guarantee, but stay safe rather than crash.
+-- first) whose values uniquely identify `thief` among same-sex suspects in
+-- `roster` — sex itself is already known for free (see above), so it's
+-- used here only to narrow the roster, never counted as part of the subset.
+-- Falls back to the full list if nothing smaller works — shouldn't happen
+-- given the roster's uniqueness guarantee, but stay safe rather than crash.
 local function unique_with(thief, roster, subset)
     for _, s in ipairs(roster) do
         if s.id ~= thief.id then
@@ -64,8 +69,12 @@ local function try_size(thief, roster, size, start, chosen)
 end
 
 function M._distinguishing_attrs(thief, roster)
+    local same_sex = {}
+    for _, s in ipairs(roster) do
+        if s.sex == thief.sex then same_sex[#same_sex + 1] = s end
+    end
     for size = 1, #DEDUCTION_ATTRS do
-        local found = try_size(thief, roster, size, 1, {})
+        local found = try_size(thief, same_sex, size, 1, {})
         if found then return found end
     end
     return DEDUCTION_ATTRS

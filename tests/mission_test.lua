@@ -116,8 +116,9 @@ describe("mission._distinguishing_attrs", function()
     it("every rank's route length reveals enough trait clues to deduce any thief", function()
         -- End-to-end regression for the bug above: simulate every possible
         -- thief at every rank, gather exactly the trait clues that route
-        -- length would reveal, and confirm the crime computer's filter
-        -- narrows to exactly one suspect.
+        -- length would reveal plus sex (stated in the briefing, never a
+        -- venue clue — see mission.lua's TRAIT_ATTRS), and confirm the
+        -- crime computer's filter narrows to exactly one suspect.
         local suspect_mod = require("src.suspect")
         local roster       = suspect_mod.load()
         for _, cfg in pairs(mission.RANK_CONFIG) do
@@ -126,7 +127,7 @@ describe("mission._distinguishing_attrs", function()
                 local route = {}
                 for i = 1, cfg.route_length do route[i] = "city" .. i end
                 local clues = mission._generate_clues(route, thief, roster, nil)
-                local gathered = {}
+                local gathered = { sex = thief.sex }
                 for i = 1, non_terminal do
                     local c = clues[route[i]][3]
                     gathered[c.attr] = c.value

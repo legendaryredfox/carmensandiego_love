@@ -639,6 +639,31 @@ locale key from both `locales/en.lua` and `locales/pt.lua` together.
 Tests: `tests/detective_test.lua`'s threshold table and "stays
 ace_detective beyond" case updated to the new numbers.
 
+### Sex should never be a venue clue — already stated in the briefing (flagged 2026-09-28)
+
+**FIXED (2026-09-28)** — `src/mission.lua`'s `TRAIT_ATTRS` (the cycle of
+attributes a route's venue-3 trait clues draw from) included `sex`, so a
+case could still spend one of its limited trait-clue slots re-revealing
+information the briefing already gave the player outright
+(`briefing.suspect_seen_male/female`, item 2 above) — a wasted, redundant
+clue. Removed `sex` from `TRAIT_ATTRS` (now `hair`/`hobby`/`vehicle`/
+`feature`/`food` only) so it's never generated as a clue. `DEDUCTION_ATTRS`
+(which attributes `_distinguishing_attrs` is allowed to pick from when
+deciding what actually needs cluing to reach a unique suspect) dropped
+`sex` too, and now filters `roster` down to the thief's own sex before
+searching — since sex is free information, only need to find what
+distinguishes the thief from other suspects of the *same* sex, not the
+whole roster. (Roster check: the 10 suspects' `hair`/`hobby`/`vehicle`/
+`feature` combination alone is already unique roster-wide, so this was
+safe without needing sex as a tiebreaker anywhere.) The crime computer's
+SEX dropdown stays — it's UI-only now, decoupled from
+`mission.TRAIT_ATTRS` (`src/screens/crime_computer.lua`'s local `ATTRS`
+prepends `"sex"` to that list instead of reusing it directly) — the player
+still has to manually select it from what the briefing told them, same as
+every other trait field. Tests: `tests/mission_test.lua`'s deduction
+end-to-end regression now seeds `gathered.sex = thief.sex` before
+filtering, matching what a player actually knows going in.
+
 ---
 
 ## Technical Decisions
