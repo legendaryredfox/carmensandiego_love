@@ -188,10 +188,19 @@ function M.button(x, y, w, h, label, selected)
     -- w-4 wraps even with no explicit "\n" in it, and undercounting lines
     -- there left wrapped labels sitting off-center / spilling out of short
     -- buttons.
-    local line_h = font_sm:getHeight() * font_sm:getLineHeight()
+    --
+    -- The block spans one full glyph height plus one *leaded* line_h per
+    -- extra wrapped line — not `line_h * lines` for every line. LINE_HEIGHT
+    -- (1.45x, set globally for readability in multi-line dialogue) is
+    -- spacing added BETWEEN lines, not part of the first line's own height;
+    -- treating it as if it were inflated the assumed block height and
+    -- shifted every single-line button's text above center.
+    local glyph_h = font_sm:getHeight()
+    local line_h  = glyph_h * font_sm:getLineHeight()
     local _, wrapped = font_sm:getWrap(label, w - 4)
-    local lines  = math.max(1, #wrapped)
-    local text_y = y + (h - line_h * lines) / 2
+    local lines   = math.max(1, #wrapped)
+    local block_h = glyph_h + (lines - 1) * line_h
+    local text_y  = y + (h - block_h) / 2
     love.graphics.printf(label, x + 2, text_y, w - 4, "center")
     love.graphics.setColor(1, 1, 1, 1)
     return { x = x, y = y, w = w, h = h }
