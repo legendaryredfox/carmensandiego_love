@@ -31,6 +31,31 @@ describe("venue_name.category_for", function()
     end)
 end)
 
+describe("venue_name.variant_for", function()
+    it("gives each of the 3 off-route venues a distinct variant number", function()
+        -- Regression: city.lua's venue-card icon is keyed off this variant
+        -- for the "generic" category (see get_venue_icon's icon_path) — if
+        -- two venues resolved the same variant, they'd render the same
+        -- icon even though M.name_for already tells them apart by text.
+        for i = 1, 30 do
+            local city_id  = "offroute" .. i
+            local no_clues = { clues = {} }
+            local a = venue_name.variant_for(no_clues, city_id, 1)
+            local b = venue_name.variant_for(no_clues, city_id, 2)
+            local c = venue_name.variant_for(no_clues, city_id, 3)
+            assert_true(a ~= b and b ~= c and a ~= c,
+                "duplicate generic variant for " .. city_id)
+        end
+    end)
+
+    it("is deterministic for the same city and venue", function()
+        local mission = { clues = {} }
+        local a = venue_name.variant_for(mission, "atlantis", 1)
+        local b = venue_name.variant_for(mission, "atlantis", 1)
+        assert_eq(a, b)
+    end)
+end)
+
 describe("venue_name.name_for", function()
     local mission = { clues = { paris = {
         { type = "destination", category = "landmark" },

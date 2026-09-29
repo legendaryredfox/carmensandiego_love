@@ -149,7 +149,12 @@ the card can't spoil the clue before the player investigates. One PNG per
 category, white silhouette on transparent background at 64x64, tinted at
 draw time via `ui.C.border` (same tint pattern as the panel sprites
 above). Source SVGs from [game-icons.net](https://game-icons.net),
-CC BY 3.0, rasterized locally with ImageMagick.
+CC BY 3.0, rasterized locally with ImageMagick. Exception: "generic" (the
+fallback for off-route cities, which have no case clue data at all) gets a
+distinct icon per name variant instead of one shared icon — every one of
+its 3 venues collides on "generic" together, unlike other categories where
+that's only an occasional coincidence, so reusing a single icon there
+made 3 unrelated dead-end venues look identical.
 
 | File | Source icon | Author | License |
 |---|---|---|---|
@@ -163,6 +168,8 @@ CC BY 3.0, rasterized locally with ImageMagick.
 | venues/trait.png | [magnifying-glass](https://game-icons.net/1x1/lorc/magnifying-glass.html) | Lorc | CC BY 3.0 |
 | venues/terminal.png | [hood](https://game-icons.net/1x1/lorc/hood.html) | Lorc | CC BY 3.0 |
 | venues/generic.png | [police-badge](https://game-icons.net/1x1/andymeneely/police-badge.html) | Andy Meneely | CC BY 3.0 |
+| venues/generic_2.png | [steam-locomotive](https://game-icons.net/1x1/delapouite/steam-locomotive.html) | Delapouite | CC BY 3.0 |
+| venues/generic_3.png | [bookshelf](https://game-icons.net/1x1/delapouite/bookshelf.html) | Delapouite | CC BY 3.0 |
 
 Icons made by Lorc, Delapouite, and Andy Meneely. Available on
 https://game-icons.net.

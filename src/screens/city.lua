@@ -27,16 +27,28 @@ local selector_x = nil
 local VENUE_ICON_PATH = "assets/images/venues/"
 local icon_cache = {}
 
-local function get_venue_icon(category)
-    if icon_cache[category] == nil then
-        local path = VENUE_ICON_PATH .. category .. ".png"
+-- "generic" is the one category guaranteed to collide on every off-route
+-- city (all 3 venues fall back to it when the city has no case clue data
+-- at all, not just occasionally like the other categories) — so unlike
+-- every other category, it gets a per-variant icon instead of one shared
+-- by all its variants. variant 1 keeps the plain generic.png.
+local function icon_path(category, variant)
+    if category == "generic" and variant > 1 then
+        return VENUE_ICON_PATH .. "generic_" .. variant .. ".png"
+    end
+    return VENUE_ICON_PATH .. category .. ".png"
+end
+
+local function get_venue_icon(category, variant)
+    local path = icon_path(category, variant)
+    if icon_cache[path] == nil then
         local ok, img = false, nil
         if love.filesystem.getInfo(path) then
             ok, img = pcall(love.graphics.newImage, path)
         end
-        icon_cache[category] = ok and img or false
+        icon_cache[path] = ok and img or false
     end
-    return icon_cache[category] or nil
+    return icon_cache[path] or nil
 end
 
 -- Zone layout: 1-3 are the venue cards (top row), 4 is the crime computer
@@ -82,13 +94,14 @@ local function draw_venue_card(i)
     local city_id  = game.detective.current_city_id
     local name     = venue_name_mod.name_for(game.mission, city_id, i)
     local category = venue_name_mod.category_for(game.mission, city_id, i)
+    local variant  = venue_name_mod.variant_for(game.mission, city_id, i)
 
     ui.panel(r.x, r.y, r.w, r.h)
     ui.text(r.x + 4, r.y + 6, name, ui.C.text, "center", r.w - 8)
 
     local img_y = r.y + 24
     local img_h = r.h - 30
-    local img   = get_venue_icon(category)
+    local img   = get_venue_icon(category, variant)
     if img then
         local scale = math.min((r.w - 12) / img:getWidth(), img_h / img:getHeight())
         local iw, ih = img:getWidth() * scale, img:getHeight() * scale
