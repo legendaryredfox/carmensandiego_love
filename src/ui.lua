@@ -146,9 +146,15 @@ function M.button(x, y, w, h, label, selected)
     love.graphics.setColor(selected and M.C.bg or M.C.text)
     love.graphics.setFont(font_sm)
     -- Vertically center regardless of h — a fixed offset only looked right
-    -- for the original 14px-tall buttons and drifted to the top on taller ones.
+    -- for the original 14px-tall buttons and drifted to the top on taller
+    -- ones. getWrap (not a manual "\n" count) is what actually determines
+    -- how many lines printf below will draw — a label that's too long for
+    -- w-4 wraps even with no explicit "\n" in it, and undercounting lines
+    -- there left wrapped labels sitting off-center / spilling out of short
+    -- buttons.
     local line_h = font_sm:getHeight() * font_sm:getLineHeight()
-    local lines  = select(2, label:gsub("\n", "\n")) + 1
+    local _, wrapped = font_sm:getWrap(label, w - 4)
+    local lines  = math.max(1, #wrapped)
     local text_y = y + (h - line_h * lines) / 2
     love.graphics.printf(label, x + 2, text_y, w - 4, "center")
     love.graphics.setColor(1, 1, 1, 1)

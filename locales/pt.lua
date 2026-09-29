@@ -189,6 +189,26 @@ return {
     ["trait.food.mexican"]        = "Prefere comida mexicana",
     ["trait.food.seafood"]        = "Prefere frutos do mar",
 
+    -- Formas curtas para o dropdown do computador da Interpol
+    -- (src/screens/crime_computer.lua) — os valores trait.* acima são
+    -- trechos de frase completa e quebram linha dentro da largura fixa do
+    -- dropdown, especialmente em PT.
+    ["trait_short.hobby.tennis"]            = "Tênis",
+    ["trait_short.hobby.mountain_climbing"] = "Alpinismo",
+    ["trait_short.hobby.croquet"]           = "Croqué",
+    ["trait_short.hobby.skydiving"]         = "Paraquedismo",
+    ["trait_short.hobby.swimming"]          = "Natação",
+    ["trait_short.vehicle.convertible"]     = "Conversível",
+    ["trait_short.vehicle.limousine"]       = "Limusine",
+    ["trait_short.vehicle.motorcycle"]      = "Motocicleta",
+    ["trait_short.vehicle.racecar"]         = "Carro de corrida",
+    ["trait_short.feature.tattoo"]          = "Tatuagem",
+    ["trait_short.feature.ring"]            = "Anel",
+    ["trait_short.feature.jewelry"]         = "Joias",
+    ["trait_short.feature.scar"]            = "Cicatriz",
+    ["trait_short.food.mexican"]            = "Comida mexicana",
+    ["trait_short.food.seafood"]            = "Frutos do mar",
+
     -- Hora / barra de status
     ["status.time"]               = "HORA: {time}",
     ["status.deadline"]           = "PRAZO: {time}",

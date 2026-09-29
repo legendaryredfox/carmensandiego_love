@@ -24,6 +24,12 @@ local ATTR_VALUES = {
     food    = { "", "mexican", "seafood" },
 }
 
+-- These 4 attrs' trait.* values are full clue-sentence fragments (see
+-- locales/en.lua/pt.lua) — too long for this dropdown's fixed width, so
+-- they use a dedicated trait_short.* key instead. sex/hair's trait.*
+-- values are already short nouns ("Male", "Brown hair") and don't need one.
+local SHORT_KEY_ATTRS = { hobby = true, vehicle = true, feature = true, food = true }
+
 local cursor, status_msg, match_list = 1, "", {}
 
 local function get_filter()
@@ -75,7 +81,9 @@ function S.draw()
 
         -- Value with arrows
         local val     = game.detective.gathered_traits[attr] or ""
-        local display = val ~= "" and locale.t("trait." .. attr .. "." .. val) or "----"
+        local key     = (SHORT_KEY_ATTRS[attr] and "trait_short." or "trait.") ..
+            attr .. "." .. val
+        local display = val ~= "" and locale.t(key) or "----"
         ui.button(col_x[2], y - 2, 200, 16, "< " .. display .. " >", sel)
     end
 

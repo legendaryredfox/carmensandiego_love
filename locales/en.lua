@@ -188,6 +188,25 @@ return {
     ["trait.food.mexican"]        = "Prefers Mexican food",
     ["trait.food.seafood"]        = "Prefers seafood",
 
+    -- Short forms for the crime computer's dropdown (src/screens/crime_computer.lua)
+    -- — the trait.* values above are full clue-sentence fragments and wrap
+    -- inside the dropdown's fixed width, especially in PT.
+    ["trait_short.hobby.tennis"]            = "Tennis",
+    ["trait_short.hobby.mountain_climbing"] = "Climbing",
+    ["trait_short.hobby.croquet"]           = "Croquet",
+    ["trait_short.hobby.skydiving"]         = "Skydiving",
+    ["trait_short.hobby.swimming"]          = "Swimming",
+    ["trait_short.vehicle.convertible"]     = "Convertible",
+    ["trait_short.vehicle.limousine"]       = "Limousine",
+    ["trait_short.vehicle.motorcycle"]      = "Motorcycle",
+    ["trait_short.vehicle.racecar"]         = "Race car",
+    ["trait_short.feature.tattoo"]          = "Tattoo",
+    ["trait_short.feature.ring"]            = "Ring",
+    ["trait_short.feature.jewelry"]         = "Jewelry",
+    ["trait_short.feature.scar"]            = "Scar",
+    ["trait_short.food.mexican"]            = "Mexican food",
+    ["trait_short.food.seafood"]            = "Seafood",
+
     -- Time / status bar
     ["status.time"]               = "TIME: {time}",
     ["status.deadline"]           = "DUE: {time}",
