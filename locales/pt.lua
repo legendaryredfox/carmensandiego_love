@@ -128,7 +128,7 @@ return {
     ["arrest.success"]            = "Voce prendeu {name}!\nCaso encerrado.",
     ["arrest.wrong_warrant"]      = "Suspeito errado!\n{name} escapou.",
     ["arrest.no_warrant"]         = "Sem mandado.\nO suspeito escapou.",
-    ["arrest.wrong_city"]         = "O ladrao nao esta aqui.",
+    ["arrest.wrong_city"]         = "O ladrao nao está aqui.",
     ["arrest.title_success"]      = "CASO ENCERRADO!",
     ["arrest.title_failed"]       = "MISSAO FRACASSADA",
     ["arrest.next_mission"]       = "[ PRESSIONE ENTER PARA A PROXIMA MISSAO ]",
@@ -136,7 +136,7 @@ return {
 
     -- Promocao
     ["rankup.title"]              = "PROMOCAO!",
-    ["rankup.message"]            = "Parabens, {name}.\nVoce agora e {rank}.",
+    ["rankup.message"]            = "Parabens, {name}.\nVoce agora é {rank}.",
     ["rankup.press_enter"]        = "[ PRESSIONE ENTER ]",
 
     -- Game over
@@ -146,7 +146,7 @@ return {
 
     -- Hall da Fama (prisao final da lider da organizacao)
     ["hallfame.title"]            = "HALL DA FAMA",
-    ["hallfame.message"]          = "Voce prendeu {leader} e desmantelou a\norganizacao de vez, {rank} {name}.\n\nSua carreira como detetive esta completa.",
+    ["hallfame.message"]          = "Voce prendeu {leader} e desmantelou a\norganizacao de vez, {rank} {name}.\n\nSua carreira como detetive está completa.",
     ["hallfame.continue"]         = "[ PRESSIONE ENTER PARA VOLTAR AO MENU ]",
 
     -- Placar
@@ -174,7 +174,7 @@ return {
     ["trait.hair.red"]            = "Cabelo ruivo",
     ["trait.hair.black"]          = "Cabelo preto",
     ["trait.hobby.tennis"]        = "Joga tenis",
-    ["trait.hobby.mountain_climbing"] = "Alpinista",
+    ["trait.hobby.mountain_climbing"] = "Pratica alpinismo",
     ["trait.hobby.croquet"]       = "Joga croquete",
     ["trait.hobby.skydiving"]     = "Pratica paraquedismo",
     ["trait.hobby.swimming"]      = "Pratica natacao",
@@ -195,7 +195,7 @@ return {
     -- dropdown, especialmente em PT.
     ["trait_short.hobby.tennis"]            = "Tênis",
     ["trait_short.hobby.mountain_climbing"] = "Alpinismo",
-    ["trait_short.hobby.croquet"]           = "Croqué",
+    ["trait_short.hobby.croquet"]           = "Croquete",
     ["trait_short.hobby.skydiving"]         = "Paraquedismo",
     ["trait_short.hobby.swimming"]          = "Natação",
     ["trait_short.vehicle.convertible"]     = "Conversível",
@@ -221,7 +221,7 @@ return {
     -- Itens roubados — itens de marco historico ligados a sua cidade real
     -- (ver ITEM_BY_CITY em src/mission.lua); os genericos servem pra qualquer cidade
     ["item.mona_lisa"]            = "A Mona Lisa",
-    ["item.crown_jewels"]         = "As Joias da Coroa",
+    ["item.crown_jewels"]         = "A Colecao das Joias da Coroa",
     ["item.magna_carta"]          = "A Magna Carta",
     ["item.aztec_calendar"]       = "A Pedra do Calendario Asteca",
     ["item.parthenon_frieze"]     = "Um Friso do Partenon",

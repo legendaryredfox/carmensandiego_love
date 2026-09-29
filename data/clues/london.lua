@@ -9,7 +9,7 @@ return {
     }, image=nil, verified=true },
     { category="wildlife", text={
         en="A birdwatcher spotted the suspect near the Thames, pointing out red kites soaring overhead — birds that were once extinct here but reintroduced successfully",
-        pt="Um observador de pássaros avistou o suspeito perto do Tâmisa, apontando para gaviões-de-cauda-vermelha soaring acima — pássaros que estavam extintos aqui mas reintroduzidos com sucesso",
+        pt="Um observador de pássaros avistou o suspeito perto do Tâmisa, apontando para milhafres-reais planando no alto — pássaros que estavam extintos aqui mas reintroduzidos com sucesso",
     }, image=nil, verified=true },
     { category="culture", text={
         en="A theatre critic overheard the suspect discussing a playwright born in a Midlands market town — whose works are performed here more than anywhere else on Earth",

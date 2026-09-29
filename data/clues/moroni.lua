@@ -13,6 +13,6 @@ return {
     }, image=nil, verified=true },
     { category="geography", text={
         en="A sailor described the suspect on a small archipelago between Madagascar and the eastern African coast — a nation whose official languages include Comorian, Arabic and French",
-        pt="Um marinheiro descreveu o suspeito em um pequeno arquipélago entre Madagascar e a costa oriental africana — uma nação cujos idiomas oficiais incluem Comorense, Árabe e Francês",
+        pt="Um marinheiro descreveu o suspeito em um pequeno arquipélago entre Madagascar e a costa oriental africana — uma nação cujos idiomas oficiais incluem comoriano, árabe e francês",
     }, image=nil, verified=true },
 }
