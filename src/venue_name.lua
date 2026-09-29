@@ -13,7 +13,7 @@ local VARIANTS = {
     industry  = 3,
     trait     = 3,
     terminal  = 2,
-    generic   = 1,
+    generic   = 3,
 }
 
 -- djb2 — deterministic, no external dependency.

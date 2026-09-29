@@ -61,6 +61,21 @@ describe("venue_name.name_for", function()
         assert_true(a ~= b, "landmark and currency venues got the same name")
     end)
 
+    it("avoids duplicate names across all 3 venues of an off-route city", function()
+        -- An off-route city has no clues at all (see clue_at), so every
+        -- venue falls back to "generic" — with only 1 variant available,
+        -- all 3 venue cards used to render the identical name/icon.
+        for i = 1, 30 do
+            local city_id     = "offroute" .. i
+            local no_clues    = { clues = {} }
+            local a = venue_name.name_for(no_clues, city_id, 1)
+            local b = venue_name.name_for(no_clues, city_id, 2)
+            local c = venue_name.name_for(no_clues, city_id, 3)
+            assert_true(a ~= b and b ~= c and a ~= c,
+                "duplicate generic venue name for " .. city_id)
+        end
+    end)
+
     it("avoids duplicate names when two venues share a category", function()
         -- Same category on both venues used to be able to hash to the same
         -- variant (e.g. two "landmark" venues both drawing "MONUMENT PLAZA").

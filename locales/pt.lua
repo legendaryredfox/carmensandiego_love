@@ -94,6 +94,8 @@ return {
     ["venue_name.terminal.1"]     = "ESCONDERIJO SUSPEITO",
     ["venue_name.terminal.2"]     = "RUA TRANQUILA",
     ["venue_name.generic.1"]      = "DELEGACIA LOCAL",
+    ["venue_name.generic.2"]      = "ESTACAO DE TREM",
+    ["venue_name.generic.3"]      = "BIBLIOTECA PUBLICA",
 
     -- Transicao de investigacao (indo do centro da cidade ate o local)
     ["investigating.heading_over"] = "A CAMINHO...",

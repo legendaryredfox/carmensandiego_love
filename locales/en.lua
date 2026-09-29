@@ -93,6 +93,8 @@ return {
     ["venue_name.terminal.1"]     = "SUSPICIOUS HIDEOUT",
     ["venue_name.terminal.2"]     = "QUIET BACK STREET",
     ["venue_name.generic.1"]      = "LOCAL PRECINCT",
+    ["venue_name.generic.2"]      = "TRAIN STATION",
+    ["venue_name.generic.3"]      = "PUBLIC LIBRARY",
 
     -- Investigation transition (walking from the city hub to a venue)
     ["investigating.heading_over"] = "HEADING OVER...",
