@@ -1,5 +1,7 @@
 return {
     -- Tela inicial
+    ["splash.tagline"]            = "FEITO COM LÖVE",
+
     ["title.game_name"]           = "DETECTIVE AGENCY",
     ["title.press_any_key"]       = "PRESSIONE QUALQUER TECLA",
     ["title.subtitle"]            = "UM JOGO DE DETETIVE PELO MUNDO",

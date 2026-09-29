@@ -1,5 +1,7 @@
 return {
     -- Title screen
+    ["splash.tagline"]            = "MADE WITH LÖVE",
+
     ["title.game_name"]           = "DETECTIVE AGENCY",
     ["title.press_any_key"]       = "PRESS ANY KEY",
     ["title.subtitle"]            = "A GLOBE-TROTTING DETECTIVE GAME",

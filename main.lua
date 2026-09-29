@@ -13,8 +13,9 @@ function love.load()
     locale.set(s.lang)
     audio.set_music_volume(s.music_volume)
     audio.set_sfx_volume(s.sfx_volume)
+    ui.apply_window_mode(s.window_scale, s.fullscreen)
     game.init()
-    SM.switch(require("src.screens.title"))
+    SM.switch(require("src.screens.splash"))
     audio.play_music("title")
 end
 
