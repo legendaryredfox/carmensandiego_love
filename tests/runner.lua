@@ -79,6 +79,7 @@ local test_files = {
     "tests/detective_test",
     "tests/map_test",
     "tests/save_test",
+    "tests/ranking_test",
     "tests/settings_test",
     "tests/ui_test",
 }

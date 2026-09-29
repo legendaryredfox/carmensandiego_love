@@ -42,6 +42,16 @@ end
 local PORTRAIT_X, PORTRAIT_Y, PORTRAIT_SIZE = 30, 44, 84
 local TEXT_X = PORTRAIT_X + PORTRAIT_SIZE + 12
 
+-- Verb-phrase trait text ("Plays tennis", "Has a tattoo") reads naturally
+-- after a pronoun ("He plays tennis"); sex/hair are noun phrases ("Male",
+-- "Brown hair") that a leading pronoun would misgrammar, so they keep the
+-- plain venue.clue_trait quote instead.
+local PRONOUN_SAFE_ATTRS = { hobby = true, vehicle = true, feature = true, food = true }
+
+local function lower_first(s)
+    return s:sub(1, 1):lower() .. s:sub(2)
+end
+
 local function clue_to_text(c)
     if not c then return locale.t("venue.nobody_suspicious") end
     if c.type == "terminal" then return locale.t("venue.nobody_suspicious") end
@@ -51,8 +61,12 @@ local function clue_to_text(c)
         return locale.t("venue.clue_destination", { hint = hint })
     end
     if c.type == "trait" then
-        return locale.t("venue.clue_trait",
-            { trait = locale.t(c.text_key) })
+        local trait = locale.t(c.text_key)
+        if PRONOUN_SAFE_ATTRS[c.attr] then
+            return locale.t("venue.clue_trait_" .. game.mission.thief.sex,
+                { trait = lower_first(trait) })
+        end
+        return locale.t("venue.clue_trait", { trait = trait })
     end
     return locale.t("venue.nobody_suspicious")
 end

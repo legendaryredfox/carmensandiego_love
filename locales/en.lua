@@ -56,6 +56,13 @@ return {
     ["venue.witness_says"]        = "A witness leans in and says:",
     ["venue.clue_destination"]    = "{hint}",
     ["venue.clue_trait"]          = "{trait}.",
+    -- Pronoun matches thief.sex (see briefing.suspect_seen_male/female for
+    -- the same convention) — only used for verb-phrase trait text (hobby,
+    -- vehicle, feature, food); sex/hair stay on venue.clue_trait above since
+    -- their trait strings are noun phrases ("Male", "Brown hair") that a
+    -- leading pronoun would misgrammar.
+    ["venue.clue_trait_male"]     = "He {trait}.",
+    ["venue.clue_trait_female"]   = "She {trait}.",
     ["venue.back"]                = "BACK",
 
     -- Venue names (derived from the clue category at that venue)
@@ -184,7 +191,7 @@ return {
     -- Time / status bar
     ["status.time"]               = "TIME: {time}",
     ["status.deadline"]           = "DUE: {time}",
-    ["briefing.deadline"]         = "CATCH THE SUSPECT BY {deadline}.",
+    ["briefing.deadline"]         = "Catch the suspect by {deadline}.",
 
     -- Generic clue fallbacks
     ["clue.generic.destination"]  = "unusual activity in a distant land",

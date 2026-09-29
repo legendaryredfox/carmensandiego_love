@@ -3,8 +3,8 @@ return {
     {
         category = "landmark",
         text = {
-            en = "A witness described marble columns atop a rocky hill — ruins of an ancient temple to a goddess of wisdom and war",
-            pt = "Uma testemunha descreveu colunas de mármore no topo de uma colina rochosa — ruínas de um templo antigo a uma deusa da sabedoria e da guerra",
+            en = "A tour guide described marble columns atop a rocky hill — ruins of an ancient temple to a goddess of wisdom and war",
+            pt = "Um guia turístico descreveu colunas de mármore no topo de uma colina rochosa — ruínas de um templo antigo a uma deusa da sabedoria e da guerra",
         },
         image = "assets/images/clues/athens/parthenon.png",
         verified = true,

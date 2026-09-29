@@ -59,6 +59,11 @@ return {
     ["venue.witness_says"]        = "Uma testemunha se aproxima e diz:",
     ["venue.clue_destination"]    = "{hint}",
     ["venue.clue_trait"]          = "{trait}.",
+    -- Pronoun matches thief.sex, same convention as
+    -- briefing.suspect_seen_male/female — only for verb-phrase trait text
+    -- (hobby, vehicle, feature, food); sex/hair keep venue.clue_trait above.
+    ["venue.clue_trait_male"]     = "Ele {trait}.",
+    ["venue.clue_trait_female"]   = "Ela {trait}.",
     ["venue.back"]                = "VOLTAR",
 
     -- Nomes de locais (derivados da categoria da pista naquele local)
@@ -187,7 +192,7 @@ return {
     -- Hora / barra de status
     ["status.time"]               = "HORA: {time}",
     ["status.deadline"]           = "PRAZO: {time}",
-    ["briefing.deadline"]         = "PRENDA O SUSPEITO ATÉ {deadline}.",
+    ["briefing.deadline"]         = "Prenda o suspeito até {deadline}.",
 
     -- Pistas genéricas
     ["clue.generic.destination"]  = "atividade incomum em uma terra distante",

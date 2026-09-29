@@ -3,8 +3,8 @@ return {
     {
         category = "landmark",
         text = {
-            en = "A witness mentioned the suspect near a great river valley — the land between two ancient rivers, cradle of the world's first writing",
-            pt = "Uma testemunha mencionou o suspeito perto de um grande vale fluvial — a terra entre dois rios antigos, berço da primeira escrita do mundo",
+            en = "A tour guide mentioned the suspect near a great river valley — the land between two ancient rivers, cradle of the world's first writing",
+            pt = "Um guia turístico mencionou o suspeito perto de um grande vale fluvial — a terra entre dois rios antigos, berço da primeira escrita do mundo",
         },
         image = nil,
         verified = true,
