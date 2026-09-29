@@ -26,6 +26,10 @@ return {
     ["settings.music_volume"]     = "VOLUME DA MUSICA",
     ["settings.sfx_volume"]       = "VOLUME DOS EFEITOS",
     ["settings.typewriter_speed"] = "VELOCIDADE DO TEXTO",
+    ["settings.resolution"]       = "RESOLUCAO",
+    ["settings.fullscreen"]       = "TELA CHEIA",
+    ["settings.on"]               = "LIGADO",
+    ["settings.off"]              = "DESLIGADO",
     ["settings.nav_hint"]         = "CIMA/BAIXO  ESQ/DIR  ENTER  ESC=VOLTAR",
 
     -- Nome do detetive

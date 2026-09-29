@@ -63,6 +63,31 @@ local function rows()
                     math.min(SPEED_MAX, s.typewriter_speed + SPEED_STEP))
             end,
         },
+        {
+            label = locale.t("settings.resolution"),
+            value = s.window_scale .. "x (" .. (ui.VIRTUAL_W * s.window_scale)
+                .. "x" .. (ui.VIRTUAL_H * s.window_scale) .. ")",
+            left  = function()
+                settings.set_window_scale(s.window_scale - 1)
+                settings.set_fullscreen(false)
+                ui.apply_window_mode(settings.get().window_scale, false)
+            end,
+            right = function()
+                settings.set_window_scale(s.window_scale + 1)
+                settings.set_fullscreen(false)
+                ui.apply_window_mode(settings.get().window_scale, false)
+            end,
+        },
+        {
+            label = locale.t("settings.fullscreen"),
+            value = locale.t(s.fullscreen and "settings.on" or "settings.off"),
+            left  = function() end,
+            right = function() end,
+            toggle = function()
+                settings.set_fullscreen(not s.fullscreen)
+                ui.apply_window_mode(s.window_scale, settings.get().fullscreen)
+            end,
+        },
     }
 end
 

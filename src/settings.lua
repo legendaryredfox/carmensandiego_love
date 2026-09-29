@@ -10,7 +10,12 @@ local DEFAULTS = {
     music_volume     = 0.6,
     sfx_volume       = 0.8,
     typewriter_speed = 40,
+    window_scale     = 2,
+    fullscreen       = false,
 }
+
+M.MIN_WINDOW_SCALE = 1
+M.MAX_WINDOW_SCALE = 3
 
 local current = nil
 
@@ -45,7 +50,12 @@ function M.load()
         music_volume     = data.music_volume      or DEFAULTS.music_volume,
         sfx_volume       = data.sfx_volume        or DEFAULTS.sfx_volume,
         typewriter_speed = data.typewriter_speed  or DEFAULTS.typewriter_speed,
+        window_scale     = data.window_scale     or DEFAULTS.window_scale,
+        -- "or" would treat a saved `false` as missing and reset it to the
+        -- default on every load — booleans need an explicit nil check.
+        fullscreen       = data.fullscreen,
     }
+    if current.fullscreen == nil then current.fullscreen = DEFAULTS.fullscreen end
     return current
 end
 
@@ -76,6 +86,17 @@ end
 
 function M.set_typewriter_speed(chars_per_sec)
     M.get().typewriter_speed = chars_per_sec
+    M.save()
+end
+
+function M.set_window_scale(scale)
+    M.get().window_scale =
+        math.max(M.MIN_WINDOW_SCALE, math.min(M.MAX_WINDOW_SCALE, scale))
+    M.save()
+end
+
+function M.set_fullscreen(enabled)
+    M.get().fullscreen = enabled and true or false
     M.save()
 end
 

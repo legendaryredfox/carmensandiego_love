@@ -26,6 +26,10 @@ return {
     ["settings.music_volume"]     = "MUSIC VOLUME",
     ["settings.sfx_volume"]       = "SFX VOLUME",
     ["settings.typewriter_speed"] = "TEXT SPEED",
+    ["settings.resolution"]       = "RESOLUTION",
+    ["settings.fullscreen"]       = "FULLSCREEN",
+    ["settings.on"]               = "ON",
+    ["settings.off"]              = "OFF",
     ["settings.nav_hint"]         = "UP/DOWN  LEFT/RIGHT  ENTER  ESC=BACK",
 
     -- Name entry

@@ -6,6 +6,12 @@ M.VIRTUAL_W = 640
 M.VIRTUAL_H = 360
 M.SCALE     = 2
 
+-- Where the scaled canvas lands inside the actual window — 0 unless
+-- M.apply_window_mode letterboxed it (fullscreen at an aspect ratio that
+-- isn't an exact multiple of VIRTUAL_W x VIRTUAL_H).
+M.offset_x = 0
+M.offset_y = 0
+
 -- Colors
 M.C = {
     bg        = { 0.05, 0.05, 0.15, 1 },
@@ -109,12 +115,42 @@ end
 
 function M.end_frame()
     love.graphics.setCanvas()
+    -- Fullscreen at an aspect ratio that isn't an exact multiple of
+    -- VIRTUAL_W x VIRTUAL_H letterboxes (M.offset_x/y > 0) — clear the
+    -- whole window first so those bars don't show last frame's edges.
+    love.graphics.clear(M.C.black)
     love.graphics.setColor(1, 1, 1, 1)
-    love.graphics.draw(canvas, 0, 0, 0, M.SCALE, M.SCALE)
+    love.graphics.draw(canvas, M.offset_x, M.offset_y, 0, M.SCALE, M.SCALE)
+end
+
+-- Applies a window mode and keeps scaling pixel-perfect (integer only, per
+-- CLAUDE.md) either way:
+--   windowed   — scale is exactly what's asked for, window sized to match.
+--   fullscreen — scale is recomputed as the largest integer that still
+--                fits the desktop, since a fixed scale could overflow an
+--                arbitrary monitor resolution; any leftover space is
+--                letterboxed via M.offset_x/y rather than stretched.
+function M.apply_window_mode(scale, fullscreen)
+    if fullscreen then
+        love.window.setFullscreen(true, "desktop")
+        local dw, dh = love.window.getDesktopDimensions()
+        scale = math.max(1, math.min(
+            math.floor(dw / M.VIRTUAL_W), math.floor(dh / M.VIRTUAL_H)))
+    else
+        love.window.setFullscreen(false)
+        love.window.setMode(M.VIRTUAL_W * scale, M.VIRTUAL_H * scale,
+            { resizable = false, vsync = 1 })
+    end
+
+    M.SCALE = scale
+    local win_w, win_h = love.graphics.getDimensions()
+    M.offset_x = math.floor((win_w - M.VIRTUAL_W * scale) / 2)
+    M.offset_y = math.floor((win_h - M.VIRTUAL_H * scale) / 2)
 end
 
 function M.to_virtual(x, y)
-    return math.floor(x / M.SCALE), math.floor(y / M.SCALE)
+    return math.floor((x - M.offset_x) / M.SCALE),
+           math.floor((y - M.offset_y) / M.SCALE)
 end
 
 -- Draws a filled rectangle with a border, or a Kenney 9-slice panel when
